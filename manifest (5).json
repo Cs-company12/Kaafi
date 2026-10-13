@@ -1,0 +1,29 @@
+{
+  "id": "./index.html",
+  "name": "Kaafi Hospital — Ballan Dhakhtar",
+  "short_name": "Kaafi Hospital",
+  "description": "Ballanso dhakhtarka Kaafi Hospital adigoo meel kasta jooga, kadibna ku bixi EVC Plus.",
+  "lang": "so",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#24318F",
+  "categories": ["medical", "health", "lifestyle"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "icons/icon-192.png",       "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png",       "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png",   "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png",   "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "icons/favicon-32.png",     "sizes": "32x32",   "type": "image/png", "purpose": "any" }
+  ],
+  "screenshots": [
+    { "src": "screenshots/mobile.jpg", "sizes": "780x1688", "type": "image/jpeg", "form_factor": "narrow", "label": "Dooro dhakhtarka oo ballanso" },
+    { "src": "screenshots/wide.jpg",   "sizes": "1280x800", "type": "image/jpeg", "form_factor": "wide",   "label": "Kaafi Hospital — ballan dhakhtar" }
+  ]
+}
