@@ -828,7 +828,9 @@ const UA = navigator.userAgent || '';
 const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches
   || window.matchMedia('(display-mode: minimal-ui)').matches || window.navigator.standalone === true;
 const isIOS = /iphone|ipad|ipod/i.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const isAndroid = /android/i.test(UA);
+const isAndroid = /android/i.test(UA) || (navigator.userAgentData && navigator.userAgentData.platform === 'Android')
+  || (/Linux x86_64|Linux aarch64/i.test(UA) && navigator.maxTouchPoints > 0 && !/CrOS/i.test(UA));
+const isRealChrome = /Chrome\//i.test(UA) && !/SamsungBrowser|EdgA|Edg\/|OPR\/|MiuiBrowser|XiaoMi|HuaweiBrowser|HonorBrowser|YaBrowser|UCBrowser|DuckDuckGo|Brave|; wv\)/i.test(UA);
 const isInApp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Line\/|TikTok|musical_ly|BytedanceWebview|Snapchat|Twitter|; wv\)/i.test(UA);
 const isChromium = !isIOS && /Chrome|Chromium|SamsungBrowser|EdgA|Edg\/|OPR\//i.test(UA);
 const dlBtn = $('#dlBtn');
@@ -855,21 +857,37 @@ function waitInstallable(ms){
 }
 async function appFilesOk(){
   const ok = async u => { try { return (await fetch(u, {cache:'no-store'})).ok; } catch { return false; } };
-  const r = await Promise.all([ok('manifest.json'), ok('sw.js')]);
-  return r[0] && r[1];
+  const r = await Promise.all([ok('manifest.json'), ok('sw.js'), ok('icons/icon-192.png'), ok('icons/icon-512.png')]);
+  return r.every(Boolean);
 }
 async function copyLink(){
   try { await navigator.clipboard.writeText(location.href); return true; }
   catch { try { const t = document.createElement('textarea'); t.value = location.href; document.body.appendChild(t); t.select(); const ok = document.execCommand('copy'); t.remove(); return ok; } catch { return false; } }
 }
+const params = new URLSearchParams(location.search);
+const cameForInstall = params.get('install') === '1';
+function openInChrome(){
+  const u = new URL(location.href); u.searchParams.set('install', '1');
+  const fallback = new URL(location.href); fallback.searchParams.set('nochrome', '1');
+  const intent = `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(':', '')};package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(fallback.href)};end`;
+  window.__intentUrl = intent;
+  location.href = intent;
+}
 const appHead = sub => `<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:6px">
   <img src="${appIcon()}" alt="" width="56" height="56" style="border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
   <div style="text-align:left"><b>Kaafi Hospital</b><br><small style="color:#767D99">${sub}</small></div></div>`;
 
+async function offerInstall(evt){
+  const r = await Swal.fire({title:'Soo deji app-ka', html: appHead('Ku dar home screen-ka'),
+    confirmButtonText:'<i class="bi bi-download"></i> Install', confirmButtonColor:'#E1262D',
+    showCancelButton:true, cancelButtonText:'Hadda maya'});
+  if (r.isConfirmed) nativeInstall(evt);
+}
+
 dlBtn.addEventListener('click', async () => {
   const t0 = Date.now();
 
-  // 1) Android / Samsung / Edge / Chrome: install straight away
+  // 1) browser can install directly (Chrome, Edge desktop, older Samsung Internet)
   if (window.__bip) return nativeInstall(window.__bip);
 
   // 2) iPhone: Apple allows only Share → Add to Home Screen
@@ -878,7 +896,10 @@ dlBtn.addEventListener('click', async () => {
       html: appHead('iPhone') + `<p style="margin:10px 0 0;font-size:16px">Riix <b>Share</b> <i class="bi bi-box-arrow-up" style="color:#24318F"></i> → <b>Add to Home Screen</b></p>`});
   }
 
-  // 3) opened inside Facebook / TikTok / WhatsApp: must open in a real browser first
+  // 3) Android in a browser that cannot install by itself (Samsung Internet, Edge, Mi, Facebook…) → open in Chrome
+  if (isAndroid && !isRealChrome && !params.get('nochrome')) return openInChrome();
+
+  // 4) in-app browser on other systems
   if (isInApp) {
     const r = await Swal.fire({title:'Ku fur Chrome', confirmButtonColor:'#24318F', confirmButtonText:'<i class="bi bi-link-45deg"></i> Koobi link-ga',
       html: appHead('Download') + `<p style="margin:10px 0 0">App-ka waxaa laga soo dejin karaa oo keliya browser (Chrome / Safari).</p>`});
@@ -886,26 +907,29 @@ dlBtn.addEventListener('click', async () => {
     return;
   }
 
-  // 4) browser still preparing: wait for it, then install
+  // 5) Chrome still preparing: wait, then install
   Swal.fire({title:'Soo deji app-ka', html: appHead('Waa la diyaarinayaa…') + '<span class="spin dark" style="display:inline-block;width:24px;height:24px;margin-top:8px"></span>',
              showConfirmButton:false, allowOutsideClick:true});
   const evt = await waitInstallable(8000);
   if (evt) {
     if (Date.now() - t0 < 4000) { Swal.close(); return nativeInstall(evt); }   // still inside the tap → opens directly
-    const r = await Swal.fire({title:'Soo deji app-ka', html: appHead('Diyaar'),
-      confirmButtonText:'<i class="bi bi-download"></i> Install', confirmButtonColor:'#E1262D',
-      showCancelButton:true, cancelButtonText:'Hadda maya'});
-    if (r.isConfirmed) nativeInstall(evt);
-    return;
+    return offerInstall(evt);
   }
 
-  // 5) not possible here (already installed, or files missing on the website)
+  // 6) nothing to install: either it is already on the home screen, or the website is missing files
   const filesOk = await appFilesOk();
-  swal({title:'Soo deji app-ka',
-    html: appHead('Kaafi Hospital') + (filesOk
-      ? '<p style="margin:10px 0 0">App-ku hore ayuu ugu degay qalabkan — ka fur shaashaddaada.<br><small style="color:#767D99">Haddii uusan ku jirin, bogga ku fur <b>Google Chrome</b>.</small></p>'
+  swal({title:'Kaafi Hospital',
+    html: appHead('App') + (filesOk
+      ? '<p style="margin:10px 0 0">App-ka Kaafi Hospital wuxuu ku jiraa shaashaddaada (home screen).</p>'
       : '<p style="margin:10px 0 0;color:#B81C22;font-size:14px">Faylasha app-ka (manifest.json, sw.js, icons) lagama helin website-ka.</p>')});
 });
+
+// opened in Chrome by the Download button → offer Install automatically as soon as Chrome is ready
+if (cameForInstall && !isStandalone()) {
+  waitInstallable(10000).then(evt => { if (evt) offerInstall(evt); });
+  try { const u = new URL(location.href); u.searchParams.delete('install'); history.replaceState(history.state, '', u.href); } catch {}
+}
+
 </script>
 </body>
 </html>
