@@ -919,8 +919,10 @@ dlBtn.addEventListener('click', async () => {
   // 6) nothing to install: either it is already on the home screen, or the website is missing files
   const filesOk = await appFilesOk();
   swal({title:'Kaafi Hospital',
-    html: appHead('App') + (filesOk
-      ? '<p style="margin:10px 0 0">App-ka Kaafi Hospital wuxuu ku jiraa shaashaddaada (home screen).</p>'
+    html: appHead(filesOk ? 'Ku rakib' : 'App') + (filesOk
+      ? `<p style="margin:10px 0 0">${isAndroid
+          ? 'Fur menu-ka browser-ka (⋮), kadib dooro <b>Install app</b> ama <b>Add to Home screen</b>.'
+          : 'Fur menu-ka browser-ka, kadib dooro <b>Install Kaafi Hospital</b> ama <b>Add to Home screen</b>.'}</p>`
       : '<p style="margin:10px 0 0;color:#B81C22;font-size:14px">Faylasha app-ka (manifest.json, sw.js, icons) lagama helin website-ka.</p>')});
 });
 
