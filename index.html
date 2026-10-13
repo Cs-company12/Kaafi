@@ -12,6 +12,15 @@
 <meta name="apple-mobile-web-app-title" content="Kaafi Hospital">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.json">
+<script>
+  /* Download: keep the browser's install event the moment it arrives */
+  window.__bip = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); window.__bip = e;
+    window.dispatchEvent(new Event('kaafi-installable'));
+  });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', {scope: './'}).catch(function () {});
+</script>
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="shortcut icon" href="favicon.ico">
@@ -813,140 +822,89 @@ sb.channel('kaafi-doctors-public')
   .on('postgres_changes', {event:'*', schema:'public', table:'kaafi_doctors'}, () => { clearTimeout(reloadT); reloadT = setTimeout(loadDoctors, 400); })
   .subscribe();
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { loadDoctors(); loadPayNumber(); } });
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', {scope:'./'}).catch(() => {});
 
-/* ================= DOWNLOAD (install app on every device) ================= */
-let installEvt = null;
+/* ================= DOWNLOAD (direct install) ================= */
 const UA = navigator.userAgent || '';
 const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches
   || window.matchMedia('(display-mode: minimal-ui)').matches || window.navigator.standalone === true;
 const isIOS = /iphone|ipad|ipod/i.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const isAndroid = /android/i.test(UA);
-const isMac = !isIOS && /Macintosh/i.test(UA);
 const isInApp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Line\/|TikTok|musical_ly|BytedanceWebview|Snapchat|Twitter|; wv\)/i.test(UA);
-const BROWSER = (() => {
-  if (/SamsungBrowser/i.test(UA)) return 'samsung';
-  if (/EdgA|EdgiOS|Edg\//i.test(UA)) return 'edge';
-  if (/OPR\/|Opera|OPX\//i.test(UA)) return 'opera';
-  if (/MiuiBrowser|XiaoMi\//i.test(UA)) return 'miui';
-  if (/HuaweiBrowser|HonorBrowser/i.test(UA)) return 'huawei';
-  if (/FxiOS|Firefox/i.test(UA)) return 'firefox';
-  if (/CriOS/i.test(UA)) return 'chrome-ios';
-  if (/Chrome|Chromium/i.test(UA)) return 'chrome';
-  if (/Safari/i.test(UA)) return 'safari';
-  return 'other';
-})();
-const ic = n => `<i class="bi ${n}" style="color:#24318F"></i>`;
-function installSteps(){
-  if (isInApp) return {title:'Ku fur browser', steps:[
-    `Bogga waxaa laga furay app kale (Facebook, TikTok, WhatsApp…).`,
-    `Riix ${ic('bi-three-dots')} ama ${ic('bi-three-dots-vertical')} kor, dooro <b>“Open in browser”</b> (Chrome / Safari).`,
-    `Kadib riix badhanka <b>Download</b> mar kale.`], copy:true};
-  if (isIOS) {
-    if (BROWSER === 'safari') return {title:'iPhone — Safari', steps:[
-      `Riix badhanka <b>Share</b> ${ic('bi-box-arrow-up')} ee hoose (ama kor iPad).`,
-      `Hoos u dhaadhac oo dooro <b>“Add to Home Screen”</b> ${ic('bi-plus-square')}.`,
-      `Riix <b>Add</b> — Kaafi Hospital waxay ka soo muuqanaysaa shaashaddaada.`]};
-    return {title:'iPhone', steps:[
-      `Riix badhanka <b>Share</b> ${ic('bi-box-arrow-up')} ee address bar-ka.`,
-      `Dooro <b>“Add to Home Screen”</b> ${ic('bi-plus-square')}, kadib <b>Add</b>.`,
-      `Haddii aadan arkin, bogga ku fur <b>Safari</b> oo isku day mar kale.`], copy:true};
-  }
-  if (isAndroid) {
-    const A = {
-      samsung: ['Samsung Internet', [`Riix menu-ga ${ic('bi-list')} ee hoose midig.`, `Dooro <b>“Add page to”</b> → <b>“Home screen”</b> (ama <b>“Install”</b>).`, `Riix <b>Add</b>.`]],
-      chrome:  ['Chrome', [`Riix ${ic('bi-three-dots-vertical')} kor midig.`, `Dooro <b>“Install app”</b> ama <b>“Add to Home screen”</b>.`, `Riix <b>Install</b>.`]],
-      edge:    ['Edge', [`Riix menu-ga ${ic('bi-three-dots')} ama ${ic('bi-list')}.`, `Dooro <b>“Add to phone”</b> ama <b>“Apps → Install this site as an app”</b>.`, `Riix <b>Install</b>.`]],
-      opera:   ['Opera', [`Riix ${ic('bi-three-dots-vertical')} kor midig.`, `Dooro <b>“Add to Home screen”</b>.`, `Riix <b>Add</b>.`]],
-      miui:    ['Mi Browser', [`Riix menu-ga ${ic('bi-list')} ee hoose.`, `Dooro <b>“Add to Home screen”</b>.`, `Riix <b>Add</b>.`]],
-      huawei:  ['Huawei Browser', [`Riix menu-ga ${ic('bi-list')} ee hoose.`, `Dooro <b>“Add to home screen”</b>.`, `Riix <b>Add</b>.`]],
-      firefox: ['Firefox', [`Riix ${ic('bi-three-dots-vertical')} menu-ga.`, `Dooro <b>“Install”</b> ama <b>“Add to Home screen”</b>.`, `Riix <b>Add</b>.`]],
-    }[BROWSER] || ['Android', [`Riix menu-ga browser-ka (${ic('bi-three-dots-vertical')} ama ${ic('bi-list')}).`, `Dooro <b>“Install app”</b> ama <b>“Add to Home screen”</b>.`, `Riix <b>Add</b>. Haddii aysan jirin, bogga ku fur <b>Chrome</b>.`]];
-    return {title:A[0], steps:A[1]};
-  }
-  if (isMac && BROWSER === 'safari') return {title:'Mac — Safari', steps:[
-    `Menu-ga kor ka dooro <b>File</b>.`, `Riix <b>“Add to Dock”</b>.`, `Riix <b>Add</b>.`]};
-  if (BROWSER === 'firefox') return {title:'Kombiyuutar', steps:[
-    `Firefox app ma soo dejiyo.`, `Bogga ku fur <b>Chrome</b> ama <b>Edge</b>.`, `Kadib riix <b>Download</b> mar kale.`], copy:true};
-  return {title:'Kombiyuutar', steps:[
-    `Address bar-ka dhinaciisa midig riix astaanta install-ka ${ic('bi-download')}.`,
-    `Ama menu-ga ${ic('bi-three-dots-vertical')} → <b>“Install Kaafi Hospital”</b> / <b>“Apps → Install”</b>.`,
-    `Riix <b>Install</b>.`]};
+const isChromium = !isIOS && /Chrome|Chromium|SamsungBrowser|EdgA|Edg\/|OPR\//i.test(UA);
+const dlBtn = $('#dlBtn');
+const appIcon = () => document.querySelector('link[rel=apple-touch-icon]').href;
+
+dlBtn.hidden = isStandalone() || !(isIOS || isAndroid || isChromium || window.__bip);
+window.addEventListener('kaafi-installable', () => { if (!isStandalone()) dlBtn.hidden = false; });
+window.addEventListener('appinstalled', () => {
+  window.__bip = null; dlBtn.hidden = true;
+  swal({icon:'success', title:'App-ka waa la soo dejiyay', text:'Kaafi Hospital hadda waxay ku jirtaa shaashaddaada.'});
+});
+
+async function nativeInstall(evt){            // opens the browser's own "Install" window
+  window.__bip = null;
+  try { await evt.prompt(); await evt.userChoice; } catch {}
+}
+function waitInstallable(ms){
+  if (window.__bip) return Promise.resolve(window.__bip);
+  return new Promise(res => {
+    const done = () => { clearTimeout(t); window.removeEventListener('kaafi-installable', done); res(window.__bip); };
+    const t = setTimeout(done, ms);
+    window.addEventListener('kaafi-installable', done);
+  });
+}
+async function appFilesOk(){
+  const ok = async u => { try { return (await fetch(u, {cache:'no-store'})).ok; } catch { return false; } };
+  const r = await Promise.all([ok('manifest.json'), ok('sw.js')]);
+  return r[0] && r[1];
 }
 async function copyLink(){
   try { await navigator.clipboard.writeText(location.href); return true; }
   catch { try { const t = document.createElement('textarea'); t.value = location.href; document.body.appendChild(t); t.select(); const ok = document.execCommand('copy'); t.remove(); return ok; } catch { return false; } }
 }
+const appHead = sub => `<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:6px">
+  <img src="${appIcon()}" alt="" width="56" height="56" style="border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
+  <div style="text-align:left"><b>Kaafi Hospital</b><br><small style="color:#767D99">${sub}</small></div></div>`;
 
-$('#dlBtn').hidden = isStandalone();
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; $('#dlBtn').hidden = false; });
-window.addEventListener('appinstalled', () => {
-  installEvt = null; $('#dlBtn').hidden = true;
-  swal({icon:'success', title:'App-ka waa la soo dejiyay', text:'Kaafi Hospital hadda waxay ku jirtaa shaashaddaada.'});
-});
-const CAN_PROMPT = !isIOS && !isInApp && ['chrome', 'samsung', 'edge', 'opera'].includes(BROWSER);
-function waitForInstallPrompt(ms){
-  if (installEvt) return Promise.resolve(installEvt);
-  return new Promise(res => {
-    const t = setTimeout(() => { window.removeEventListener('beforeinstallprompt', on); res(null); }, ms);
-    function on(){ clearTimeout(t); setTimeout(() => res(installEvt), 0); }
-    window.addEventListener('beforeinstallprompt', on, {once:true});
-  });
-}
-async function runInstall(evt){
-  installEvt = null;
-  try {
-    await evt.prompt();
-    const choice = await evt.userChoice;
-    return !!(choice && choice.outcome === 'accepted');
-  } catch { return false; }
-}
-async function appFilesOk(){
-  const ok = async u => { try { const r = await fetch(u, {cache:'no-store'}); return r.ok; } catch { return false; } };
-  const [m, w] = await Promise.all([ok('manifest.json'), ok('sw.js')]);
-  return m && w;
-}
-$('#dlBtn').addEventListener('click', async () => {
-  if (installEvt) { await runInstall(installEvt); return; }   // browser's own Install dialog
-  if (CAN_PROMPT) {
-    // browser may still be preparing the app — wait a few seconds, then show a real Install button
-    Swal.fire({title:'Soo deji app-ka', html:'<span class="spin dark" style="display:inline-block;width:22px;height:22px;vertical-align:-5px;margin-right:8px"></span> Waa la diyaarinayaa…',
-               showConfirmButton:false, allowOutsideClick:true});
-    const evt = await waitForInstallPrompt(6000);
-    if (evt) {
-      const r = await Swal.fire({
-        title:'Soo deji app-ka',
-        html:`<div style="display:flex;align-items:center;gap:12px;justify-content:center">
-                <img src="${document.querySelector('link[rel=apple-touch-icon]').href}" alt="" width="56" height="56" style="border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
-                <div style="text-align:left"><b>Kaafi Hospital</b><br><small style="color:#767D99">Ballan dhakhtar · EVC Plus</small></div></div>`,
-        confirmButtonText:'<i class="bi bi-download"></i> Install', confirmButtonColor:'#E1262D',
-        showCancelButton:true, cancelButtonText:'Hadda maya'});
-      if (r.isConfirmed) await runInstall(evt);
-      return;
-    } else {
-      Swal.close();
-    }
+dlBtn.addEventListener('click', async () => {
+  const t0 = Date.now();
+
+  // 1) Android / Samsung / Edge / Chrome: install straight away
+  if (window.__bip) return nativeInstall(window.__bip);
+
+  // 2) iPhone: Apple allows only Share → Add to Home Screen
+  if (isIOS) {
+    return Swal.fire({title:'Soo deji app-ka', confirmButtonColor:'#24318F', confirmButtonText:'Hagaag',
+      html: appHead('iPhone') + `<p style="margin:10px 0 0;font-size:16px">Riix <b>Share</b> <i class="bi bi-box-arrow-up" style="color:#24318F"></i> → <b>Add to Home Screen</b></p>`});
   }
-  const g = installSteps();
-  const filesOk = (isIOS || isInApp) ? true : await appFilesOk();
-  const r = await Swal.fire({
-    title: 'Soo deji app-ka',
-    html: `<div style="text-align:left;font-size:15px;line-height:1.7">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <img src="${document.querySelector('link[rel=apple-touch-icon]').href}" alt="" width="48" height="48" style="border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
-        <div><b>Kaafi Hospital</b><br><small style="color:#767D99">${esc(g.title)}</small></div>
-      </div>
-      <ol style="margin:0;padding-left:20px;display:grid;gap:8px">${g.steps.map(x => `<li>${x}</li>`).join('')}</ol>
-      ${filesOk ? '' : '<p style="margin:12px 0 0;font-size:12px;color:#B81C22">Ogeysiis: faylasha app-ka (manifest.json, sw.js, icons) lagama helin website-ka — sidaas darteed “Install” toos ah ma furmayo.</p>'}
-      </div>`,
-    confirmButtonColor: '#24318F', confirmButtonText: 'Hagaag',
-    showDenyButton: !!g.copy, denyButtonText: '<i class="bi bi-link-45deg"></i> Koobi link-ga', denyButtonColor: '#E1262D'
-  });
-  if (r.isDenied) {
-    const ok = await copyLink();
-    swal({icon: ok ? 'success' : 'info', title: ok ? 'Link-ga waa la koobiyay' : 'Koobi link-ga',
-          text: ok ? 'Ku dheji (paste) Chrome ama Safari.' : location.href});
+
+  // 3) opened inside Facebook / TikTok / WhatsApp: must open in a real browser first
+  if (isInApp) {
+    const r = await Swal.fire({title:'Ku fur Chrome', confirmButtonColor:'#24318F', confirmButtonText:'<i class="bi bi-link-45deg"></i> Koobi link-ga',
+      html: appHead('Download') + `<p style="margin:10px 0 0">App-ka waxaa laga soo dejin karaa oo keliya browser (Chrome / Safari).</p>`});
+    if (r.isConfirmed) { const ok = await copyLink(); swal({icon: ok ? 'success' : 'info', title: ok ? 'Link-ga waa la koobiyay' : location.href, text: ok ? 'Ku dheji Chrome.' : ''}); }
+    return;
   }
+
+  // 4) browser still preparing: wait for it, then install
+  Swal.fire({title:'Soo deji app-ka', html: appHead('Waa la diyaarinayaa…') + '<span class="spin dark" style="display:inline-block;width:24px;height:24px;margin-top:8px"></span>',
+             showConfirmButton:false, allowOutsideClick:true});
+  const evt = await waitInstallable(8000);
+  if (evt) {
+    if (Date.now() - t0 < 4000) { Swal.close(); return nativeInstall(evt); }   // still inside the tap → opens directly
+    const r = await Swal.fire({title:'Soo deji app-ka', html: appHead('Diyaar'),
+      confirmButtonText:'<i class="bi bi-download"></i> Install', confirmButtonColor:'#E1262D',
+      showCancelButton:true, cancelButtonText:'Hadda maya'});
+    if (r.isConfirmed) nativeInstall(evt);
+    return;
+  }
+
+  // 5) not possible here (already installed, or files missing on the website)
+  const filesOk = await appFilesOk();
+  swal({title:'Soo deji app-ka',
+    html: appHead('Kaafi Hospital') + (filesOk
+      ? '<p style="margin:10px 0 0">App-ku hore ayuu ugu degay qalabkan — ka fur shaashaddaada.<br><small style="color:#767D99">Haddii uusan ku jirin, bogga ku fur <b>Google Chrome</b>.</small></p>'
+      : '<p style="margin:10px 0 0;color:#B81C22;font-size:14px">Faylasha app-ka (manifest.json, sw.js, icons) lagama helin website-ka.</p>')});
 });
 </script>
 </body>
