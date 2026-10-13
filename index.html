@@ -44,6 +44,14 @@ a{color:inherit}
 .icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:0;background:var(--navy-l);color:var(--navy);font-size:17px;text-decoration:none;cursor:pointer;transition:background .15s}
 .icon-btn:hover{background:var(--navy-m)}
 .icon-btn.ghost{background:transparent}
+.top-actions{display:flex;align-items:center;gap:8px}
+.dl-btn{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 16px;border:0;border-radius:99px;background:var(--red);color:#fff;font-weight:700;font-size:14px;cursor:pointer;transition:background .15s}
+.dl-btn:hover{background:var(--red-d)}
+.dl-btn i{font-size:16px}
+.brand small{white-space:nowrap}
+@media (max-width:420px){.dl-btn{padding:0 12px;gap:5px;font-size:13px}.brand b{font-size:15px}.brand small{letter-spacing:.04em}.top-actions{gap:6px}}
+@media (max-width:380px){.brand small{display:none}}
+@media (max-width:340px){.dl-btn span{display:none}.dl-btn{width:42px;padding:0;justify-content:center}}
 .icon-btn.ghost:hover{background:var(--navy-l)}
 
 /* hero */
@@ -203,6 +211,7 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .spin.dark{border-color:rgba(36,49,143,.25);border-top-color:var(--navy)}
 .hint .spin{display:inline-block;width:12px;height:12px;border-width:2px;vertical-align:-2px;margin-right:4px}
 #prevBox:empty{display:none}
+.hint:empty{display:none}
 
 .box{background:#fff;border-radius:var(--r-sm);border:1px solid var(--line);padding:14px;margin-top:12px}
 .box h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
@@ -241,7 +250,10 @@ body.lock{overflow:hidden}
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAABIFBMVEWwsNfPKzXc7+9WW6C3Eh6qqlXZXGjkvML04N1/f39VVaq2W2eqVaq6e4eZmZmykJuZzMzao5/8/PwAAAAyOI4nLIb+/v7q6O20ts3W2ORTV5MlKnuSlbdFSYtzd6bGyNilqMWFiLA7QY1laJn+/v0vNHz39/f9/f3qycvR0t38/PvTRk8dIna4R1DRZ25oa6LUCxhdYZjmqqvv19h9gKm+wNT7/Pu2OkXZpqnn5+z08/IYHXSdoL3Wio7e4OnVEhzs7O7kt7iZnMS5KTbHOkXPc3rZnaGjpL3YmpvZs7fY2O7Tu8bW1tYdIoBucZyeocO6UlvGW2Ps3uGqqqrOfIM8QX5eY6W8ZW7MzMzLzuD//9qzNj3GVFwAAH86QKFVVVWDc16pAAAAYHRSTlMG/xH8/wP//v4CA/8D/wX/Bf/9AP7+BP7+/v7+/f7+/f39/v3R/kyy/v6P//////7//f/+/f52//4XLf/9//7/Kf79//////3//g/9Bv/9/v///gP///7/Bf4H//8C/wNmQv8vAAAOjUlEQVR42r1bB3vjOA7Vttu9fsdQoUSqy7LsxI7XiR2nXzLJlEyf2Z2y/f//iwNIVVvNTrL8vkk8ji08Ag8gCBLa1hpje3tb/n5+2T/ciXs9koxeL9457J8clz7UcWjriIcfP2z3QbSSy0zT/Okn+MESHPFOX35oHQhdAfyAzzzu70jZpmE5IbdpOgKbh47lXkgUO33UxPYP9woAp/S8jzNnc2sKkoWu09LQdUEpBxRSE/3nndWgdVT95SHO3JvYBdF6NrJ3hLAdDy1yeNnRFFon+f0Y5u6FNBUlIkptzh3H8X0HrAHmiHJl0NeIIe53QqB1FO/OApFMm9oTy3NNUhzMnHt+aEuEAUAIHLMjhBYAiXhjSnU1OdDwkJGawdxHoZ1iCI0Ewh0AwHdPUDxPVMt9g7QNZjiIASBE/AVAOGmBoDVq/zNQz/hKzl4PHIORTkOyRVorBKc4/NxoB61R+z1iOgJmQwW3TLLGMH1bSKU5jPQa7aDVy/95hxALnvE7OLjHyJqDWYniPEJ2fq5HoNWq/6RHhhynr9se2WSkEEKT9E5qzaDVyQfre/gAnVqMbDhMBxwi0ClM4LAOgVYjH9Q/kZ6HPNp8GBwfImZghhoEWqX5v4mJiV+VFrzTYD4uVoKbJP6mkghalfztmBgy4oYmufNwcdXUbZfE21UItCr5PXKGoV33yX0MJm0ZeaRXhUCrlG8J9ZV7GvJxtBqBViXfhy/ofNg8L9ezZo4z8735RSsCT66VZ1UItCr5SD/e5HxDi+PaH8EQAteINq64AZrUqkCgLcn/LVYKmzbI97gYBaFlDM2LCxPSs9AWgrfYa2jr0grxX5cQaGX//zkmZ6j/sEn8KXXm5ffmDh21QDBlCmmAL5TjQRkAxB8D5U/rnwOUrlqX2KNg1Oy0CoGLEakOwPZWn7i00f4GHc1YXcjRm/3GRB7YjPRLCLSi/EvCEGa9fF/YDSnJ3BZOIxOpevhJEUERADhAiPlUrSad02njwsTC00YEBrrXDFyhEgASwNIlUWrlT9oc3mlGgA4mvBINtBIBIF4Iq/bbo7B9YXZOG+P3BPIL0HCBBlqm/y97hDc5oKHzLmGXi6bEFTkGInq5L2oFA2AEDFg9h01iGCrphBzh4Cj/23sjETo4AhFRkzeikvWiEbRUAZfEpI0EgJmZkRhKWwDMva+vcnYLodi5+z8XNNXIlGSWJ6kKUgBbMZkCtloKGSOwzRADCVIJvHnv+/0sNlB/cnqmALxAGjQagUsx8VYJADLQEzJM1IyPYAAyFFxZowjAQN56ryT3dr8fwJ9pI1nmuNK7GQ81ZYCXMTJQ1EYyV4aYoVAU5UEOwIioBVmPbmQAiN+oAuLokGqR+KUyQgKgDyEgaEAeCmSWqX+U/7NtkgIwIpi/gSttDsCMwsaQjFx7QfoFAFtbPQL+EdUCZ3SaOBGS0EBFKABGBPEfjHBGCgAgnpptPOSkl3MAGXDWuAZ7r7wkFtme+4gKNwHg0egN8XT6lJQAGKdvGiM2rkrzhAVa4gKcKobXBDBhpqsRAI1wvn8BAE8jcGmv4LsJAEabYzZEfJhtnAKAXRguE02Bzs7+5nI6kcniu2sGfuPhw3LLJQAkS5tUgCww1aooARxiDKiPQUAbp7AiqM/9+8ATQBoLfxA2LAPwRXNGCyyAnP9QAdje0iQxGxTgFlYoS0+AwvxRvsR9+/cyAG/UXMkwVWryHIVLCvp6oFsN63ghQKQApGhfBEgctr9bBmCIlhw1BIGGpKEmKYh5UIPS3hQmlACQpgenwG8dfDq/GSRrgQLgNk0nSU0SGmrbW8c9FxyzibdnI3cJAMh3gUuBe/XkyZNPN3t7i/ODZ0dHX6QARAsAmfqx3vHWtoYWmIFCmnT2ZjQvAwD55u0LILN79ezov4Pz8fn417fPjp7dZBp41JI2zHRclfsSwA5aIGiKXd6SCQzY7A6+foLrstyWfbs7PDg/KnCgHQBm/w6mBeCGPROShLD502USOvBPRkLIkhH4wT+X4oDxqm1jizawMRxrW18ioZtttuyGDkQRtRY4I+m9bAmANWqtq0D+LeYEvaCP6yN1myPXpAQgzABAkC7qLgXgRK2VjUc6zroPACQF7OZ8l+d/lwD0n1IAjI8KWVTqhnZ7/urKxGgHAMQYmZ3mT/vCLAKY6G6WkJj2yHc9owRgiFWpTiSIt7TjHgaFFred5x9YBoCbTn0keDEQWaftNWXYIlB60Xuuncgltu0LgV0LACjE/a9GYQEApx02EL5MCk60vqwHtnHGzyKBJZY1gDEEcl03AzB/1aW6BXkMRIu+doi5SNC25zLptLAcO7qZA3CjqVSDm6blgG/YAcBcRxYeatIJ2knrpCqwTi3GiwCATR4zAqlEqYG5cDrVcWUhZEeLLyJKJ+0fjxJPdAXlrzgpcADiGKejZF8AGuBRFwUQNfFY62Fy0O41oPrEsJ4dTGG259eDvGoU2MpL9hYHQBerW/WQy2Cs9eYdS6IfR0l8Z6ouyIpHVsl/GIN1g3eTT6Y6cK+nkQ5hIN0edyicu+0eVdghwWcVgE5FWZcGrcYd2tQgDwUAtkFBiw7cD6KzfAlguBYA3Ig/bUYYdZcvd2juegCIG4yc+mNLRwTrHK9sAoBcTETdEZZnn04uyIYA3nT/mkdPKw7xGFaQ1zxfAABRCsBa43vMoqMPpVNUZjjBKfXXPVxLvKDnrn02w7ypGFHb8R953iPfselo3YPVNCukZk+FYmfdLw/PXkMeIkYjIaj92hqSDQZXkVBmZJNNHsBMdz53zY2PNblajDoux/c/sE7CYTnulpA8wMB8YAIJSbeU7AGGARtSH1IyTEqDdSLofQ3Y4MKO70Sl5XQ1EDBWeMkewEQyDEBaLjcmqzVi64OdBAdzatvR6wzBLJyufNgJp3kksXhYGJAwy581CVFcuzWz9AQUnmJH+UGVIVYrulhlzpfhySi58iJ/DIFselX1BcPPR7k1Uyxc/oiVRCd/qYYvL9SU4cpqR+7JsCZmd8xohABoVZaKHJzJzemXsm7oVQLAOxy0qEBDHkOXN/Nn6r30CaabjaGLy7P6WVWp88gx1gl7Pwmqv14FMCNP8czZKhtO9y29FDdAAboFj1szmE1lkWhrKy3RLJMANeCrU7bydgp2/nbpXYkHwlq6pOYkVAGe+X7FQjmUtemdpEgFHqEbKwDUKIYItLaPKYFtZ2bBzTGIPgtsrtIR5zS9YxclbNMrOGDJJEAVqY57c7HiiBJA5HOZNBQnK88NLvIlCJWP/zHNYb7rVdCDNJ2v8AK0wFCW6dJCpX2xjJDahjpxdos1BZ4MM9stZO+pY0VA5MwNOTJ/G1ZsH3ApzEq1zoofWMnEhh/y71vFG5R+Hs/Sa4TKOQCAteTwq/uJWVIh2k6K1e5KtR4AOBlWVUQ0g9IlTjPhkvR3NSSTAYDfBkCGjgvyUgKQ5fqV8worS5OM7Mnwe2iqwRPSgAJ48tZQMRQ/tgxgxQSeLBUfZucFJ/IdpxwnXoX5dkQHhrtRIQZDQMKKhFt0H0st646uLwNY8QI13/TAorJeboThWZ7xT20H/JsXDq9fcw6xYMZ5DpuFnIP1LdsucYDljM13UGjxuHBm1JeR0fmzUgFOk0p14dhOHuMM/xz5uKCUju3kwSUemhRUwA7gx/v3yf8GR9+mfzg4uk1fDQZpkUT9ZoNB9tb7g/RBwyoFiKelg0s8ukUVFPbWt2Ow994eSSove4t3yv63i3fjsXr4+Obd+K18l42l2KPx7he7n9Tnxr8kfHkyXonCQqYixaNbyQJLL6bn+wuSATi/OQAZP8rXb+HX3hP58mafsMW51MUimfez3VQluzfP1KujcVUMMMqH15kj5Av91fX+4Gr3sZoNSjlayNePF/upcnevAEQZwFEKYO88FXz0diUXDGAjtHR8Ly8wyGQjdZjb691f314rALs4mauF0umPi+u/KAi7u3vjMSsBeJIAYIsBuxlUasBQUfRy6QKDvMIBu8XsDtW+5IAC8CtO89kipdt3Y2WZ8ePbKwUq4UBu8P3rd3tfnJeVku+HIFCtXOFAHkpXFH7KgZyE+9dXbHB9nkhlLLXMbeYZmQZ+SazzeDA4Vyo7Gh8cHJSTcV51iUXy0MivEV2hBh4r4pHzxXiRvByMF+N3yjvfZtdYMg0k+j5AP2HjF/KtX8bjT7kHRKXrEysXmZAgyfkZK9Yi2SAPwtl8innh0m6GFd5k373PPjmP5K3CyotMgOAYrzEElD/YThXTG2BZzVUueZlNXqZzHm4NCHBlv6y5zJbdpbmn27Qru82QLhOg6kIjBsS1ilZr7UaXbrKtXun8HMPWCnBaDyTfIvHnhiudiC2W1SthPYh8n8S/NV1qRQTgCvJWuX/P9tflHXfcCXS42Mzv2xcYT+S3XmxOdIB49em9xQN5vx30vzr/2svtWDLQ7XuqHMmL3Si/0+V2qYNYHqdWlY42UL/aPHmdr/cjgj9ivCAFsKfm3dUPO1rdnpP4j64NDkmLB36T6ndUgmywkDel12nxSJtcpO706fwO1pdX2nGrtl6Ti0Rw2cPLahi+nQ3t4IZIJGG7pHe5ZpuPJMLLHWKGql9qtgEE14nU9NkmjU5Zq5dSoh45a3b7GEm7GXc3bfWSZvjXIW63ddW+173dyzzjSrz9FKz/nw2b3bJ2P+aobkqd+1367fAESZVNcJd8l3a/vOHRRC3Q36muc8drogNzPScQqkorxd+x4TFv+WSWnTxXp3z2dF6BAnuB7awrlRv30/JZ6Do1HCo7KRFERG3u+JYna2HeG8t3eC4bJu+799b0mjbvnhyqbk6h5z2/yevlvt8ZOsw9tv2mGDTZ+Gz402Cl7TlIW59t2fnci/vafTY+L7d+M9NzOA9olDc+RzTgE9/AWufDtH7npvjbcdr8brqG553BACaoLmRsfn/+jwdqfi919h+fVLb/P9+k/f//CY1tf/K+euQAAAAASUVORK5CYII=" alt="Kaafi Hospital">
       <span><b>Kaafi Hospital</b><small>Kaafiyaha Bulshada</small></span>
     </a>
-    <a class="icon-btn" href="tel:+252610830002" aria-label="Wac isbitaalka"><i class="bi bi-telephone-fill"></i></a>
+    <div class="top-actions">
+      <button class="dl-btn" id="dlBtn" type="button" hidden><i class="bi bi-download"></i><span>Download</span></button>
+      <a class="icon-btn" href="tel:+252610830002" aria-label="Wac isbitaalka"><i class="bi bi-telephone-fill"></i></a>
+    </div>
   </div>
 </header>
 
@@ -316,7 +328,7 @@ const CFG = {
   url: 'https://tpmsyyhrnciqqcxlfamr.supabase.co',
   key: 'sb_publishable_exzgU4lfqJpzI89f8Jjl7w_5vT2d4NR',
   bookingFee: 1,
-  ussdPrefix: '*789*736275*',   // + TOTAL + #
+  payNumber: '736275',         // fallback; the live number comes from the database (admin → Lacagta)
 };
 const DISTRICTS = [
   'Boondheere','Cabdicasiis','Daarusalaam','Dayniile','Dharkeenleey','Garasbaaley','Gubadley',
@@ -347,8 +359,11 @@ const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num = n => { const v = Number(n) || 0; return Number.isInteger(v) ? String(v) : v.toFixed(2); };
 const money = n => '$' + num(n);
-const ussd = total => CFG.ussdPrefix + num(total) + '#';
-const telHref = total => 'tel:' + ussd(total).replace(/#/g, '%23');
+const ussd = (total, pay) => `*789*${pay || CFG.payNumber}*${num(total)}#`;
+const telHref = (total, pay) => 'tel:' + ussd(total, pay).replace(/#/g, '%23');
+async function loadPayNumber(){
+  try { const {data, error} = await sb.rpc('kaafi_pay_number'); if (!error && data) CFG.payNumber = String(data); } catch {}
+}
 const initials = n => String(n || '').replace(/^dr\.?\s*/i, '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || 'DR';
 const store = {
   get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
@@ -367,7 +382,7 @@ let query = '';
 let sel = null;          // selected doctor
 let step = 1;            // 1 form, 2 confirm, 3 done
 /* found: previous patients saved under this phone number; pick: chosen previous patient id, or 'new' */
-const EMPTY_FORM = () => ({name:'', age:'', phone:(store.get('kaafi_phone') || ''), district:'', found:[], foundKey:'', pick:null});
+const EMPTY_FORM = () => ({name:'', age:'', sex:'', came:null, phone:(store.get('kaafi_phone') || ''), district:'', found:[], foundKey:'', pick:null});
 let form = EMPTY_FORM();
 let booking = null;
 let busy = false;
@@ -438,7 +453,7 @@ function renderLast(){
   $('#lastBooking').innerHTML = `<div class="last">
     <span class="ic"><i class="bi bi-check2-circle"></i></span>
     <div class="tx"><b>Ballantaada: ${esc(b.code)}</b>${esc(b.doctor)} · ${money(b.total)}</div>
-    <a class="btn btn-green" href="${telHref(b.total)}"><i class="bi bi-phone"></i> Bixi</a>
+    <a class="btn btn-green" href="${telHref(b.total, b.pay)}"><i class="bi bi-phone"></i> Bixi</a>
     <button class="x" aria-label="Qari" onclick="store.del('kaafi_last_booking');renderLast()"><i class="bi bi-x"></i></button>
   </div>`;
 }
@@ -499,7 +514,7 @@ function prevHTML(){
     <div class="pick-list">
       ${form.found.map(m => `<button type="button" class="pick ${form.pick===m.id?'on':''}" data-pick="${esc(m.id)}">
           <span class="pav">${esc(initials(m.full_name))}</span>
-          <span class="pt"><b>${esc(m.full_name)}</b><small>${esc(m.age)} sano · ${esc(m.district)}</small></span>
+          <span class="pt"><b>${esc(m.full_name)}</b><small>${esc(m.age)} sano${m.sex ? ' · ' + (m.sex === 'rag' ? 'Rag' : 'Dumar') : ''} · ${esc(m.district)}</small></span>
           <i class="bi bi-check-circle-fill ck"></i></button>`).join('')}
       <button type="button" class="pick add ${form.pick==='new'?'on':''}" data-pick="new">
         <span class="pav"><i class="bi bi-plus-lg"></i></span>
@@ -508,7 +523,7 @@ function prevHTML(){
     </div>
   </div>`;
 }
-const HINT_DEFAULT = 'Haddii aad hore u timid, xogtaada ayaa si toos ah u soo baxaysa.';
+const HINT_DEFAULT = '';
 function paintPrev(){ const b = $('#prevBox'); if (b) b.innerHTML = prevHTML(); }
 function setHint(html){ const h = $('#lookHint'); if (h) h.innerHTML = html || HINT_DEFAULT; }
 
@@ -537,7 +552,7 @@ async function runLookup(key){
     paintPrev();
     setHint(form.found.length
       ? `<i class="bi bi-check2-circle"></i> Xogtii hore waa la helay — dooro qofka.`
-      : (data && !data.ok && data.error) ? esc(data.error) : 'Taleefankan xog hore kuma jirto — buuxi xogta hoose.');
+      : (data && !data.ok && data.error) ? esc(data.error) : '');
   } catch (e) {
     if (my === lookSeq) setHint('');
   }
@@ -575,6 +590,22 @@ function renderSheet(){
           <div class="err">Fadlan dooro degmada.</div>
         </div>
       </div>
+      <fieldset class="field" data-f="sex">
+        <legend>Jinsiga</legend>
+        <div class="seg">
+          <button type="button" data-sex="rag" class="${form.sex==='rag'?'on':''}"><i class="bi bi-gender-male"></i> Rag</button>
+          <button type="button" data-sex="dumar" class="${form.sex==='dumar'?'on':''}"><i class="bi bi-gender-female"></i> Dumar</button>
+        </div>
+        <div class="err">Fadlan dooro Rag ama Dumar.</div>
+      </fieldset>
+      <fieldset class="field" data-f="came">
+        <legend>Qofka aad numberka u rabto horay ma u yimid isbitaalka?</legend>
+        <div class="seg">
+          <button type="button" data-came="yes" class="${form.came===true?'on':''}"><i class="bi bi-check-lg"></i> Haa</button>
+          <button type="button" data-came="no" class="${form.came===false?'on':''}"><i class="bi bi-x-lg"></i> Maya</button>
+        </div>
+        <div class="err">Fadlan dooro Haa ama Maya.</div>
+      </fieldset>
     </form>`;
     foot.innerHTML = `<button class="btn btn-primary btn-block" id="toConfirm">Sii wad <i class="bi bi-arrow-right"></i></button>`;
     if (form.found.length) setHint(`<i class="bi bi-check2-circle"></i> Xogtii hore waa la helay — dooro qofka.`);
@@ -590,8 +621,10 @@ function renderSheet(){
         <dl class="kv">
           <dt>Magaca</dt><dd>${esc(form.name)}</dd>
           <dt>Da'da</dt><dd>${esc(form.age)} sano</dd>
+          <dt>Jinsiga</dt><dd>${form.sex === 'rag' ? 'Rag' : 'Dumar'}</dd>
           <dt>Taleefanka</dt><dd>${esc(form.phone)}</dd>
           <dt>Degmada</dt><dd>${esc(form.district)}</dd>
+          <dt>Horay ma u yimid</dt><dd>${form.came ? 'Haa' : 'Maya'}</dd>
         </dl>
       </div>
       <div class="box bill">
@@ -648,6 +681,8 @@ function validate(){
   const digits = form.phone.replace(/\D/g, '');
   if (digits.length < 7 || digits.length > 15) bad.phone = 1;
   if (!form.district) bad.district = 1;
+  if (form.sex !== 'rag' && form.sex !== 'dumar') bad.sex = 1;
+  if (form.came !== true && form.came !== false) bad.came = 1;
   document.querySelectorAll('#pForm .field').forEach(f => f.classList.toggle('bad', !!bad[f.dataset.f]));
   const first = document.querySelector('#pForm .field.bad');
   if (first) { first.scrollIntoView({behavior:'smooth', block:'center'}); const i = first.querySelector('input,select'); if (i) i.focus({preventScroll:true}); }
@@ -661,17 +696,20 @@ async function confirmAndPay(){
   btn.disabled = true;
   btn.innerHTML = `<span class="spin"></span> Waa la diiwaangelinayaa…`;
   try {
-    const {data, error} = await sb.rpc('kaafi_book_visit', {
+    const {data, error} = await sb.rpc('kaafi_book_appointment', {
       p_doctor_id: sel.id,
       p_patient_name: form.name,
       p_patient_age: Number(form.age),
+      p_patient_sex: form.sex,
       p_patient_phone: form.phone,
       p_district: form.district,
+      p_came_before: form.came,
       p_patient_id: (form.pick && form.pick !== 'new') ? form.pick : null
     });
     if (error) throw error;
     booking = data;
-    store.set('kaafi_last_booking', {code:data.booking_code, doctor:data.doctor_name, total:data.total, created_at:data.created_at});
+    if (data.pay_number) CFG.payNumber = String(data.pay_number);
+    store.set('kaafi_last_booking', {code:data.booking_code, doctor:data.doctor_name, total:data.total, pay:CFG.payNumber, created_at:data.created_at});
     store.set('kaafi_phone', form.phone);
     step = 3;
     renderSheet();
@@ -685,6 +723,12 @@ async function confirmAndPay(){
   } finally {
     busy = false;
   }
+}
+
+function setSex(v){
+  form.sex = v || '';
+  document.querySelectorAll('[data-sex]').forEach(b => b.classList.toggle('on', b.dataset.sex === form.sex));
+  if (form.sex) { const f = document.querySelector('[data-f="sex"]'); if (f) f.classList.remove('bad'); }
 }
 
 /* ================= EVENTS ================= */
@@ -708,6 +752,15 @@ $('#sheetClose').addEventListener('click', () => closeSheet());
 $('#sheetBack').addEventListener('click', () => { if (step === 2) { step = 1; renderSheet(); } });
 $('#sheet').addEventListener('click', e => {
   const t = e.target;
+  const sx = t.closest('[data-sex]');
+  if (sx) { setSex(sx.dataset.sex); return; }
+  const cm = t.closest('[data-came]');
+  if (cm) {
+    form.came = cm.dataset.came === 'yes';
+    document.querySelectorAll('[data-came]').forEach(b => b.classList.toggle('on', b === cm));
+    document.querySelector('[data-f="came"]').classList.remove('bad');
+    return;
+  }
   const pk = t.closest('[data-pick]');
   if (pk) {
     form.pick = pk.dataset.pick;
@@ -715,6 +768,7 @@ $('#sheet').addEventListener('click', e => {
     $('#f_name').value = m ? m.full_name : '';
     $('#f_age').value = m ? m.age : '';
     if (m) $('#f_district').value = m.district;
+    setSex(m ? (m.sex || form.sex) : '');
     ['name', 'age', 'district'].forEach(k => { const f = document.querySelector(`[data-f="${k}"]`); if (f) f.classList.remove('bad'); });
     readForm();
     paintPrev();
@@ -744,12 +798,36 @@ $('#yr').textContent = new Date().getFullYear();
 $('#grid').innerHTML = Array.from({length:6}, () => '<div class="skel"></div>').join('');
 renderLast();
 loadDoctors();
+loadPayNumber();
 let reloadT;
 sb.channel('kaafi-doctors-public')
   .on('postgres_changes', {event:'*', schema:'public', table:'kaafi_doctors'}, () => { clearTimeout(reloadT); reloadT = setTimeout(loadDoctors, 400); })
   .subscribe();
-document.addEventListener('visibilitychange', () => { if (!document.hidden) loadDoctors(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { loadDoctors(); loadPayNumber(); } });
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+
+/* ================= DOWNLOAD (install app) ================= */
+let installEvt = null;
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+$('#dlBtn').hidden = isStandalone();
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
+window.addEventListener('appinstalled', () => {
+  installEvt = null; $('#dlBtn').hidden = true;
+  swal({icon:'success', title:'App-ka waa la soo dejiyay', text:'Kaafi Hospital hadda waxay ku jirtaa shaashaddaada.'});
+});
+$('#dlBtn').addEventListener('click', async () => {
+  if (installEvt) {
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch {}
+    installEvt = null;
+    return;
+  }
+  const steps = isIOS()
+    ? '1. Riix badhanka <b>Share</b> <i class="bi bi-box-arrow-up"></i> ee hoose.<br>2. Dooro <b>“Add to Home Screen”</b>.<br>3. Riix <b>Add</b>.'
+    : '1. Riix <b>⋮</b> (menu-ga browser-ka) ee kor.<br>2. Dooro <b>“Install app”</b> ama <b>“Add to Home screen”</b>.<br>3. Riix <b>Install</b>.';
+  swal({icon:'info', title:'Soo deji app-ka', html:`<div style="text-align:left;line-height:1.9;font-size:15px">${steps}</div>`});
+});
 </script>
 </body>
 </html>
