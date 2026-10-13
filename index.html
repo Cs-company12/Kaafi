@@ -16,7 +16,7 @@
   /* Download: keep the browser's install event the moment it arrives */
   window.__bip = null;
   window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault(); window.__bip = e;
+    window.__bip = e;   /* no preventDefault: Chrome also shows its own "Install app" banner automatically */
     window.dispatchEvent(new Event('kaafi-installable'));
   });
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', {scope: './'}).catch(function () {});
