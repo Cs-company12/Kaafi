@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="so">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kaafi Admin · Ballamaha</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#17206B">
+<link rel="manifest" href="admin-manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+:root{
+  --navy:#24318F; --navy-d:#17206B; --navy-l:#EEF0FB; --navy-m:#C9CEF0;
+  --red:#E1262D; --red-d:#B81C22; --red-l:#FDECEC;
+  --bg:#F3F5FA; --card:#FFFFFF; --ink:#101633; --ink-2:#3B4262; --muted:#767D99; --line:#E3E6EF;
+  --green:#0F9A55; --green-d:#0B7A43; --green-l:#E6F6EE;
+  --amber:#B86E00; --amber-l:#FFF4DE; --gray-l:#EEF0F4;
+  --r:16px; --shadow:0 1px 2px rgba(16,22,51,.05),0 10px 26px -14px rgba(16,22,51,.18);
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+img{display:block;max-width:100%}
+[hidden]{display:none!important}
+.wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+.muted{color:var(--muted)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:11px;padding:10px 15px;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s,opacity .15s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.55;pointer-events:none}
+.btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:var(--navy-d)}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red-d)}
+.btn-light{background:var(--navy-l);color:var(--navy)}.btn-light:hover{background:var(--navy-m)}
+.btn-ghost{background:transparent;color:var(--ink-2)}.btn-ghost:hover{background:var(--gray-l)}
+.btn-danger-text{background:transparent;color:var(--red)}.btn-danger-text:hover{background:var(--red-l)}
+.btn-block{width:100%;padding:14px;font-size:15px;border-radius:13px}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:0;background:var(--navy-l);color:var(--navy);cursor:pointer;font-size:16px;position:relative;text-decoration:none;flex:none}
+.icon-btn:hover{background:var(--navy-m)}
+.icon-btn.sm{width:34px;height:34px;font-size:14px}
+.icon-btn.green{background:var(--green-l);color:var(--green)}
+.icon-btn.red{background:var(--red-l);color:var(--red)}
+.spin{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* inputs */
+.field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:5px}
+.in{width:100%;height:48px;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:0 14px;font-size:15px;outline:0;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
+.in:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(36,49,143,.12)}
+select.in{padding-right:36px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23767D99' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center}
+
+/* ============ AUTH ============ */
+.auth{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1200px 500px at 10% -10%,#2f3ca4 0%,transparent 60%),linear-gradient(160deg,var(--navy) 0%,var(--navy-d) 100%);position:relative;overflow:hidden}
+.auth::after{content:"";position:absolute;right:12%;top:-20%;width:26px;height:140%;background:var(--red);transform:skewX(-24deg);opacity:.85}
+.auth::before{content:"";position:absolute;right:-60px;top:-20%;width:170px;height:140%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 18px,transparent 18px 34px);transform:skewX(-24deg)}
+.auth-card{position:relative;z-index:1;width:100%;max-width:400px;background:#fff;border-radius:22px;padding:26px 22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)}
+.auth-card .logo{width:72px;height:72px;border-radius:50%;margin:0 auto 10px}
+.auth-card h1{text-align:center;margin:0;font-size:21px;letter-spacing:-.01em}
+.auth-card .sub{text-align:center;margin:3px 0 18px;color:var(--muted);font-size:13.5px}
+.auth-card form{display:grid;gap:12px}
+.auth-card .swap{text-align:center;margin-top:14px;font-size:13.5px}
+.auth-card .swap button{border:0;background:none;color:var(--navy);font-weight:700;cursor:pointer;padding:4px}
+.pw{position:relative}
+.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--muted);width:38px;height:38px;cursor:pointer}
+
+/* ============ APP ============ */
+.top{position:sticky;top:0;z-index:30;background:var(--navy-d);color:#fff}
+.top-in{display:flex;align-items:center;gap:12px;height:62px}
+.top .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.top .brand img{width:38px;height:38px;border-radius:50%;background:#fff}
+.top .brand b{display:block;font-size:15.5px;line-height:1.15}
+.top .brand small{display:block;font-size:11.5px;color:rgba(255,255,255,.65)}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.1)}
+.live i{width:8px;height:8px;border-radius:50%;background:#9aa0b8}
+.live.on i{background:#3ee08a;box-shadow:0 0 0 0 rgba(62,224,138,.6);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(62,224,138,0)}100%{box-shadow:0 0 0 0 rgba(62,224,138,0)}}
+.top .icon-btn{background:rgba(255,255,255,.1);color:#fff}
+.top .icon-btn:hover{background:rgba(255,255,255,.2)}
+.live-txt{display:none}
+@media (min-width:560px){.live-txt{display:inline}}
+
+.tabs{display:flex;gap:4px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:62px;z-index:29}
+.tabs .wrap{display:flex;gap:4px}
+.tab{flex:1;max-width:220px;display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border:0;background:none;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;font-size:14.5px}
+.tab.on{color:var(--navy);border-bottom-color:var(--navy)}
+.badge{min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--red);color:#fff;font-size:11px;font-weight:800;display:inline-grid;place-items:center}
+@media (max-width:719px){
+  .tabs{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:0;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -6px 20px rgba(16,22,51,.06)}
+  .tabs .wrap{padding:0}
+  .tab{max-width:none;flex-direction:column;gap:2px;height:60px;font-size:12px;border-bottom:0;border-top:3px solid transparent}
+  .tab i{font-size:19px}
+  .tab.on{border-top-color:var(--navy)}
+  .tab .badge{position:absolute;margin:-26px 0 0 30px}
+  .app-main{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+}
+.app-main{padding-top:16px;padding-bottom:40px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:860px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;display:flex;gap:12px;align-items:center}
+.stat .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:19px;flex:none}
+.stat b{display:block;font-size:22px;line-height:1.1;letter-spacing:-.02em}
+.stat span{display:block;font-size:12px;line-height:1.3;color:var(--muted);font-weight:600;margin-top:2px}
+.ic.navy{background:var(--navy-l);color:var(--navy)} .ic.amber{background:var(--amber-l);color:var(--amber)}
+.ic.green{background:var(--green-l);color:var(--green)} .ic.red{background:var(--red-l);color:var(--red)}
+
+/* filters */
+.filters{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:12px;margin-top:12px;display:grid;gap:10px}
+.search{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:12px;padding:0 12px;height:46px;border:1.5px solid transparent}
+.search:focus-within{border-color:var(--navy);background:#fff}
+.search input{flex:1;border:0;background:none;outline:0;min-width:0;height:100%}
+.seg{display:flex;gap:4px;background:var(--bg);border-radius:12px;padding:4px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1;border:0;background:none;border-radius:9px;padding:8px 12px;font-weight:700;font-size:13px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(16,22,51,.12)}
+.frow{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+@media (max-width:480px){.seg button{padding:8px 6px;font-size:12.5px}.stat{padding:12px;gap:10px}.stat b{font-size:20px}}
+.frow .in{height:44px;font-size:14px}
+@media (min-width:980px){.filters{grid-template-columns:1.2fr 1.3fr 1.6fr;align-items:center}}
+
+.list-head{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 10px}
+.list-head h2{margin:0;font-size:17px}
+
+/* booking cards */
+.blist{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:760px){.blist{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1140px){.blist{grid-template-columns:repeat(3,1fr)}}
+.bk{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border-left:5px solid var(--amber);display:flex;flex-direction:column}
+.bk.st-paid{border-left-color:var(--green)}
+.bk.st-completed{border-left-color:var(--navy)}
+.bk.st-cancelled{border-left-color:#B8BCCB;opacity:.75}
+.bk.is-new{animation:flash 2.4s ease-out}
+@keyframes flash{0%,30%{box-shadow:0 0 0 3px var(--red),var(--shadow);transform:scale(1.01)}100%{box-shadow:var(--shadow)}}
+.bk-top{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--line);background:#FAFBFD}
+.bk-code{font-weight:800;color:var(--navy);letter-spacing:.02em;font-size:14px}
+.bk-time{font-size:12px;color:var(--muted);flex:1;text-align:right}
+.new-tag{font-size:10.5px;font-weight:800;color:#fff;background:var(--red);border-radius:6px;padding:2px 6px;letter-spacing:.04em}
+.bk-body{padding:12px 14px;display:grid;gap:10px;flex:1}
+.pt{display:flex;align-items:flex-start;gap:10px}
+.pt .av{width:40px;height:40px;border-radius:12px;background:var(--navy-l);color:var(--navy);display:grid;place-items:center;font-weight:800;flex:none}
+.pt h3{margin:0;font-size:16px;line-height:1.25;word-break:break-word}
+.pt p{margin:1px 0 0;font-size:13px;color:var(--ink-2)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 9px;border-radius:8px;background:var(--gray-l);color:var(--ink-2)}
+.tag.id{background:var(--navy-l);color:var(--navy)}
+.tag.newp{background:var(--amber-l);color:var(--amber)}
+.tag.dial{background:var(--green-l);color:var(--green)}
+.contact{display:flex;align-items:center;gap:8px}
+.contact .ph{flex:1;font-weight:700;font-size:15px;letter-spacing:.02em;text-decoration:none}
+.docline{display:flex;gap:8px;align-items:center;font-size:13px;background:var(--bg);border-radius:10px;padding:8px 10px}
+.docline i{color:var(--navy)}
+.docline b{display:block;font-size:13.5px}
+.docline small{color:var(--muted)}
+.bill{display:flex;align-items:baseline;justify-content:space-between;font-size:13px;color:var(--muted)}
+.bill b{font-size:20px;color:var(--ink);letter-spacing:-.02em}
+.bk-act{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line);align-items:center}
+.status-sel{flex:1;height:40px;border-radius:10px;border:1.5px solid var(--line);font-weight:700;font-size:13.5px;padding:0 34px 0 12px;-webkit-appearance:none;appearance:none;cursor:pointer;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23767D99' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center}
+.status-sel.pending{color:var(--amber);border-color:#F2D9A6;background-color:var(--amber-l)}
+.status-sel.paid{color:var(--green);border-color:#BFE8D2;background-color:var(--green-l)}
+.status-sel.completed{color:var(--navy);border-color:var(--navy-m);background-color:var(--navy-l)}
+.status-sel.cancelled{color:var(--muted);background-color:var(--gray-l)}
+
+.empty{grid-column:1/-1;text-align:center;padding:44px 16px;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);color:var(--muted)}
+.empty i{font-size:36px;color:var(--navy-m);display:block;margin-bottom:6px}
+.skel{height:240px;border-radius:var(--r);background:linear-gradient(90deg,#e9ecf4 0%,#f6f7fb 50%,#e9ecf4 100%);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* doctors admin */
+.dgrid{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:700px){.dgrid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:1000px){.dgrid{grid-template-columns:repeat(4,1fr)}}
+.dcard{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;border:1.5px solid transparent;transition:border-color .15s,transform .15s;display:flex;flex-direction:column;text-align:left;padding:0}
+.dcard:hover{border-color:var(--navy-m);transform:translateY(-2px)}
+.dphoto{position:relative;aspect-ratio:4/4.2;background:var(--navy-l)}
+.dphoto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.phx{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(150deg,var(--navy),var(--navy-d));color:#fff;font-weight:800;font-size:30px;overflow:hidden}
+.phx::after{content:"";position:absolute;right:-12px;bottom:-30px;width:44px;height:180px;background:var(--red);transform:skewX(-24deg);opacity:.9}
+.dphoto .cam{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.2);z-index:2}
+.dphoto .off{position:absolute;left:8px;top:8px;z-index:2;background:rgba(16,22,51,.8);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:7px}
+.dphoto .nophoto{position:absolute;left:8px;top:8px;z-index:2;background:var(--amber-l);color:var(--amber);font-size:11px;font-weight:700;padding:3px 8px;border-radius:7px}
+.dbody{padding:10px 12px 12px}
+.dbody h3{margin:0;font-size:14px;line-height:1.3}
+.dbody p{margin:2px 0 0;font-size:12.5px;color:var(--navy);font-weight:600}
+.dbody .meta{display:flex;justify-content:space-between;margin-top:6px;font-size:12.5px;color:var(--muted)}
+.dbody .meta b{color:var(--ink);font-size:15px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(10,14,40,.55);display:grid;place-items:end center;padding:0}
+@media (min-width:640px){.modal{place-items:center;padding:20px}}
+.mcard{width:100%;max-width:520px;max-height:94vh;max-height:94dvh;background:#fff;border-radius:22px 22px 0 0;display:flex;flex-direction:column;animation:up .25s cubic-bezier(.2,.8,.2,1)}
+@media (min-width:640px){.mcard{border-radius:22px}}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+.mhead h3{margin:0;font-size:17px}
+.mbody{padding:16px;overflow-y:auto;display:grid;gap:14px}
+.mfoot{display:flex;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.mfoot .sp{flex:1}
+.photo-edit{display:flex;gap:16px;align-items:center}
+.pprev{width:120px;aspect-ratio:4/5;border-radius:16px;overflow:hidden;position:relative;background:var(--navy-l);flex:none;box-shadow:var(--shadow)}
+.pprev img{width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.pprev .phx{font-size:28px}
+.pactions{display:grid;gap:6px;justify-items:start}
+.pactions .hint{font-size:12px;color:var(--muted);margin:2px 0 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg);border-radius:12px;padding:12px 14px;cursor:pointer}
+.toggle b{display:block;font-size:14px}
+.toggle small{color:var(--muted)}
+.sw{position:relative;width:48px;height:28px;flex:none}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw span{position:absolute;inset:0;border-radius:99px;background:#C7CBD8;transition:.2s}
+.sw span::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw input:checked+span{background:var(--green)}
+.sw input:checked+span::after{transform:translateX(20px)}
+
+/* toast */
+.toasts{position:fixed;z-index:80;top:72px;right:12px;left:12px;display:grid;gap:8px;justify-items:end;pointer-events:none}
+.toast{pointer-events:auto;max-width:360px;width:100%;background:#fff;border-radius:14px;box-shadow:0 16px 40px -10px rgba(16,22,51,.35);padding:12px 14px;display:flex;gap:12px;align-items:center;border-left:5px solid var(--red);animation:tin .3s cubic-bezier(.2,.9,.3,1.2);cursor:pointer}
+.toast .ic{width:38px;height:38px;border-radius:50%;background:var(--red-l);color:var(--red);display:grid;place-items:center;flex:none;font-size:17px}
+.toast b{display:block;font-size:14px}
+.toast span{font-size:12.5px;color:var(--ink-2)}
+@keyframes tin{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+.swal2-popup{font-family:inherit!important;border-radius:18px!important}
+</style>
+</head>
+<body>
+
+<!-- ============ AUTH VIEW ============ -->
+<section class="auth" id="authView" hidden>
+  <div class="auth-card">
+    <img class="logo" src="data:image/png;base64,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" alt="Kaafi Hospital">
+    <h1 id="authTitle">Admin — Kaafi Hospital</h1>
+    <p class="sub">Gal si aad u aragto ballamaha bukaannada</p>
+
+    <form id="loginForm" autocomplete="on">
+      <div class="field"><label for="lUser">Username</label>
+        <div class="pw"><input class="in" id="lUser" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="username" required></div>
+      </div>
+      <div class="field"><label for="lPass">Password</label>
+        <div class="pw"><input class="in" id="lPass" type="password" autocomplete="current-password" required><button type="button" class="eye" aria-label="Muuji password-ka"><i class="bi bi-eye"></i></button></div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit"><i class="bi bi-box-arrow-in-right"></i> Gal</button>
+      <p class="swap muted" style="font-size:12.5px"><i class="bi bi-shield-lock"></i> Kaliya admin-ka Kaafi Hospital ayaa geli kara.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ APP VIEW ============ -->
+<div id="appView" hidden>
+  <header class="top">
+    <div class="wrap top-in">
+      <div class="brand"><img src="data:image/png;base64,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" alt=""><div><b>Kaafi Admin</b><small id="whoami"></small></div></div>
+      <span class="live" id="live" title="Xiriirka realtime"><i></i><span class="live-txt">Toos</span></span>
+      <button class="icon-btn" id="notifBtn" title="Ogeysiisyada" aria-label="Ogeysiisyada"><i class="bi bi-bell"></i></button>
+      <button class="icon-btn" id="logoutBtn" title="Ka bax" aria-label="Ka bax"><i class="bi bi-box-arrow-right"></i></button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div class="wrap">
+      <button class="tab on" data-tab="bookings"><i class="bi bi-people-fill"></i> Bukaannada <span class="badge" id="newBadge" hidden>0</span></button>
+      <button class="tab" data-tab="doctors"><i class="bi bi-person-badge-fill"></i> Dhakhaatiirta</button>
+    </div>
+  </nav>
+
+  <main class="wrap app-main">
+    <!-- BOOKINGS -->
+    <section id="tab-bookings">
+      <div class="stats" id="stats"></div>
+      <div class="filters">
+        <label class="search"><i class="bi bi-search muted"></i><input id="fq" type="search" placeholder="Raadi magac, taleefan, koodh…"></label>
+        <div class="seg" id="fRange">
+          <button data-r="today" class="on">Maanta</button>
+          <button data-r="yesterday">Shalay</button>
+          <button data-r="week">7 maalmood</button>
+          <button data-r="all">Dhammaan</button>
+        </div>
+        <div class="frow">
+          <select class="in" id="fStatus">
+            <option value="all">Xaalad kasta</option>
+            <option value="pending">Sugaya</option>
+            <option value="paid">La bixiyay</option>
+            <option value="completed">La dhammeeyay</option>
+            <option value="cancelled">La joojiyay</option>
+          </select>
+          <select class="in" id="fDoctor"><option value="all">Dhakhtar kasta</option></select>
+          <button class="icon-btn" id="csvBtn" title="Soo deji CSV" aria-label="Soo deji CSV"><i class="bi bi-download"></i></button>
+        </div>
+      </div>
+      <div class="list-head"><h2 id="listTitle">Ballamaha maanta</h2><span class="muted" id="listCount"></span></div>
+      <div class="blist" id="blist"></div>
+    </section>
+
+    <!-- DOCTORS -->
+    <section id="tab-doctors" hidden>
+      <div class="list-head" style="margin-top:4px">
+        <div><h2>Dhakhaatiirta</h2><span class="muted" style="font-size:13px">Riix kaarka si aad u beddesho sawirka iyo xogta</span></div>
+        <button class="btn btn-red" id="addDoc"><i class="bi bi-plus-lg"></i> Ku dar</button>
+      </div>
+      <div class="dgrid" id="dgrid"></div>
+    </section>
+  </main>
+</div>
+
+<!-- DOCTOR MODAL -->
+<div class="modal" id="docModal" hidden>
+  <form class="mcard" id="docForm" novalidate>
+    <div class="mhead"><h3 id="docModalTitle">Dhakhtar</h3><button type="button" class="icon-btn sm" data-close aria-label="Xir"><i class="bi bi-x-lg"></i></button></div>
+    <div class="mbody">
+      <div class="photo-edit">
+        <div class="pprev" id="pprev"></div>
+        <div class="pactions">
+          <label class="btn btn-light"><i class="bi bi-camera-fill"></i> Dooro sawir<input type="file" id="photoInput" accept="image/*" hidden></label>
+          <button type="button" class="btn btn-danger-text" id="photoRemove"><i class="bi bi-trash3"></i> Ka saar sawirka</button>
+          <p class="hint">Sawirka si toos ah ayaa loo jarayaa (4:5) oo loo yareeyaa si uu si qurux badan ugu muuqdo bogga dadweynaha.</p>
+        </div>
+      </div>
+      <div class="field"><label for="dName">Magaca dhakhtarka</label><input class="in" id="dName" placeholder="Dr. ..." required maxlength="120"></div>
+      <div class="field"><label for="dSpec">Takhasuska</label><input class="in" id="dSpec" list="specList" placeholder="Tusaale: Pediatrics" required maxlength="120"><datalist id="specList"></datalist></div>
+      <div class="g2">
+        <div class="field"><label for="dFee">Lacagta ballanta ($)</label><input class="in" id="dFee" type="number" inputmode="decimal" min="0" step="0.5" required></div>
+        <div class="field"><label for="dYears">Sanadaha khibradda</label><input class="in" id="dYears" type="number" inputmode="numeric" min="0" max="70" placeholder="—"></div>
+      </div>
+      <div class="field"><label for="dSort">Kala horreynta (lambar yar = kor)</label><input class="in" id="dSort" type="number" inputmode="numeric" value="0"></div>
+      <label class="toggle"><div><b>Ka muuji bogga dadweynaha</b><small>Bukaannadu way ballansan karaan</small></div><span class="sw"><input type="checkbox" id="dActive" checked><span></span></span></label>
+    </div>
+    <div class="mfoot">
+      <button type="button" class="btn btn-danger-text" id="docDelete"><i class="bi bi-trash3"></i></button>
+      <span class="sp"></span>
+      <button type="button" class="btn btn-ghost" data-close>Jooji</button>
+      <button type="submit" class="btn btn-primary" id="docSave"><i class="bi bi-check2"></i> Kaydi</button>
+    </div>
+  </form>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+/* ================= CONFIG ================= */
+const CFG = {
+  url: 'https://tpmsyyhrnciqqcxlfamr.supabase.co',
+  key: 'sb_publishable_exzgU4lfqJpzI89f8Jjl7w_5vT2d4NR',
+  bucket: 'kaafi-doctors',
+};
+const STATUS = {
+  pending:   {so:'Sugaya',        icon:'bi-hourglass-split'},
+  paid:      {so:'La bixiyay',    icon:'bi-cash-coin'},
+  completed: {so:'La dhammeeyay', icon:'bi-check2-all'},
+  cancelled: {so:'La joojiyay',   icon:'bi-x-circle'},
+};
+
+/* ================= HELPERS ================= */
+const sb = supabase.createClient(CFG.url, CFG.key, {auth:{persistSession:true, autoRefreshToken:true}});
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = n => { const v = Number(n) || 0; return Number.isInteger(v) ? String(v) : v.toFixed(2); };
+const money = n => '$' + num(n);
+const initials = n => String(n || '').replace(/^dr\.?\s*/i, '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+const swal = o => Swal.fire({confirmButtonColor:'#24318F', confirmButtonText:'Hagaag', ...o});
+const errMsg = e => (e && e.message) ? (/fetch|network/i.test(e.message) ? 'Internetka ayaa go\'an. Isku day mar kale.' : e.message) : 'Khalad ayaa dhacay.';
+const timeFmt = d => new Date(d).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+const dateFmt = d => new Date(d).toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
+function ago(d){
+  const s = (Date.now() - new Date(d).getTime()) / 1000;
+  if (s < 60) return 'hadda';
+  if (s < 3600) return Math.floor(s / 60) + ' daqiiqo kahor';
+  if (s < 86400) return Math.floor(s / 3600) + ' saac kahor';
+  return dateFmt(d);
+}
+function intlPhone(p){
+  let d = String(p || '').replace(/\D/g, '');
+  if (d.startsWith('00')) d = d.slice(2);
+  if (d.startsWith('252')) return d;
+  if (d.startsWith('0')) d = d.slice(1);
+  return '252' + d;
+}
+const photoHTML = (d, cls = 'phx') => d && d.photo_url
+  ? `<img src="${esc(d.photo_url)}" alt="" loading="lazy">`
+  : `<div class="${cls}">${esc(initials(d && d.full_name))}</div>`;
+
+/* ================= STATE ================= */
+let me = null;
+let bookings = [];
+let doctors = [];
+let range = 'today';
+let fStatus = 'all', fDoctor = 'all', fq = '';
+let newIds = new Set();
+let unseen = 0;
+let channel = null;
+let audioCtx = null;
+let tab = 'bookings';
+
+/* ================= AUTH ================= */
+// Username → internal account email (the password is checked by Supabase Auth; only a bcrypt hash is stored in the database)
+const ADMIN_DOMAIN = 'admin.kaafihospital.com';
+const toLoginEmail = u => { u = String(u || '').trim().toLowerCase(); return u.includes('@') ? u : `${u}@${ADMIN_DOMAIN}`; };
+
+function showAuth(){
+  $('#appView').hidden = true;
+  $('#authView').hidden = false;
+  setTimeout(() => { const u = $('#lUser'); if (u && !u.value) u.focus(); }, 50);
+}
+$$('.eye').forEach(b => b.addEventListener('click', () => {
+  const i = b.previousElementSibling; i.type = i.type === 'password' ? 'text' : 'password';
+  b.innerHTML = `<i class="bi ${i.type === 'password' ? 'bi-eye' : 'bi-eye-slash'}"></i>`;
+}));
+
+function setBusy(form, on, html){
+  const b = form.querySelector('button[type=submit]');
+  if (on) { b.dataset.html = b.innerHTML; b.disabled = true; b.innerHTML = `<span class="spin"></span> ${html || 'Fadlan sug…'}`; }
+  else { b.disabled = false; if (b.dataset.html) b.innerHTML = b.dataset.html; }
+}
+
+$('#loginForm').addEventListener('submit', async e => {
+  e.preventDefault(); unlockAudio();
+  const f = e.currentTarget;
+  const user = $('#lUser').value.trim(), pass = $('#lPass').value;
+  if (!user || !pass) return swal({icon:'warning', title:'Geli username iyo password'});
+  setBusy(f, true, 'Waa la galayaa…');
+  const {data, error} = await sb.auth.signInWithPassword({email:toLoginEmail(user), password:pass});
+  setBusy(f, false);
+  if (error) {
+    const m = /invalid|credentials/i.test(error.message) ? 'Username-ka ama password-ka waa khalad.'
+            : /rate|too many/i.test(error.message) ? 'Isku day badan ayaa dhacay. Sug dhowr daqiiqo.' : errMsg(error);
+    $('#lPass').value = '';
+    return swal({icon:'error', title:'Lama gali karo', text:m});
+  }
+  me = data.user; await afterLogin();
+});
+$('#logoutBtn').addEventListener('click', async () => {
+  const r = await Swal.fire({title:'Ka bax?', icon:'question', showCancelButton:true, confirmButtonText:'Haa, ka bax', cancelButtonText:'Maya', confirmButtonColor:'#E1262D'});
+  if (r.isConfirmed) logout();
+});
+
+async function logout(){
+  if (channel) { sb.removeChannel(channel); channel = null; }
+  await sb.auth.signOut();
+  me = null; bookings = []; doctors = [];
+  $('#lPass').value = '';
+  showAuth();
+}
+
+async function afterLogin(){
+  const {data:isAdmin, error} = await sb.rpc('kaafi_is_admin');
+  if (error || !isAdmin) {
+    await sb.auth.signOut(); me = null; showAuth();
+    return swal({icon:'error', title:'Ogolaansho ma lihid', text:'Akoonkan ma aha admin-ka Kaafi Hospital.'});
+  }
+  enterApp();
+}
+
+/* ================= APP ================= */
+function enterApp(){
+  $('#authView').hidden = true;
+  $('#appView').hidden = false;
+  $('#whoami').textContent = me?.user_metadata?.username || me?.user_metadata?.full_name || (me?.email || '').split('@')[0];
+  renderStats(); $('#blist').innerHTML = Array.from({length:3}, () => '<div class="skel"></div>').join('');
+  loadDoctors().then(loadBookings);
+  subscribe();
+  updateNotifIcon();
+}
+
+function rangeBounds(){
+  const now = new Date();
+  const sod = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (range === 'today') return {from:sod, to:null};
+  if (range === 'yesterday') return {from:new Date(sod.getTime() - 864e5), to:sod};
+  if (range === 'week') return {from:new Date(sod.getTime() - 6 * 864e5), to:null};
+  return {from:null, to:null};
+}
+function inRange(iso){
+  const {from, to} = rangeBounds(); const t = new Date(iso);
+  return (!from || t >= from) && (!to || t < to);
+}
+
+async function loadBookings(){
+  const {from, to} = rangeBounds();
+  let q = sb.from('kaafi_bookings').select('*').order('created_at', {ascending:false}).limit(1000);
+  if (from) q = q.gte('created_at', from.toISOString());
+  if (to) q = q.lt('created_at', to.toISOString());
+  const {data, error} = await q;
+  if (error) { $('#blist').innerHTML = `<div class="empty"><i class="bi bi-wifi-off"></i>${esc(errMsg(error))}<br><br><button class="btn btn-primary" onclick="loadBookings()">Isku day mar kale</button></div>`; return; }
+  bookings = data || [];
+  renderBookings();
+}
+
+function filtered(){
+  const q = fq.trim().toLowerCase();
+  return bookings.filter(b =>
+    (fStatus === 'all' || b.status === fStatus) &&
+    (fDoctor === 'all' || b.doctor_id === fDoctor) &&
+    (!q || [b.patient_name, b.patient_phone, b.booking_code, b.district, b.patient_number, b.doctor_name].join(' ').toLowerCase().includes(q))
+  );
+}
+
+function renderStats(){
+  const list = bookings.filter(b => b.status !== 'cancelled');
+  const pending = bookings.filter(b => b.status === 'pending').length;
+  const paidL = bookings.filter(b => b.status === 'paid' || b.status === 'completed');
+  const income = paidL.reduce((s, b) => s + Number(b.total), 0);
+  const lbl = {today:'maanta', yesterday:'shalay', week:'7 maalmood', all:'guud ahaan'}[range];
+  $('#stats').innerHTML = `
+    <div class="stat"><span class="ic navy"><i class="bi bi-calendar2-check"></i></span><div><b>${list.length}</b><span>Ballamaha ${lbl}</span></div></div>
+    <div class="stat"><span class="ic amber"><i class="bi bi-hourglass-split"></i></span><div><b>${pending}</b><span>Sugaya</span></div></div>
+    <div class="stat"><span class="ic green"><i class="bi bi-cash-coin"></i></span><div><b>${paidL.length}</b><span>La bixiyay</span></div></div>
+    <div class="stat"><span class="ic red"><i class="bi bi-wallet2"></i></span><div><b>${money(income)}</b><span>Lacagta la bixiyay</span></div></div>`;
+}
+
+function bookingCard(b){
+  const st = STATUS[b.status] || STATUS.pending;
+  const isNew = newIds.has(b.id);
+  const wa = `https://wa.me/${intlPhone(b.patient_phone)}?text=${encodeURIComponent(`Asc ${b.patient_name}, waa Kaafi Hospital. Ballantaada ${b.booking_code} ee ${b.doctor_name} waa la helay.`)}`;
+  return `<article class="bk st-${b.status} ${isNew ? 'is-new' : ''}" data-id="${b.id}">
+    <div class="bk-top">
+      <span class="bk-code">${esc(b.booking_code)}</span>
+      ${isNew ? '<span class="new-tag">CUSUB</span>' : ''}
+      <span class="bk-time" title="${esc(new Date(b.created_at).toLocaleString('en-GB'))}">${range === 'today' ? '' : dateFmt(b.created_at) + ' · '}${timeFmt(b.created_at)} · ${ago(b.created_at)}</span>
+    </div>
+    <div class="bk-body">
+      <div class="pt">
+        <span class="av">${esc(initials(b.patient_name))}</span>
+        <div><h3>${esc(b.patient_name)}</h3><p>${esc(b.patient_age)} sano · <i class="bi bi-geo-alt"></i> ${esc(b.district)}</p></div>
+      </div>
+      <div class="tags">
+        ${b.has_patient_number ? `<span class="tag id"><i class="bi bi-person-vcard"></i> ID: ${esc(b.patient_number)}</span>` : `<span class="tag newp"><i class="bi bi-stars"></i> Bukaan cusub (ID ma leh)</span>`}
+        ${b.payment_dialed_at ? `<span class="tag dial" title="Bukaanku wuxuu riixay badhanka lacag bixinta"><i class="bi bi-phone-vibrate"></i> EVC la riixay ${timeFmt(b.payment_dialed_at)}</span>` : ''}
+      </div>
+      <div class="contact">
+        <a class="ph" href="tel:${esc(b.patient_phone)}"><i class="bi bi-telephone muted"></i> ${esc(b.patient_phone)}</a>
+        <a class="icon-btn sm" href="tel:${esc(b.patient_phone)}" aria-label="Wac"><i class="bi bi-telephone-fill"></i></a>
+        <a class="icon-btn sm green" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+      </div>
+      <div class="docline"><i class="bi bi-person-badge"></i><div><b>${esc(b.doctor_name)}</b><small>${esc(b.doctor_specialty)}</small></div></div>
+      <div class="bill"><span>${money(b.doctor_fee)} dhakhtar + ${money(b.booking_fee)} ballan</span><b>${money(b.total)}</b></div>
+    </div>
+    <div class="bk-act">
+      <select class="status-sel ${b.status}" data-status="${b.id}" aria-label="Xaaladda">
+        ${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === b.status ? 'selected' : ''}>${v.so}</option>`).join('')}
+      </select>
+      <button class="icon-btn sm red" data-del="${b.id}" aria-label="Tirtir"><i class="bi bi-trash3"></i></button>
+    </div>
+  </article>`;
+}
+
+function renderBookings(){
+  renderStats();
+  const list = filtered();
+  const ttl = {today:'Ballamaha maanta', yesterday:'Ballamaha shalay', week:'7-dii maalmood ee la soo dhaafay', all:'Dhammaan ballamaha'}[range];
+  $('#listTitle').textContent = ttl;
+  $('#listCount').textContent = `${list.length} ballan`;
+  $('#blist').innerHTML = list.length ? list.map(bookingCard).join('')
+    : `<div class="empty"><i class="bi bi-inbox"></i>Ballan lama helin${range === 'today' ? ' maanta weli' : ''}.<br><small>Ballamaha cusub halkan ayay si toos ah uga soo muuqanayaan.</small></div>`;
+}
+
+/* booking actions */
+$('#blist').addEventListener('change', async e => {
+  const s = e.target.closest('[data-status]'); if (!s) return;
+  const id = s.dataset.status, val = s.value;
+  const b = bookings.find(x => x.id === id); if (!b) return;
+  const prev = b.status; b.status = val; newIds.delete(id); renderBookings();
+  const {error} = await sb.from('kaafi_bookings').update({status:val}).eq('id', id);
+  if (error) { b.status = prev; renderBookings(); swal({icon:'error', title:'Lama beddelin', text:errMsg(error)}); }
+});
+$('#blist').addEventListener('click', async e => {
+  const d = e.target.closest('[data-del]'); if (!d) return;
+  const b = bookings.find(x => x.id === d.dataset.del); if (!b) return;
+  const r = await Swal.fire({icon:'warning', title:'Tirtir ballantan?', html:`<b>${esc(b.booking_code)}</b> — ${esc(b.patient_name)}<br><small>Lama soo celin karo.</small>`, showCancelButton:true, confirmButtonText:'Haa, tirtir', cancelButtonText:'Maya', confirmButtonColor:'#E1262D'});
+  if (!r.isConfirmed) return;
+  const {error} = await sb.from('kaafi_bookings').delete().eq('id', b.id);
+  if (error) return swal({icon:'error', title:'Lama tirtirin', text:errMsg(error)});
+  bookings = bookings.filter(x => x.id !== b.id); renderBookings();
+});
+
+/* filters */
+$('#fq').addEventListener('input', e => { fq = e.target.value; renderBookings(); });
+$('#fStatus').addEventListener('change', e => { fStatus = e.target.value; renderBookings(); });
+$('#fDoctor').addEventListener('change', e => { fDoctor = e.target.value; renderBookings(); });
+$('#fRange').addEventListener('click', e => {
+  const b = e.target.closest('[data-r]'); if (!b) return;
+  range = b.dataset.r; $$('#fRange button').forEach(x => x.classList.toggle('on', x === b));
+  $('#blist').innerHTML = Array.from({length:3}, () => '<div class="skel"></div>').join('');
+  loadBookings();
+});
+
+/* CSV */
+$('#csvBtn').addEventListener('click', () => {
+  const list = filtered();
+  if (!list.length) return swal({icon:'info', title:'Wax la soo dejiyo ma jiro'});
+  const head = ['Koodh','Taariikh','Saac','Bukaan','Da\'','Taleefan','Degmo','Patient ID','Dhakhtar','Takhasus','Lacag dhakhtar','Khidmad ballan','Wadar','Xaalad','EVC la riixay'];
+  const rows = list.map(b => [b.booking_code, new Date(b.created_at).toLocaleDateString('en-GB'), timeFmt(b.created_at), b.patient_name, b.patient_age, b.patient_phone, b.district, b.has_patient_number ? b.patient_number : 'Cusub', b.doctor_name, b.doctor_specialty, num(b.doctor_fee), num(b.booking_fee), num(b.total), (STATUS[b.status] || {}).so, b.payment_dialed_at ? timeFmt(b.payment_dialed_at) : '']);
+  const csv = '﻿' + [head, ...rows].map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+  a.download = `kaafi-ballamaha-${range}-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+});
+
+/* ================= REALTIME ================= */
+async function subscribe(){
+  if (channel) sb.removeChannel(channel);
+  try { const {data:{session}} = await sb.auth.getSession(); if (session) sb.realtime.setAuth(session.access_token); } catch {}
+  channel = sb.channel('kaafi-admin-live')
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'kaafi_bookings'}, ({new:b}) => {
+      if (bookings.some(x => x.id === b.id)) return;
+      if (inRange(b.created_at)) { bookings.unshift(b); newIds.add(b.id); renderBookings(); }
+      if (tab !== 'bookings' || document.hidden) { unseen++; updateBadge(); }
+      notifyNew(b);
+      setTimeout(() => { newIds.delete(b.id); }, 60000);
+    })
+    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'kaafi_bookings'}, ({new:b}) => {
+      const i = bookings.findIndex(x => x.id === b.id);
+      if (i >= 0) { bookings[i] = b; renderBookings(); }
+    })
+    .on('postgres_changes', {event:'DELETE', schema:'public', table:'kaafi_bookings'}, ({old}) => {
+      const n = bookings.length; bookings = bookings.filter(x => x.id !== old.id);
+      if (bookings.length !== n) renderBookings();
+    })
+    .on('postgres_changes', {event:'*', schema:'public', table:'kaafi_doctors'}, () => { clearTimeout(subscribe._t); subscribe._t = setTimeout(loadDoctors, 500); })
+    .subscribe(status => { $('#live').classList.toggle('on', status === 'SUBSCRIBED'); });
+}
+
+function unlockAudio(){
+  try { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch {}
+}
+document.addEventListener('pointerdown', unlockAudio, {once:true});
+function beep(){
+  try {
+    if (!audioCtx) return;
+    [0, .18].forEach((t, i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = i ? 1046 : 784;
+      g.gain.setValueAtTime(.0001, audioCtx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(.25, audioCtx.currentTime + t + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + t + .16);
+      o.connect(g).connect(audioCtx.destination); o.start(audioCtx.currentTime + t); o.stop(audioCtx.currentTime + t + .18);
+    });
+  } catch {}
+}
+function notifyNew(b){
+  beep();
+  if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span class="ic"><i class="bi bi-bell-fill"></i></span><div><b>Ballan cusub · ${esc(b.booking_code)}</b><span>${esc(b.patient_name)} → ${esc(b.doctor_name)} · ${money(b.total)}</span></div>`;
+  t.onclick = () => { switchTab('bookings'); t.remove(); };
+  $('#toasts').prepend(t);
+  setTimeout(() => t.remove(), 7000);
+  try {
+    if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
+      new Notification('Ballan cusub — Kaafi Hospital', {body:`${b.patient_name} → ${b.doctor_name} (${money(b.total)})`, icon:'icons/icon-192.png', tag:b.id});
+    }
+  } catch {}
+}
+function updateBadge(){ const el = $('#newBadge'); el.textContent = unseen; el.hidden = unseen < 1; }
+function updateNotifIcon(){
+  const ok = 'Notification' in window && Notification.permission === 'granted';
+  $('#notifBtn').innerHTML = `<i class="bi ${ok ? 'bi-bell-fill' : 'bi-bell-slash'}"></i>`;
+}
+$('#notifBtn').addEventListener('click', async () => {
+  unlockAudio();
+  if (!('Notification' in window)) return swal({icon:'info', title:'Ogeysiisyo', text:'Browser-kan ma taageero ogeysiisyada. Codka iyo gariirka way shaqaynayaan.'});
+  if (Notification.permission === 'granted') return swal({icon:'success', title:'Ogeysiisyadu way shidan yihiin', text:'Ballan kasta oo cusub cod ayaad maqli doontaa oo ogeysiis ayaa kuu imanaya.'});
+  const p = await Notification.requestPermission(); updateNotifIcon();
+  if (p === 'granted') swal({icon:'success', title:'Waa la shiday'});
+});
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && me && !$('#appView').hidden) { loadBookings(); if (tab === 'bookings') { unseen = 0; updateBadge(); } }
+});
+setInterval(() => { if (!document.hidden && me && tab === 'bookings') $$('.bk-time').forEach(el => {
+  const b = bookings.find(x => x.id === el.closest('.bk').dataset.id);
+  if (b) el.textContent = `${range === 'today' ? '' : dateFmt(b.created_at) + ' · '}${timeFmt(b.created_at)} · ${ago(b.created_at)}`;
+}); }, 60000);
+
+/* ================= TABS ================= */
+function switchTab(t){
+  tab = t;
+  $$('.tab').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
+  $('#tab-bookings').hidden = t !== 'bookings';
+  $('#tab-doctors').hidden = t !== 'doctors';
+  if (t === 'bookings') { unseen = 0; updateBadge(); }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+$$('.tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+/* ================= DOCTORS ================= */
+async function loadDoctors(){
+  const {data, error} = await sb.from('kaafi_doctors').select('*').order('sort_order').order('full_name');
+  if (error) { $('#dgrid').innerHTML = `<div class="empty"><i class="bi bi-wifi-off"></i>${esc(errMsg(error))}</div>`; return; }
+  doctors = data || [];
+  renderDoctors();
+  const cur = fDoctor;
+  $('#fDoctor').innerHTML = `<option value="all">Dhakhtar kasta</option>` + doctors.map(d => `<option value="${d.id}" ${d.id === cur ? 'selected' : ''}>${esc(d.full_name)}</option>`).join('');
+  $('#specList').innerHTML = [...new Set(doctors.map(d => d.specialty))].map(s => `<option value="${esc(s)}">`).join('');
+}
+function renderDoctors(){
+  $('#dgrid').innerHTML = doctors.length ? doctors.map(d => `
+    <button class="dcard" data-doc="${d.id}">
+      <div class="dphoto">${photoHTML(d)}
+        ${!d.is_active ? '<span class="off"><i class="bi bi-eye-slash"></i> Qarsoon</span>' : (!d.photo_url ? '<span class="nophoto">Sawir ma leh</span>' : '')}
+        <span class="cam"><i class="bi bi-camera-fill"></i></span>
+      </div>
+      <div class="dbody">
+        <h3>${esc(d.full_name)}</h3>
+        <p>${esc(d.specialty)}</p>
+        <div class="meta"><span>${d.experience_years != null ? d.experience_years + ' sano' : '—'}</span><b>${money(d.fee)}</b></div>
+      </div>
+    </button>`).join('')
+    : `<div class="empty"><i class="bi bi-person-plus"></i>Weli dhakhtar lama gelin.</div>`;
+}
+
+/* ---- modal ---- */
+let editing = null;     // doctor object or null (new)
+let newPhoto = null;    // Blob
+let newPhotoURL = null;
+let removePhoto = false;
+
+function openDoc(d){
+  editing = d || null; newPhoto = null; removePhoto = false;
+  if (newPhotoURL) { URL.revokeObjectURL(newPhotoURL); newPhotoURL = null; }
+  $('#docModalTitle').textContent = d ? 'Wax ka beddel dhakhtarka' : 'Dhakhtar cusub';
+  $('#dName').value = d?.full_name || 'Dr. ';
+  $('#dSpec').value = d?.specialty || '';
+  $('#dFee').value = d ? num(d.fee) : '';
+  $('#dYears').value = d?.experience_years ?? '';
+  $('#dSort').value = d ? d.sort_order : (doctors.reduce((m, x) => Math.max(m, x.sort_order), 0) + 1);
+  $('#dActive').checked = d ? d.is_active : true;
+  $('#docDelete').hidden = !d;
+  $('#photoInput').value = '';
+  renderPreview();
+  $('#docModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function closeDoc(){ $('#docModal').hidden = true; document.body.style.overflow = ''; }
+function renderPreview(){
+  let html;
+  if (newPhotoURL) html = `<img src="${newPhotoURL}" alt="">`;
+  else if (editing?.photo_url && !removePhoto) html = `<img src="${esc(editing.photo_url)}" alt="">`;
+  else html = `<div class="phx">${esc(initials($('#dName').value))}</div>`;
+  $('#pprev').innerHTML = html;
+  $('#photoRemove').hidden = !(newPhotoURL || (editing?.photo_url && !removePhoto));
+}
+$('#dgrid').addEventListener('click', e => { const c = e.target.closest('[data-doc]'); if (c) openDoc(doctors.find(d => d.id === c.dataset.doc)); });
+$('#addDoc').addEventListener('click', () => openDoc(null));
+$$('#docModal [data-close]').forEach(b => b.addEventListener('click', closeDoc));
+$('#docModal').addEventListener('click', e => { if (e.target.id === 'docModal') closeDoc(); });
+$('#dName').addEventListener('input', () => { if (!newPhotoURL && !(editing?.photo_url && !removePhoto)) renderPreview(); });
+$('#photoRemove').addEventListener('click', () => {
+  if (newPhotoURL) { URL.revokeObjectURL(newPhotoURL); newPhotoURL = null; newPhoto = null; }
+  else removePhoto = true;
+  $('#photoInput').value = '';
+  renderPreview();
+});
+
+function loadImage(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file); const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); res(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Sawirkan lama akhrin karo')); };
+    img.src = url;
+  });
+}
+/* crop to 4:5 portrait (bias toward the top for faces) and resize to 640×800 JPEG */
+async function processPhoto(file){
+  const img = await loadImage(file);
+  const W = 640, H = 800, target = W / H;
+  const iw = img.naturalWidth, ih = img.naturalHeight;
+  let sw, sh, sx, sy;
+  if (iw / ih > target) { sh = ih; sw = ih * target; sx = (iw - sw) / 2; sy = 0; }
+  else { sw = iw; sh = iw / target; sx = 0; sy = (ih - sh) * 0.2; }
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const ctx = c.getContext('2d'); ctx.imageSmoothingQuality = 'high';
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+  return await new Promise(r => c.toBlob(r, 'image/jpeg', 0.86));
+}
+$('#photoInput').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  if (!/^image\//.test(f.type)) return swal({icon:'error', title:'Sawir dooro', text:'Fadlan dooro fayl sawir ah (JPG, PNG, WEBP).'});
+  try {
+    newPhoto = await processPhoto(f);
+    if (newPhotoURL) URL.revokeObjectURL(newPhotoURL);
+    newPhotoURL = URL.createObjectURL(newPhoto);
+    removePhoto = false;
+    renderPreview();
+  } catch (err) { swal({icon:'error', title:'Sawirka', text:errMsg(err)}); }
+});
+
+$('#docForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name = $('#dName').value.trim().replace(/\s+/g, ' ');
+  const spec = $('#dSpec').value.trim();
+  const fee = Number($('#dFee').value);
+  const yrsRaw = $('#dYears').value.trim();
+  const yrs = yrsRaw === '' ? null : Math.round(Number(yrsRaw));
+  if (name.replace(/^dr\.?\s*/i, '').length < 3) return swal({icon:'warning', title:'Magaca dhakhtarka geli'});
+  if (spec.length < 2) return swal({icon:'warning', title:'Takhasuska geli'});
+  if (!($('#dFee').value !== '' && fee >= 0 && fee <= 1000)) return swal({icon:'warning', title:'Lacagta ballanta sax ma aha'});
+  if (yrs !== null && (yrs < 0 || yrs > 70 || Number.isNaN(yrs))) return swal({icon:'warning', title:'Sanadaha khibradda sax ma aha'});
+  const payload = {full_name:name, specialty:spec, fee, experience_years:yrs, sort_order:Math.round(Number($('#dSort').value) || 0), is_active:$('#dActive').checked};
+
+  const btn = $('#docSave'); btn.disabled = true; const old = btn.innerHTML; btn.innerHTML = '<span class="spin"></span> Waa la kaydinayaa…';
+  try {
+    let doc = editing;
+    if (!doc) {
+      const {data, error} = await sb.from('kaafi_doctors').insert(payload).select().single();
+      if (error) throw error; doc = data;
+    } else {
+      const {error} = await sb.from('kaafi_doctors').update(payload).eq('id', doc.id);
+      if (error) throw error;
+    }
+    const oldPath = editing?.photo_path || null;
+    if (newPhoto) {
+      const path = `doctors/${doc.id}/${Date.now()}.jpg`;
+      const {error:upErr} = await sb.storage.from(CFG.bucket).upload(path, newPhoto, {contentType:'image/jpeg', cacheControl:'31536000', upsert:false});
+      if (upErr) throw upErr;
+      const {data:pub} = sb.storage.from(CFG.bucket).getPublicUrl(path);
+      const {error} = await sb.from('kaafi_doctors').update({photo_url:pub.publicUrl, photo_path:path}).eq('id', doc.id);
+      if (error) throw error;
+      if (oldPath) sb.storage.from(CFG.bucket).remove([oldPath]).catch(() => {});
+    } else if (removePhoto && editing?.photo_url) {
+      const {error} = await sb.from('kaafi_doctors').update({photo_url:null, photo_path:null}).eq('id', doc.id);
+      if (error) throw error;
+      if (oldPath) sb.storage.from(CFG.bucket).remove([oldPath]).catch(() => {});
+    }
+    closeDoc();
+    await loadDoctors();
+    Swal.fire({icon:'success', title:'Waa la kaydiyay', timer:1300, showConfirmButton:false});
+  } catch (err) {
+    swal({icon:'error', title:'Lama kaydin', text:errMsg(err)});
+  } finally { btn.disabled = false; btn.innerHTML = old; }
+});
+
+$('#docDelete').addEventListener('click', async () => {
+  if (!editing) return;
+  const r = await Swal.fire({icon:'warning', title:'Tirtir dhakhtarkan?', html:`<b>${esc(editing.full_name)}</b><br><small>Ballamihii hore way jiri doonaan. Haddii aad rabto inaad ku qariso oo kaliya, dami “Ka muuji bogga dadweynaha”.</small>`, showCancelButton:true, confirmButtonText:'Haa, tirtir', cancelButtonText:'Maya', confirmButtonColor:'#E1262D'});
+  if (!r.isConfirmed) return;
+  const {error} = await sb.from('kaafi_doctors').delete().eq('id', editing.id);
+  if (error) return swal({icon:'error', title:'Lama tirtirin', text:errMsg(error)});
+  if (editing.photo_path) sb.storage.from(CFG.bucket).remove([editing.photo_path]).catch(() => {});
+  closeDoc(); loadDoctors();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#docModal').hidden) closeDoc(); });
+
+/* ================= INIT ================= */
+sb.auth.onAuthStateChange((ev, session) => {
+  if (ev === 'SIGNED_OUT') setTimeout(() => { me = null; if (channel) { sb.removeChannel(channel); channel = null; } showAuth(); }, 0);
+  if (ev === 'TOKEN_REFRESHED' && session) me = session.user;
+});
+(async () => {
+  const {data:{session}} = await sb.auth.getSession();
+  if (session) { me = session.user; await afterLogin(); }
+  else showAuth();
+})();
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>

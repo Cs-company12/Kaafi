@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="so">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kaafi Hospital · Ballan Dhakhtar</title>
+<meta name="description" content="Ballanso dhakhtarka Kaafi Hospital si fudud, kadibna ku bixi EVC Plus.">
+<meta name="theme-color" content="#24318F">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+:root{
+  --navy:#24318F; --navy-d:#17206B; --navy-l:#EEF0FB; --navy-m:#C9CEF0;
+  --red:#E1262D; --red-d:#B81C22; --red-l:#FDECEC;
+  --bg:#F3F5FA; --card:#FFFFFF; --ink:#101633; --ink-2:#3B4262; --muted:#767D99; --line:#E3E6EF;
+  --green:#0F9A55; --green-d:#0B7A43; --green-l:#E6F6EE;
+  --r:18px; --r-sm:12px;
+  --shadow:0 1px 2px rgba(16,22,51,.05),0 10px 28px -12px rgba(16,22,51,.16);
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button,input,select{font:inherit;color:inherit}
+a{color:inherit}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 16px}
+.muted{color:var(--muted)}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{width:42px;height:42px;border-radius:50%}
+.brand b{display:block;font-size:16px;font-weight:800;letter-spacing:-.01em;color:var(--navy)}
+.brand small{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-top:-2px}
+.icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:0;background:var(--navy-l);color:var(--navy);font-size:17px;text-decoration:none;cursor:pointer;transition:background .15s}
+.icon-btn:hover{background:var(--navy-m)}
+.icon-btn.ghost{background:transparent}
+.icon-btn.ghost:hover{background:var(--navy-l)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-d) 100%);color:#fff;padding:34px 0 72px}
+.hero::before,.hero::after{content:"";position:absolute;top:-40%;height:180%;transform:skewX(-24deg);pointer-events:none}
+.hero::before{right:-40px;width:150px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 18px,transparent 18px 34px)}
+.hero::after{right:150px;width:22px;background:var(--red);opacity:.9}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.12);padding:6px 12px;border-radius:99px}
+.hero h1{font-size:clamp(26px,6vw,42px);line-height:1.12;letter-spacing:-.02em;font-weight:800;margin:14px 0 8px;max-width:620px}
+.hero h1 span{color:#FFD3D5}
+.hero p{margin:0;max-width:520px;color:rgba(255,255,255,.82);font-size:15.5px}
+.steps{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:20px 0 0}
+.steps li{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);padding:6px 12px 6px 6px;border-radius:99px;font-size:13px;font-weight:600}
+.steps b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--navy);font-size:12px}
+
+/* main */
+.main{margin-top:-46px;position:relative;z-index:2;padding-bottom:40px}
+.toolbar{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:12px;display:grid;gap:10px}
+.search{display:flex;align-items:center;gap:10px;background:var(--bg);border:1.5px solid transparent;border-radius:14px;padding:0 14px;height:50px;transition:border-color .15s,background .15s}
+.search:focus-within{border-color:var(--navy);background:#fff}
+.search i{color:var(--muted)}
+.search input{flex:1;border:0;background:transparent;outline:0;height:100%;font-size:15px;min-width:0}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:7px 14px;font-size:13.5px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap;transition:all .15s}
+.chip:hover{border-color:var(--navy-m)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 12px}
+.section-head h2{margin:0;font-size:19px;letter-spacing:-.01em}
+
+/* doctor cards */
+.grid{display:grid;gap:12px;grid-template-columns:1fr}
+.doc{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);display:grid;grid-template-columns:104px 1fr;overflow:hidden;cursor:pointer;border:1.5px solid transparent;transition:transform .15s,border-color .15s,box-shadow .15s}
+.doc:hover{border-color:var(--navy-m);transform:translateY(-2px)}
+.doc:focus-visible{outline:3px solid var(--navy-m);outline-offset:2px}
+.doc-photo{position:relative;background:var(--navy-l);min-height:132px}
+.doc-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.ph{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(150deg,var(--navy) 0%,var(--navy-d) 100%);color:#fff;font-weight:800;font-size:26px;letter-spacing:.02em;overflow:hidden}
+.ph::after{content:"";position:absolute;right:-18px;bottom:-30px;width:40px;height:130px;background:var(--red);transform:skewX(-24deg);opacity:.9}
+.ph i{position:absolute;left:10px;top:10px;font-size:14px;opacity:.6}
+.doc-body{padding:12px 14px;display:flex;flex-direction:column;min-width:0}
+.doc h3{margin:0;font-size:15.5px;line-height:1.3;letter-spacing:-.01em}
+.spec{margin:3px 0 0;font-size:13px;font-weight:700;color:var(--navy)}
+.spec-so{margin:0;font-size:12.5px;color:var(--muted)}
+.exp{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.exp i{color:var(--red)}
+.doc-foot{margin-top:auto;padding-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.price{font-size:21px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.price small{display:block;font-size:10.5px;font-weight:600;color:var(--muted);letter-spacing:0;margin-top:3px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:10px 16px;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;transition:background .15s,transform .1s,opacity .15s;white-space:nowrap}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.6;pointer-events:none}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--navy-d)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-d)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-d)}
+.btn-light{background:var(--navy-l);color:var(--navy)}
+.btn-light:hover{background:var(--navy-m)}
+.btn-block{width:100%;padding:15px 18px;font-size:16px;border-radius:14px}
+.doc .btn{padding:9px 14px}
+
+@media (min-width:640px){
+  .grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .doc{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .doc-photo{aspect-ratio:4/3.4;min-height:0}
+  .doc-body{padding:14px 16px 16px}
+  .ph{font-size:40px}
+  .ph::after{width:56px;right:-10px;height:200px}
+}
+@media (min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}.toolbar{grid-template-columns:minmax(260px,360px) 1fr;align-items:center}}
+
+/* skeleton / empty */
+.skel{background:linear-gradient(90deg,#e9ecf4 0%,#f6f7fb 50%,#e9ecf4 100%);background-size:200% 100%;animation:sh 1.2s infinite;border-radius:var(--r);height:150px}
+@media (min-width:640px){.skel{height:330px}}
+@keyframes sh{to{background-position:-200% 0}}
+.empty{grid-column:1/-1;text-align:center;padding:40px 16px;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);color:var(--muted)}
+.empty i{font-size:34px;color:var(--navy-m);display:block;margin-bottom:6px}
+
+/* last booking banner */
+.last{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:12px;border-left:5px solid var(--green)}
+.last .ic{width:38px;height:38px;border-radius:50%;background:var(--green-l);color:var(--green);display:grid;place-items:center;flex:none}
+.last .tx{flex:1;min-width:0;font-size:13px}
+.last .tx b{display:block;font-size:14px}
+.last .x{border:0;background:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px}
+
+/* footer */
+footer{background:var(--navy-d);color:rgba(255,255,255,.8);padding:28px 0 calc(28px + env(safe-area-inset-bottom));font-size:13.5px}
+footer .fgrid{display:grid;gap:18px}
+footer h4{margin:0 0 6px;color:#fff;font-size:15px}
+footer a{color:#fff;text-decoration:none}
+footer p{margin:3px 0}
+footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.55)}
+@media (min-width:720px){footer .fgrid{grid-template-columns:1.2fr 1fr 1fr}}
+
+/* sheet */
+.backdrop{position:fixed;inset:0;background:rgba(10,14,40,.55);z-index:50;opacity:0;transition:opacity .2s}
+.backdrop.show{opacity:1}
+.sheet{position:fixed;z-index:51;left:0;right:0;bottom:0;max-height:94vh;max-height:94dvh;background:var(--bg);border-radius:22px 22px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.2)}
+.sheet.show{transform:none}
+@media (min-width:720px){
+  .sheet{left:50%;top:50%;bottom:auto;width:520px;max-height:90vh;border-radius:22px;transform:translate(-50%,-46%) scale(.98);opacity:0;transition:transform .22s,opacity .22s}
+  .sheet.show{transform:translate(-50%,-50%);opacity:1}
+}
+.sheet-head{display:flex;align-items:center;gap:8px;padding:10px 10px 8px;background:#fff;border-radius:22px 22px 0 0;border-bottom:1px solid var(--line)}
+.sheet-head .ttl{flex:1;text-align:center}
+.sheet-head .ttl b{display:block;font-size:15px}
+.prog{display:flex;gap:5px;justify-content:center;margin-top:5px}
+.prog span{width:26px;height:4px;border-radius:4px;background:var(--line)}
+.prog span.p-on{background:var(--navy)}
+.prog span.p-ok{background:var(--green)}
+.sheet-body{overflow-y:auto;padding:16px;flex:1;overscroll-behavior:contain}
+.sheet-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)}
+.sheet-foot:empty{display:none}
+
+.mini{display:flex;gap:12px;align-items:center;background:#fff;border-radius:var(--r-sm);padding:10px;border:1px solid var(--line)}
+.mini .av{width:56px;height:64px;border-radius:10px;overflow:hidden;position:relative;flex:none;background:var(--navy-l)}
+.mini .av img{width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.mini .av .ph{font-size:18px}
+.mini .av .ph::after,.mini .av .ph i{display:none}
+.mini .t{flex:1;min-width:0}
+.mini .t b{display:block;font-size:14.5px;line-height:1.3}
+.mini .t span{font-size:12.5px;color:var(--navy);font-weight:600}
+.mini .p{font-weight:800;font-size:18px}
+
+.form{display:grid;gap:14px;margin-top:16px}
+.field label,.field legend{display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:6px;padding:0}
+.field fieldset,fieldset.field{border:0;margin:0;padding:0;min-width:0}
+.inp{position:relative}
+.inp i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.inp input,.inp select{width:100%;height:52px;border:1.5px solid var(--line);background:#fff;border-radius:13px;padding:0 14px 0 42px;font-size:16px;outline:0;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
+.inp select{padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23767D99' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.inp input:focus,.inp select:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(36,49,143,.12)}
+.row2{display:grid;grid-template-columns:110px 1fr;gap:12px}
+.field.bad input,.field.bad select,.field.bad .seg{border-color:var(--red)}
+.err{display:none;color:var(--red);font-size:12.5px;font-weight:600;margin-top:5px}
+.field.bad .err{display:block}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:13px;padding:5px}
+.seg button{height:42px;border:0;border-radius:9px;background:transparent;font-weight:700;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px}
+.seg button.on{background:var(--navy);color:#fff}
+.hint{font-size:12px;color:var(--muted);margin-top:5px}
+
+.box{background:#fff;border-radius:var(--r-sm);border:1px solid var(--line);padding:14px;margin-top:12px}
+.box h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.box h4 button{border:0;background:none;color:var(--navy);font-weight:700;font-size:13px;cursor:pointer;text-transform:none;letter-spacing:0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600;text-align:right;word-break:break-word}
+.bill .ln{display:flex;justify-content:space-between;font-size:14.5px;padding:5px 0}
+.bill .ln span{color:var(--ink-2)}
+.bill .tot{border-top:1.5px dashed var(--line);margin-top:6px;padding-top:12px;align-items:center}
+.bill .tot span{font-weight:800;color:var(--ink);font-size:15px}
+.bill .tot b{font-size:28px;letter-spacing:-.02em;color:var(--navy)}
+.pay{display:flex;gap:12px;align-items:flex-start;background:var(--green-l);border:1px solid #BFE8D2;color:#0B5E35;border-radius:var(--r-sm);padding:12px 14px;margin-top:12px;font-size:13.5px}
+.pay i{font-size:20px;color:var(--green);margin-top:1px}
+.ussd{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;background:#fff;border-radius:6px;padding:1px 7px;color:var(--ink);letter-spacing:.02em}
+
+.done{text-align:center;padding:8px 4px}
+.check{width:84px;height:84px;border-radius:50%;background:var(--green-l);display:grid;place-items:center;margin:6px auto 12px;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.check i{font-size:44px;color:var(--green)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.done h3{margin:0;font-size:20px}
+.done p{margin:6px 0 0;color:var(--ink-2)}
+.code{display:inline-block;margin:14px 0 4px;font-size:30px;font-weight:800;letter-spacing:.04em;color:var(--navy);background:var(--navy-l);padding:8px 20px;border-radius:14px;border:2px dashed var(--navy-m)}
+.stack{display:grid;gap:10px}
+.spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+body.lock{overflow:hidden}
+.swal2-popup{font-family:inherit!important;border-radius:18px!important}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="./">
+      <img src="data:image/png;base64,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" alt="Kaafi Hospital">
+      <span><b>Kaafi Hospital</b><small>Kaafiyaha Bulshada</small></span>
+    </a>
+    <a class="icon-btn" href="tel:+252610830002" aria-label="Wac isbitaalka"><i class="bi bi-telephone-fill"></i></a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><i class="bi bi-calendar2-check"></i> Ballan online ah</span>
+    <h1>Ballanso dhakhtarkaaga <span>adigoo meel kasta jooga</span></h1>
+    <p>Dooro dhakhtarka, buuxi xogta bukaanka, kadibna ku bixi EVC Plus.</p>
+    <ol class="steps">
+      <li><b>1</b>Dooro dhakhtar</li>
+      <li><b>2</b>Xogta bukaanka</li>
+      <li><b>3</b>Xaqiiji &amp; bixi</li>
+    </ol>
+  </div>
+</section>
+
+<main class="wrap main">
+  <div id="lastBooking"></div>
+  <div class="toolbar">
+    <label class="search">
+      <i class="bi bi-search"></i>
+      <input id="q" type="search" placeholder="Raadi magac ama takhasus…" autocomplete="off" aria-label="Raadi dhakhtar">
+    </label>
+    <div class="chips" id="chips" role="tablist" aria-label="Takhasusyada"></div>
+  </div>
+  <div class="section-head">
+    <h2>Dhakhaatiirta</h2>
+    <span id="count" class="muted"></span>
+  </div>
+  <div id="grid" class="grid" aria-live="polite"></div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <h4>Kaafi Hospital</h4>
+        <p>Kaafiyaha Bulshada — daryeel caafimaad oo tayo leh.</p>
+        <p><i class="bi bi-geo-alt"></i> Degmada Wadajir, Muqdisho, Soomaaliya</p>
+      </div>
+      <div>
+        <h4>Nala soo xiriir</h4>
+        <p><i class="bi bi-telephone"></i> <a href="tel:+252610830002">+252 610 830 002</a></p>
+        <p><i class="bi bi-telephone"></i> <a href="tel:+252620830002">+252 620 830 002</a></p>
+        <p><i class="bi bi-telephone"></i> <a href="tel:+252610830004">+252 610 830 004</a></p>
+        <p><i class="bi bi-telephone"></i> <a href="tel:+252620830004">+252 620 830 004</a></p>
+      </div>
+      <div>
+        <h4>Online</h4>
+        <p><i class="bi bi-envelope"></i> <a href="mailto:info@kaafihospital.com">info@kaafihospital.com</a></p>
+        <p><i class="bi bi-globe2"></i> kaafihospital.com</p>
+      </div>
+    </div>
+    <div class="credit">© <span id="yr"></span> Kaafi Hospital · Nidaamka ballamaha waxaa dhisay C.S Company</div>
+  </div>
+</footer>
+
+<div class="backdrop" id="backdrop" hidden></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="sheet-head">
+    <button class="icon-btn ghost" id="sheetBack" aria-label="Dib u noqo"><i class="bi bi-arrow-left"></i></button>
+    <div class="ttl"><b id="sheetTitle">Xogta bukaanka</b><div class="prog" id="prog"><span></span><span></span><span></span></div></div>
+    <button class="icon-btn ghost" id="sheetClose" aria-label="Xir"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+  <div class="sheet-foot" id="sheetFoot"></div>
+</section>
+
+<script>
+/* ================= CONFIG ================= */
+const CFG = {
+  url: 'https://tpmsyyhrnciqqcxlfamr.supabase.co',
+  key: 'sb_publishable_exzgU4lfqJpzI89f8Jjl7w_5vT2d4NR',
+  bookingFee: 1,
+  ussdPrefix: '*789*736275*',   // + TOTAL + #
+};
+const DISTRICTS = [
+  'Boondheere','Cabdicasiis','Daarusalaam','Dayniile','Dharkeenleey','Garasbaaley','Gubadley',
+  'Hawl-Wadaag','Heliwaa','Hodan','Kaaraan','Kaxda','Shangaani','Shibis','Waaberi','Wadajir',
+  'Wardhiigleey','Xamar Jajab','Xamar Weyne','Yaaqshiid'
+];
+const OTHER_DISTRICT = 'Meel kale (ka baxsan Muqdisho)';
+
+/* specialty → Somali category */
+const CATS = [
+  {k:'neuro',  so:'Maskaxda & Dareemayaasha', chip:'Maskaxda',      re:/neuro/i},
+  {k:'cardio', so:'Cudurrada Gudaha & Wadnaha', chip:'Gudaha & Wadnaha', re:/cardio|internal/i},
+  {k:'obgyn',  so:'Haweenka & Dhalmada',      chip:'Haweenka',      re:/obs|gyn/i},
+  {k:'peds',   so:'Carruurta',                chip:'Carruurta',     re:/p(a)?ediatric/i},
+  {k:'dental', so:'Ilkaha',                   chip:'Ilkaha',        re:/dent/i},
+  {k:'eye',    so:'Indhaha',                  chip:'Indhaha',       re:/ophthal|eye/i},
+  {k:'ent',    so:'Dhegta, Sanka & Cunaha',   chip:'Dhegta & Sanka',re:/\bent\b|otolaryn/i},
+  {k:'derm',   so:'Maqaarka',                 chip:'Maqaarka',      re:/dermat|skin/i},
+  {k:'uro',    so:'Kelyaha & Kaadi-mareenka', chip:'Kelyaha',       re:/urolog|nephro/i},
+  {k:'ortho',  so:'Lafaha & Kala-goysyada',   chip:'Lafaha',        re:/orthop/i},
+  {k:'surg',   so:'Qalliinka',                chip:'Qalliinka',     re:/surg|laparo/i},
+];
+const catOf = s => CATS.find(c => c.re.test(s || '')) || {k:'x:'+(s||'').toLowerCase(), so:'', chip:s};
+
+/* ================= HELPERS ================= */
+const sb = supabase.createClient(CFG.url, CFG.key);
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = n => { const v = Number(n) || 0; return Number.isInteger(v) ? String(v) : v.toFixed(2); };
+const money = n => '$' + num(n);
+const ussd = total => CFG.ussdPrefix + num(total) + '#';
+const telHref = total => 'tel:' + ussd(total).replace(/#/g, '%23');
+const initials = n => String(n || '').replace(/^dr\.?\s*/i, '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || 'DR';
+const store = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+const photoHTML = d => d.photo_url
+  ? `<img src="${esc(d.photo_url)}" alt="${esc(d.full_name)}" loading="lazy">`
+  : `<div class="ph"><i class="bi bi-heart-pulse"></i>${esc(initials(d.full_name))}</div>`;
+const swal = opts => Swal.fire({confirmButtonColor:'#24318F', confirmButtonText:'Hagaag', ...opts});
+
+/* ================= STATE ================= */
+let doctors = [];
+let activeCat = 'all';
+let query = '';
+let sel = null;          // selected doctor
+let step = 1;            // 1 form, 2 confirm, 3 done
+let form = {name:'', age:'', phone:'', district:'', has:null, pnum:''};
+let booking = null;
+let busy = false;
+
+/* ================= DOCTORS ================= */
+async function loadDoctors(){
+  const {data, error} = await sb.from('kaafi_doctors')
+    .select('id,full_name,specialty,experience_years,fee,photo_url,sort_order')
+    .eq('is_active', true)
+    .order('sort_order', {ascending:true})
+    .order('full_name', {ascending:true});
+  if (error) {
+    $('#grid').innerHTML = `<div class="empty"><i class="bi bi-wifi-off"></i>Xogta lama soo qaadi karo. Hubi internetkaaga.<br><br><button class="btn btn-primary" onclick="loadDoctors()"><i class="bi bi-arrow-clockwise"></i> Isku day mar kale</button></div>`;
+    return;
+  }
+  doctors = data || [];
+  renderChips();
+  renderGrid();
+}
+
+function renderChips(){
+  const seen = new Map();
+  doctors.forEach(d => { const c = catOf(d.specialty); if (!seen.has(c.k)) seen.set(c.k, c.chip); });
+  if (activeCat !== 'all' && !seen.has(activeCat)) activeCat = 'all';
+  $('#chips').innerHTML =
+    `<button class="chip ${activeCat==='all'?'on':''}" data-cat="all" role="tab">Dhammaan</button>` +
+    [...seen].map(([k, label]) => `<button class="chip ${activeCat===k?'on':''}" data-cat="${esc(k)}" role="tab">${esc(label)}</button>`).join('');
+}
+
+function renderGrid(){
+  const q = query.trim().toLowerCase();
+  const list = doctors.filter(d => {
+    const c = catOf(d.specialty);
+    if (activeCat !== 'all' && c.k !== activeCat) return false;
+    if (!q) return true;
+    return (d.full_name + ' ' + d.specialty + ' ' + c.so).toLowerCase().includes(q);
+  });
+  $('#count').textContent = list.length ? `${list.length} dhakhtar` : '';
+  if (!list.length) {
+    $('#grid').innerHTML = `<div class="empty"><i class="bi bi-search"></i>Dhakhtar lama helin. Isku day eray kale.</div>`;
+    return;
+  }
+  $('#grid').innerHTML = list.map(d => {
+    const c = catOf(d.specialty);
+    return `<article class="doc" tabindex="0" data-id="${d.id}" aria-label="Ballanso ${esc(d.full_name)}">
+      <div class="doc-photo">${photoHTML(d)}</div>
+      <div class="doc-body">
+        <h3>${esc(d.full_name)}</h3>
+        <p class="spec">${esc(d.specialty)}</p>
+        ${c.so ? `<p class="spec-so">${esc(c.so)}</p>` : ''}
+        ${d.experience_years != null ? `<span class="exp"><i class="bi bi-award-fill"></i>${d.experience_years} sano khibrad</span>` : ''}
+        <div class="doc-foot">
+          <div class="price">${money(d.fee)}<small>lacagta dhakhtarka</small></div>
+          <span class="btn btn-red">Ballanso <i class="bi bi-arrow-right"></i></span>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+/* ================= LAST BOOKING ================= */
+function renderLast(){
+  const b = store.get('kaafi_last_booking');
+  if (!b || Date.now() - new Date(b.created_at).getTime() > 24 * 3600e3) { $('#lastBooking').innerHTML = ''; return; }
+  $('#lastBooking').innerHTML = `<div class="last">
+    <span class="ic"><i class="bi bi-check2-circle"></i></span>
+    <div class="tx"><b>Ballantaada: ${esc(b.code)}</b>${esc(b.doctor)} · ${money(b.total)}</div>
+    <a class="btn btn-green" href="${telHref(b.total)}"><i class="bi bi-phone"></i> Bixi</a>
+    <button class="x" aria-label="Qari" onclick="store.del('kaafi_last_booking');renderLast()"><i class="bi bi-x"></i></button>
+  </div>`;
+}
+
+/* ================= SHEET ================= */
+function openSheet(d){
+  sel = d; step = 1; booking = null; busy = false;
+  form = {...form, pnum: form.has ? form.pnum : ''};
+  renderSheet();
+  const bd = $('#backdrop'), sh = $('#sheet');
+  bd.hidden = false; sh.hidden = false;
+  document.body.classList.add('lock');
+  requestAnimationFrame(() => { bd.classList.add('show'); sh.classList.add('show'); });
+  history.pushState({sheet:true}, '');
+}
+function closeSheet(fromPop){
+  const bd = $('#backdrop'), sh = $('#sheet');
+  if (sh.hidden) return;
+  bd.classList.remove('show'); sh.classList.remove('show');
+  document.body.classList.remove('lock');
+  setTimeout(() => { bd.hidden = true; sh.hidden = true; }, 260);
+  if (!fromPop && history.state && history.state.sheet) history.back();
+  if (step === 3) { form = {name:'', age:'', phone:'', district:'', has:null, pnum:''}; }
+}
+window.addEventListener('popstate', () => closeSheet(true));
+
+function setProgress(){
+  const titles = {1:'Xogta bukaanka', 2:'Xaqiiji & bixi', 3:'Ballantu waa diyaar'};
+  $('#sheetTitle').textContent = titles[step];
+  [...$('#prog').children].forEach((s, i) => { s.className = (i + 1 < step || step === 3) ? 'p-ok' : (i + 1 === step ? 'p-on' : ''); });
+  $('#sheetBack').style.visibility = step === 2 ? 'visible' : 'hidden';
+}
+
+function miniHTML(){
+  const c = catOf(sel.specialty);
+  return `<div class="mini">
+    <div class="av">${photoHTML(sel)}</div>
+    <div class="t"><b>${esc(sel.full_name)}</b><span>${esc(sel.specialty)}</span>${c.so ? `<div class="muted" style="font-size:12px">${esc(c.so)}</div>` : ''}</div>
+    <div class="p">${money(sel.fee)}</div>
+  </div>`;
+}
+
+function renderSheet(){
+  setProgress();
+  const body = $('#sheetBody'), foot = $('#sheetFoot');
+  body.scrollTop = 0;
+
+  if (step === 1) {
+    body.innerHTML = miniHTML() + `
+    <form class="form" id="pForm" novalidate>
+      <div class="field" data-f="name">
+        <label for="f_name">Magaca bukaanka (oo buuxa)</label>
+        <div class="inp"><i class="bi bi-person"></i><input id="f_name" autocomplete="name" placeholder="Tusaale: Faadumo Cali Xasan" value="${esc(form.name)}" maxlength="100"></div>
+        <div class="err">Fadlan qor magaca bukaanka oo buuxa.</div>
+      </div>
+      <div class="row2">
+        <div class="field" data-f="age">
+          <label for="f_age">Da'da</label>
+          <div class="inp"><i class="bi bi-hourglass-split"></i><input id="f_age" type="number" inputmode="numeric" min="0" max="120" placeholder="Sano" value="${esc(form.age)}"></div>
+          <div class="err">Da' sax ah geli.</div>
+        </div>
+        <div class="field" data-f="phone">
+          <label for="f_phone">Lambarka taleefanka</label>
+          <div class="inp"><i class="bi bi-phone"></i><input id="f_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="061 XXX XXXX" value="${esc(form.phone)}" maxlength="20"></div>
+          <div class="err">Lambar sax ah geli.</div>
+        </div>
+      </div>
+      <div class="field" data-f="district">
+        <label for="f_district">Degmada</label>
+        <div class="inp"><i class="bi bi-geo-alt"></i>
+          <select id="f_district">
+            <option value="">— Dooro degmada —</option>
+            <optgroup label="Degmooyinka Muqdisho">
+              ${DISTRICTS.map(x => `<option ${form.district===x?'selected':''}>${esc(x)}</option>`).join('')}
+            </optgroup>
+            <option ${form.district===OTHER_DISTRICT?'selected':''}>${esc(OTHER_DISTRICT)}</option>
+          </select>
+        </div>
+        <div class="err">Fadlan dooro degmada.</div>
+      </div>
+      <fieldset class="field" data-f="has">
+        <legend>Bukaanka hore ma loo siiyay lambar bukaan (Patient ID)?</legend>
+        <div class="seg">
+          <button type="button" data-has="yes" class="${form.has===true?'on':''}"><i class="bi bi-check-lg"></i> Haa</button>
+          <button type="button" data-has="no" class="${form.has===false?'on':''}"><i class="bi bi-x-lg"></i> Maya</button>
+        </div>
+        <div class="err">Fadlan dooro Haa ama Maya.</div>
+      </fieldset>
+      <div class="field" data-f="pnum" id="pnumWrap" ${form.has===true?'':'hidden'}>
+        <label for="f_pnum">Lambarka bukaanka (Patient ID)</label>
+        <div class="inp"><i class="bi bi-person-vcard"></i><input id="f_pnum" placeholder="Lambarka kaarka bukaanka" value="${esc(form.pnum)}" maxlength="40"></div>
+        <div class="err">Fadlan qor lambarka bukaanka.</div>
+      </div>
+    </form>`;
+    foot.innerHTML = `<button class="btn btn-primary btn-block" id="toConfirm">Sii wad <i class="bi bi-arrow-right"></i></button>`;
+    return;
+  }
+
+  if (step === 2) {
+    const total = Number(sel.fee) + CFG.bookingFee;
+    body.innerHTML = miniHTML() + `
+      <div class="box">
+        <h4>Xogta bukaanka <button type="button" id="editP"><i class="bi bi-pencil"></i> Beddel</button></h4>
+        <dl class="kv">
+          <dt>Magaca</dt><dd>${esc(form.name)}</dd>
+          <dt>Da'da</dt><dd>${esc(form.age)} sano</dd>
+          <dt>Taleefanka</dt><dd>${esc(form.phone)}</dd>
+          <dt>Degmada</dt><dd>${esc(form.district)}</dd>
+          <dt>Patient ID</dt><dd>${form.has ? esc(form.pnum) : 'Maya — bukaan cusub'}</dd>
+        </dl>
+      </div>
+      <div class="box bill">
+        <h4>Lacagta</h4>
+        <div class="ln"><span>Lacagta dhakhtarka</span><b>${money(sel.fee)}</b></div>
+        <div class="ln"><span>Khidmadda ballanta</span><b>${money(CFG.bookingFee)}</b></div>
+        <div class="ln tot"><span>Wadarta guud</span><b>${money(total)}</b></div>
+      </div>
+      <div class="pay"><i class="bi bi-phone-vibrate"></i>
+        <div>Markaad riixdo <b>“Xaqiiji &amp; Bixi”</b>, ballantaada waa la diiwaangelinayaa, taleefankaaguna wuxuu si toos ah u furayaa EVC Plus:<br><span class="ussd">${esc(ussd(total))}</span></div>
+      </div>`;
+    foot.innerHTML = `<button class="btn btn-green btn-block" id="payBtn"><i class="bi bi-shield-check"></i> Xaqiiji &amp; Bixi ${money(total)}</button>`;
+    return;
+  }
+
+  // step 3 — done
+  body.innerHTML = `<div class="done">
+      <div class="check"><i class="bi bi-check-lg"></i></div>
+      <h3>Ballantaada waa la diiwaangeliyay</h3>
+      <p>Koodhka ballantaada:</p>
+      <div class="code">${esc(booking.booking_code)}</div>
+      <p class="muted" style="font-size:13px">Kaydi koodhkan oo tus marka aad timaado isbitaalka.</p>
+    </div>
+    <div class="box">
+      <dl class="kv">
+        <dt>Bukaanka</dt><dd>${esc(form.name)}</dd>
+        <dt>Dhakhtarka</dt><dd>${esc(booking.doctor_name)}</dd>
+        <dt>Lacagta dhakhtarka</dt><dd>${money(booking.doctor_fee)}</dd>
+        <dt>Khidmadda ballanta</dt><dd>${money(booking.booking_fee)}</dd>
+        <dt><b style="color:var(--ink)">Wadarta</b></dt><dd style="font-size:18px;color:var(--navy)">${money(booking.total)}</dd>
+      </dl>
+    </div>
+    <div class="pay"><i class="bi bi-info-circle"></i>
+      <div>Haddii wicitaanka EVC Plus uusan si toos ah u furmin, riix badhanka hoose si aad u bixiso <b>${money(booking.total)}</b>.</div>
+    </div>`;
+  foot.innerHTML = `<div class="stack">
+      <a class="btn btn-green btn-block" href="${telHref(booking.total)}" id="dialAgain"><i class="bi bi-telephone-outbound-fill"></i> Bixi hadda · <span class="ussd" style="background:rgba(255,255,255,.18);color:#fff">${esc(ussd(booking.total))}</span></a>
+      <button class="btn btn-light btn-block" id="newBooking"><i class="bi bi-plus-lg"></i> Ballan kale samee</button>
+    </div>`;
+}
+
+/* ================= FORM LOGIC ================= */
+function readForm(){
+  form.name = $('#f_name').value.trim().replace(/\s+/g, ' ');
+  form.age = $('#f_age').value.trim();
+  form.phone = $('#f_phone').value.trim();
+  form.district = $('#f_district').value;
+  form.pnum = form.has ? ($('#f_pnum').value.trim()) : '';
+}
+function validate(){
+  const bad = {};
+  if (form.name.length < 3) bad.name = 1;
+  const age = Number(form.age);
+  if (form.age === '' || !Number.isInteger(age) || age < 0 || age > 120) bad.age = 1;
+  const digits = form.phone.replace(/\D/g, '');
+  if (digits.length < 7 || digits.length > 15) bad.phone = 1;
+  if (!form.district) bad.district = 1;
+  if (form.has !== true && form.has !== false) bad.has = 1;
+  if (form.has === true && !form.pnum) bad.pnum = 1;
+  document.querySelectorAll('#pForm .field').forEach(f => f.classList.toggle('bad', !!bad[f.dataset.f]));
+  const first = document.querySelector('#pForm .field.bad');
+  if (first) { first.scrollIntoView({behavior:'smooth', block:'center'}); const i = first.querySelector('input,select'); if (i) i.focus({preventScroll:true}); }
+  return !first;
+}
+
+async function confirmAndPay(){
+  if (busy) return;
+  busy = true;
+  const btn = $('#payBtn');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spin"></span> Waa la diiwaangelinayaa…`;
+  try {
+    const {data, error} = await sb.rpc('kaafi_create_booking', {
+      p_doctor_id: sel.id,
+      p_patient_name: form.name,
+      p_patient_age: Number(form.age),
+      p_patient_phone: form.phone,
+      p_district: form.district,
+      p_has_patient_number: form.has === true,
+      p_patient_number: form.has ? form.pnum : null
+    });
+    if (error) throw error;
+    booking = data;
+    store.set('kaafi_last_booking', {code:data.booking_code, doctor:data.doctor_name, total:data.total, created_at:data.created_at});
+    step = 3;
+    renderSheet();
+    renderLast();
+    sb.rpc('kaafi_mark_dialed', {p_id:data.id, p_code:data.booking_code}).then(() => {}, () => {});
+    setTimeout(() => { window.location.href = telHref(data.total); }, 450);
+  } catch (e) {
+    const msg = (e && e.message && !/fetch|network/i.test(e.message)) ? e.message : 'Internetka ayaa go\'an. Fadlan hubi oo isku day mar kale.';
+    swal({icon:'error', title:'Ballanta lama dhammaystirin', text:msg});
+    btn.disabled = false;
+    btn.innerHTML = `<i class="bi bi-shield-check"></i> Xaqiiji &amp; Bixi ${money(Number(sel.fee) + CFG.bookingFee)}`;
+  } finally {
+    busy = false;
+  }
+}
+
+/* ================= EVENTS ================= */
+$('#q').addEventListener('input', e => { query = e.target.value; renderGrid(); });
+$('#chips').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  activeCat = c.dataset.cat; renderChips(); renderGrid();
+});
+$('#grid').addEventListener('click', e => {
+  const card = e.target.closest('.doc'); if (!card) return;
+  const d = doctors.find(x => x.id === card.dataset.id); if (d) openSheet(d);
+});
+$('#grid').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const card = e.target.closest('.doc'); if (!card) return;
+  e.preventDefault();
+  const d = doctors.find(x => x.id === card.dataset.id); if (d) openSheet(d);
+});
+$('#backdrop').addEventListener('click', () => closeSheet());
+$('#sheetClose').addEventListener('click', () => closeSheet());
+$('#sheetBack').addEventListener('click', () => { if (step === 2) { step = 1; renderSheet(); } });
+$('#sheet').addEventListener('click', e => {
+  const t = e.target;
+  const hasBtn = t.closest('[data-has]');
+  if (hasBtn) {
+    form.has = hasBtn.dataset.has === 'yes';
+    document.querySelectorAll('[data-has]').forEach(b => b.classList.toggle('on', b === hasBtn));
+    $('#pnumWrap').hidden = !form.has;
+    document.querySelector('[data-f="has"]').classList.remove('bad');
+    if (form.has) setTimeout(() => $('#f_pnum').focus(), 50);
+    return;
+  }
+  if (t.closest('#toConfirm')) { readForm(); if (validate()) { step = 2; renderSheet(); } return; }
+  if (t.closest('#editP')) { step = 1; renderSheet(); return; }
+  if (t.closest('#payBtn')) { confirmAndPay(); return; }
+  if (t.closest('#newBooking')) { closeSheet(); return; }
+});
+$('#sheet').addEventListener('input', e => { const f = e.target.closest('.field'); if (f) f.classList.remove('bad'); });
+$('#sheet').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && step === 1 && e.target.matches('input')) { e.preventDefault(); $('#toConfirm').click(); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ================= INIT ================= */
+$('#yr').textContent = new Date().getFullYear();
+$('#grid').innerHTML = Array.from({length:6}, () => '<div class="skel"></div>').join('');
+renderLast();
+loadDoctors();
+let reloadT;
+sb.channel('kaafi-doctors-public')
+  .on('postgres_changes', {event:'*', schema:'public', table:'kaafi_doctors'}, () => { clearTimeout(reloadT); reloadT = setTimeout(loadDoctors, 400); })
+  .subscribe();
+document.addEventListener('visibilitychange', () => { if (!document.hidden) loadDoctors(); });
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>
