@@ -217,7 +217,7 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .pick .pav{width:40px;height:40px;border-radius:12px;background:var(--navy-l);color:var(--navy);display:grid;place-items:center;font-weight:800;flex:none}
 .pick.on .pav{background:var(--navy);color:#fff}
 .pick .pt{flex:1;min-width:0}
-.pick .pt b{display:block;font-size:14.5px;line-height:1.3;word-break:break-word}
+.pick .pt b{display:block;font-size:15.5px;line-height:1.3;text-transform:uppercase;word-break:break-word}
 .pick .pt small{display:block;font-size:12.5px;color:var(--muted)}
 .pick .ck{color:var(--navy);font-size:20px;opacity:0}
 .pick.on .ck{opacity:1}
@@ -225,6 +225,8 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .field.bad .pick{border-color:var(--red)}
 .spin.dark{border-color:rgba(36,49,143,.25);border-top-color:var(--navy)}
 .hint .spin{display:inline-block;width:12px;height:12px;border-width:2px;vertical-align:-2px;margin-right:4px}
+#f_name{font-size:20px!important;font-weight:700;text-transform:uppercase}
+.patient-name{font-size:20px!important;font-weight:800;text-transform:uppercase;color:var(--navy)}
 #prevBox:empty{display:none}
 .hint:empty{display:none}
 
@@ -608,13 +610,13 @@ function renderSheet(){
       <fieldset class="field" data-f="sex">
         <legend>Jinsiga</legend>
         <div class="seg">
-          <button type="button" data-sex="rag" class="${form.sex==='rag'?'on':''}"><i class="bi bi-gender-male"></i> Rag</button>
-          <button type="button" data-sex="dumar" class="${form.sex==='dumar'?'on':''}"><i class="bi bi-gender-female"></i> Dumar</button>
+          <button type="button" data-sex="rag" class="${form.sex==='rag'?'on':''}">Rag</button>
+          <button type="button" data-sex="dumar" class="${form.sex==='dumar'?'on':''}">Dumar</button>
         </div>
         <div class="err">Fadlan dooro Rag ama Dumar.</div>
       </fieldset>
       <fieldset class="field" data-f="came">
-        <legend>Qofka aad numberka u rabto horay ma u yimid isbitaalka?</legend>
+        <legend>QOFKA AAD NUMBERKA U RABTO HORAY MA U YIMID ISBITAALKA?</legend>
         <div class="seg">
           <button type="button" data-came="yes" class="${form.came===true?'on':''}"><i class="bi bi-check-lg"></i> Haa</button>
           <button type="button" data-came="no" class="${form.came===false?'on':''}"><i class="bi bi-x-lg"></i> Maya</button>
@@ -634,7 +636,7 @@ function renderSheet(){
       <div class="box">
         <h4>Xogta bukaanka <button type="button" id="editP"><i class="bi bi-pencil"></i> Beddel</button></h4>
         <dl class="kv">
-          <dt>Magaca</dt><dd>${esc(form.name)}</dd>
+          <dt>Magaca</dt><dd class="patient-name">${esc(form.name)}</dd>
           <dt>Da'da</dt><dd>${esc(form.age)} sano</dd>
           <dt>Jinsiga</dt><dd>${form.sex === 'rag' ? 'Rag' : 'Dumar'}</dd>
           <dt>Taleefanka</dt><dd>${esc(form.phone)}</dd>
@@ -665,7 +667,7 @@ function renderSheet(){
     </div>
     <div class="box">
       <dl class="kv">
-        <dt>Bukaanka</dt><dd>${esc(booking.patient_name)}</dd>
+        <dt>Bukaanka</dt><dd class="patient-name">${esc(booking.patient_name)}</dd>
         <dt>Dhakhtarka</dt><dd>${esc(booking.doctor_name)}</dd>
         <dt>Lacagta dhakhtarka</dt><dd>${money(booking.doctor_fee)}</dd>
         <dt>Khidmadda ballanta</dt><dd>${money(booking.booking_fee)}</dd>
