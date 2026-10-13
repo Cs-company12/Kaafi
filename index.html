@@ -187,6 +187,22 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .seg button{height:42px;border:0;border-radius:9px;background:transparent;font-weight:700;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px}
 .seg button.on{background:var(--navy);color:#fff}
 .hint{font-size:12px;color:var(--muted);margin-top:5px}
+.pick-list{display:grid;gap:8px}
+.pick{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:13px;padding:10px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.pick:hover{border-color:var(--navy-m)}
+.pick.on{border-color:var(--navy);background:var(--navy-l)}
+.pick .pav{width:40px;height:40px;border-radius:12px;background:var(--navy-l);color:var(--navy);display:grid;place-items:center;font-weight:800;flex:none}
+.pick.on .pav{background:var(--navy);color:#fff}
+.pick .pt{flex:1;min-width:0}
+.pick .pt b{display:block;font-size:14.5px;line-height:1.3;word-break:break-word}
+.pick .pt small{display:block;font-size:12.5px;color:var(--muted)}
+.pick .ck{color:var(--navy);font-size:20px;opacity:0}
+.pick.on .ck{opacity:1}
+.pick.add .pav{background:var(--red-l);color:var(--red)}
+.field.bad .pick{border-color:var(--red)}
+.spin.dark{border-color:rgba(36,49,143,.25);border-top-color:var(--navy)}
+.hint .spin{display:inline-block;width:12px;height:12px;border-width:2px;vertical-align:-2px;margin-right:4px}
+#prevBox:empty{display:none}
 
 .box{background:#fff;border-radius:var(--r-sm);border:1px solid var(--line);padding:14px;margin-top:12px}
 .box h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
@@ -350,9 +366,14 @@ let activeCat = 'all';
 let query = '';
 let sel = null;          // selected doctor
 let step = 1;            // 1 form, 2 confirm, 3 done
-let form = {name:'', age:'', phone:'', district:'', has:null, pnum:''};
+/* found: previous patients saved under this phone number; pick: chosen previous patient id, or 'new' */
+const EMPTY_FORM = () => ({name:'', age:'', phone:(store.get('kaafi_phone') || ''), district:'', found:[], foundKey:'', pick:null});
+let form = EMPTY_FORM();
 let booking = null;
 let busy = false;
+let lookT = null, lookSeq = 0;
+const phoneKey = p => String(p || '').replace(/\D/g, '').slice(-9);
+const netMsg = e => (e && e.message && !/fetch|network/i.test(e.message)) ? e.message : 'Internetka ayaa go\'an. Fadlan hubi oo isku day mar kale.';
 
 /* ================= DOCTORS ================= */
 async function loadDoctors(){
@@ -425,7 +446,6 @@ function renderLast(){
 /* ================= SHEET ================= */
 function openSheet(d){
   sel = d; step = 1; booking = null; busy = false;
-  form = {...form, pnum: form.has ? form.pnum : ''};
   renderSheet();
   const bd = $('#backdrop'), sh = $('#sheet');
   bd.hidden = false; sh.hidden = false;
@@ -440,7 +460,7 @@ function closeSheet(fromPop){
   document.body.classList.remove('lock');
   setTimeout(() => { bd.hidden = true; sh.hidden = true; }, 260);
   if (!fromPop && history.state && history.state.sheet) history.back();
-  if (step === 3) { form = {name:'', age:'', phone:'', district:'', has:null, pnum:''}; }
+  if (step === 3) { form = EMPTY_FORM(); }
 }
 window.addEventListener('popstate', () => closeSheet(true));
 
@@ -460,6 +480,69 @@ function miniHTML(){
   </div>`;
 }
 
+/* ---------- patient form ---------- */
+function districtSelect(id, value){
+  return `<select id="${id}">
+    <option value="">— Dooro degmada —</option>
+    <optgroup label="Degmooyinka Muqdisho">
+      ${DISTRICTS.map(x => `<option ${value===x?'selected':''}>${esc(x)}</option>`).join('')}
+    </optgroup>
+    <option ${value===OTHER_DISTRICT?'selected':''}>${esc(OTHER_DISTRICT)}</option>
+  </select>`;
+}
+
+/* previous patients found for the typed phone number */
+function prevHTML(){
+  if (!form.found.length) return '';
+  return `<div class="box" style="margin-top:0">
+    <h4>Xogtii hore ee taleefankan</h4>
+    <div class="pick-list">
+      ${form.found.map(m => `<button type="button" class="pick ${form.pick===m.id?'on':''}" data-pick="${esc(m.id)}">
+          <span class="pav">${esc(initials(m.full_name))}</span>
+          <span class="pt"><b>${esc(m.full_name)}</b><small>${esc(m.age)} sano · ${esc(m.district)}</small></span>
+          <i class="bi bi-check-circle-fill ck"></i></button>`).join('')}
+      <button type="button" class="pick add ${form.pick==='new'?'on':''}" data-pick="new">
+        <span class="pav"><i class="bi bi-plus-lg"></i></span>
+        <span class="pt"><b>Qof cusub</b><small>Qof kale oo isla taleefankan isticmaala</small></span>
+        <i class="bi bi-check-circle-fill ck"></i></button>
+    </div>
+  </div>`;
+}
+const HINT_DEFAULT = 'Haddii aad hore u timid, xogtaada ayaa si toos ah u soo baxaysa.';
+function paintPrev(){ const b = $('#prevBox'); if (b) b.innerHTML = prevHTML(); }
+function setHint(html){ const h = $('#lookHint'); if (h) h.innerHTML = html || HINT_DEFAULT; }
+
+function scheduleLookup(){
+  clearTimeout(lookT);
+  const key = phoneKey(form.phone);
+  if (key.length < 9) {
+    lookSeq++;
+    if (form.foundKey) { form.found = []; form.foundKey = ''; form.pick = null; paintPrev(); }
+    setHint('');
+    return;
+  }
+  if (key === form.foundKey) return;
+  lookT = setTimeout(() => runLookup(key), 350);
+}
+async function runLookup(key){
+  const my = ++lookSeq;
+  setHint('<span class="spin dark"></span> Xogtii hore waa la raadinayaa…');
+  try {
+    const {data, error} = await sb.rpc('kaafi_phone_lookup', {p_phone: form.phone});
+    if (my !== lookSeq || step !== 1) return;
+    if (error) throw error;
+    form.foundKey = key;
+    form.found = (data && data.ok && data.members) || [];
+    form.pick = null;
+    paintPrev();
+    setHint(form.found.length
+      ? `<i class="bi bi-check2-circle"></i> Xogtii hore waa la helay — dooro qofka.`
+      : (data && !data.ok && data.error) ? esc(data.error) : 'Taleefankan xog hore kuma jirto — buuxi xogta hoose.');
+  } catch (e) {
+    if (my === lookSeq) setHint('');
+  }
+}
+
 function renderSheet(){
   setProgress();
   const body = $('#sheetBody'), foot = $('#sheetFoot');
@@ -468,6 +551,13 @@ function renderSheet(){
   if (step === 1) {
     body.innerHTML = miniHTML() + `
     <form class="form" id="pForm" novalidate>
+      <div class="field" data-f="phone">
+        <label for="f_phone">Lambarka taleefanka</label>
+        <div class="inp"><i class="bi bi-phone"></i><input id="f_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="061 XXX XXXX" value="${esc(form.phone)}" maxlength="20"></div>
+        <div class="err">Lambar sax ah geli.</div>
+        <div class="hint" id="lookHint">${HINT_DEFAULT}</div>
+      </div>
+      <div id="prevBox">${prevHTML()}</div>
       <div class="field" data-f="name">
         <label for="f_name">Magaca bukaanka (oo buuxa)</label>
         <div class="inp"><i class="bi bi-person"></i><input id="f_name" autocomplete="name" placeholder="Tusaale: Faadumo Cali Xasan" value="${esc(form.name)}" maxlength="100"></div>
@@ -479,40 +569,16 @@ function renderSheet(){
           <div class="inp"><i class="bi bi-hourglass-split"></i><input id="f_age" type="number" inputmode="numeric" min="0" max="120" placeholder="Sano" value="${esc(form.age)}"></div>
           <div class="err">Da' sax ah geli.</div>
         </div>
-        <div class="field" data-f="phone">
-          <label for="f_phone">Lambarka taleefanka</label>
-          <div class="inp"><i class="bi bi-phone"></i><input id="f_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="061 XXX XXXX" value="${esc(form.phone)}" maxlength="20"></div>
-          <div class="err">Lambar sax ah geli.</div>
+        <div class="field" data-f="district">
+          <label for="f_district">Degmada</label>
+          <div class="inp"><i class="bi bi-geo-alt"></i>${districtSelect('f_district', form.district)}</div>
+          <div class="err">Fadlan dooro degmada.</div>
         </div>
-      </div>
-      <div class="field" data-f="district">
-        <label for="f_district">Degmada</label>
-        <div class="inp"><i class="bi bi-geo-alt"></i>
-          <select id="f_district">
-            <option value="">— Dooro degmada —</option>
-            <optgroup label="Degmooyinka Muqdisho">
-              ${DISTRICTS.map(x => `<option ${form.district===x?'selected':''}>${esc(x)}</option>`).join('')}
-            </optgroup>
-            <option ${form.district===OTHER_DISTRICT?'selected':''}>${esc(OTHER_DISTRICT)}</option>
-          </select>
-        </div>
-        <div class="err">Fadlan dooro degmada.</div>
-      </div>
-      <fieldset class="field" data-f="has">
-        <legend>Bukaanka hore ma loo siiyay lambar bukaan (Patient ID)?</legend>
-        <div class="seg">
-          <button type="button" data-has="yes" class="${form.has===true?'on':''}"><i class="bi bi-check-lg"></i> Haa</button>
-          <button type="button" data-has="no" class="${form.has===false?'on':''}"><i class="bi bi-x-lg"></i> Maya</button>
-        </div>
-        <div class="err">Fadlan dooro Haa ama Maya.</div>
-      </fieldset>
-      <div class="field" data-f="pnum" id="pnumWrap" ${form.has===true?'':'hidden'}>
-        <label for="f_pnum">Lambarka bukaanka (Patient ID)</label>
-        <div class="inp"><i class="bi bi-person-vcard"></i><input id="f_pnum" placeholder="Lambarka kaarka bukaanka" value="${esc(form.pnum)}" maxlength="40"></div>
-        <div class="err">Fadlan qor lambarka bukaanka.</div>
       </div>
     </form>`;
     foot.innerHTML = `<button class="btn btn-primary btn-block" id="toConfirm">Sii wad <i class="bi bi-arrow-right"></i></button>`;
+    if (form.found.length) setHint(`<i class="bi bi-check2-circle"></i> Xogtii hore waa la helay — dooro qofka.`);
+    scheduleLookup();
     return;
   }
 
@@ -526,7 +592,6 @@ function renderSheet(){
           <dt>Da'da</dt><dd>${esc(form.age)} sano</dd>
           <dt>Taleefanka</dt><dd>${esc(form.phone)}</dd>
           <dt>Degmada</dt><dd>${esc(form.district)}</dd>
-          <dt>Patient ID</dt><dd>${form.has ? esc(form.pnum) : 'Maya — bukaan cusub'}</dd>
         </dl>
       </div>
       <div class="box bill">
@@ -552,7 +617,7 @@ function renderSheet(){
     </div>
     <div class="box">
       <dl class="kv">
-        <dt>Bukaanka</dt><dd>${esc(form.name)}</dd>
+        <dt>Bukaanka</dt><dd>${esc(booking.patient_name)}</dd>
         <dt>Dhakhtarka</dt><dd>${esc(booking.doctor_name)}</dd>
         <dt>Lacagta dhakhtarka</dt><dd>${money(booking.doctor_fee)}</dd>
         <dt>Khidmadda ballanta</dt><dd>${money(booking.booking_fee)}</dd>
@@ -574,7 +639,6 @@ function readForm(){
   form.age = $('#f_age').value.trim();
   form.phone = $('#f_phone').value.trim();
   form.district = $('#f_district').value;
-  form.pnum = form.has ? ($('#f_pnum').value.trim()) : '';
 }
 function validate(){
   const bad = {};
@@ -584,8 +648,6 @@ function validate(){
   const digits = form.phone.replace(/\D/g, '');
   if (digits.length < 7 || digits.length > 15) bad.phone = 1;
   if (!form.district) bad.district = 1;
-  if (form.has !== true && form.has !== false) bad.has = 1;
-  if (form.has === true && !form.pnum) bad.pnum = 1;
   document.querySelectorAll('#pForm .field').forEach(f => f.classList.toggle('bad', !!bad[f.dataset.f]));
   const first = document.querySelector('#pForm .field.bad');
   if (first) { first.scrollIntoView({behavior:'smooth', block:'center'}); const i = first.querySelector('input,select'); if (i) i.focus({preventScroll:true}); }
@@ -599,26 +661,25 @@ async function confirmAndPay(){
   btn.disabled = true;
   btn.innerHTML = `<span class="spin"></span> Waa la diiwaangelinayaa…`;
   try {
-    const {data, error} = await sb.rpc('kaafi_create_booking', {
+    const {data, error} = await sb.rpc('kaafi_book_visit', {
       p_doctor_id: sel.id,
       p_patient_name: form.name,
       p_patient_age: Number(form.age),
       p_patient_phone: form.phone,
       p_district: form.district,
-      p_has_patient_number: form.has === true,
-      p_patient_number: form.has ? form.pnum : null
+      p_patient_id: (form.pick && form.pick !== 'new') ? form.pick : null
     });
     if (error) throw error;
     booking = data;
     store.set('kaafi_last_booking', {code:data.booking_code, doctor:data.doctor_name, total:data.total, created_at:data.created_at});
+    store.set('kaafi_phone', form.phone);
     step = 3;
     renderSheet();
     renderLast();
     sb.rpc('kaafi_mark_dialed', {p_id:data.id, p_code:data.booking_code}).then(() => {}, () => {});
     setTimeout(() => { window.location.href = telHref(data.total); }, 450);
   } catch (e) {
-    const msg = (e && e.message && !/fetch|network/i.test(e.message)) ? e.message : 'Internetka ayaa go\'an. Fadlan hubi oo isku day mar kale.';
-    swal({icon:'error', title:'Ballanta lama dhammaystirin', text:msg});
+    swal({icon:'error', title:'Ballanta lama dhammaystirin', text:netMsg(e)});
     btn.disabled = false;
     btn.innerHTML = `<i class="bi bi-shield-check"></i> Xaqiiji &amp; Bixi ${money(Number(sel.fee) + CFG.bookingFee)}`;
   } finally {
@@ -647,13 +708,17 @@ $('#sheetClose').addEventListener('click', () => closeSheet());
 $('#sheetBack').addEventListener('click', () => { if (step === 2) { step = 1; renderSheet(); } });
 $('#sheet').addEventListener('click', e => {
   const t = e.target;
-  const hasBtn = t.closest('[data-has]');
-  if (hasBtn) {
-    form.has = hasBtn.dataset.has === 'yes';
-    document.querySelectorAll('[data-has]').forEach(b => b.classList.toggle('on', b === hasBtn));
-    $('#pnumWrap').hidden = !form.has;
-    document.querySelector('[data-f="has"]').classList.remove('bad');
-    if (form.has) setTimeout(() => $('#f_pnum').focus(), 50);
+  const pk = t.closest('[data-pick]');
+  if (pk) {
+    form.pick = pk.dataset.pick;
+    const m = form.found.find(x => x.id === form.pick);
+    $('#f_name').value = m ? m.full_name : '';
+    $('#f_age').value = m ? m.age : '';
+    if (m) $('#f_district').value = m.district;
+    ['name', 'age', 'district'].forEach(k => { const f = document.querySelector(`[data-f="${k}"]`); if (f) f.classList.remove('bad'); });
+    readForm();
+    paintPrev();
+    if (!m) $('#f_name').focus();
     return;
   }
   if (t.closest('#toConfirm')) { readForm(); if (validate()) { step = 2; renderSheet(); } return; }
@@ -661,7 +726,14 @@ $('#sheet').addEventListener('click', e => {
   if (t.closest('#payBtn')) { confirmAndPay(); return; }
   if (t.closest('#newBooking')) { closeSheet(); return; }
 });
-$('#sheet').addEventListener('input', e => { const f = e.target.closest('.field'); if (f) f.classList.remove('bad'); });
+$('#sheet').addEventListener('input', e => {
+  const f = e.target.closest('.field'); if (f) f.classList.remove('bad');
+  if (e.target.id === 'f_phone') { form.phone = e.target.value.trim(); scheduleLookup(); }
+  if (e.target.id === 'f_name' && form.pick && form.pick !== 'new') {
+    const m = form.found.find(x => x.id === form.pick);
+    if (m && e.target.value.trim().toLowerCase() !== m.full_name.toLowerCase()) { form.pick = null; paintPrev(); }
+  }
+});
 $('#sheet').addEventListener('keydown', e => {
   if (e.key === 'Enter' && step === 1 && e.target.matches('input')) { e.preventDefault(); $('#toConfirm').click(); }
 });
