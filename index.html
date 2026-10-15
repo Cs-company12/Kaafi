@@ -267,6 +267,8 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;margin:0}
 .kv dt{color:var(--muted)}
 .kv dd{margin:0;font-weight:600;text-align:right;word-break:break-word}
+.kv dd.patient-name{font-size:1.2rem;font-weight:800;letter-spacing:.02em;text-transform:uppercase;color:var(--navy);line-height:1.35}
+#f_name{text-transform:uppercase;font-weight:700}
 .bill .ln{display:flex;justify-content:space-between;font-size:14.5px;padding:5px 0}
 .bill .ln span{color:var(--ink-2)}
 .bill .tot{border-top:1.5px dashed var(--line);margin-top:6px;padding-top:12px;align-items:center}
@@ -340,7 +342,7 @@ body.lock{overflow:hidden}
       <div>
         <h4>Kaafi Hospital</h4>
         <p>Kaafiyaha Bulshada — daryeel caafimaad oo tayo leh.</p>
-        <p><i class="bi bi-geo-alt"></i> Degmada Wadajir, Muqdisho, Soomaaliya</p>
+        <p><i class="bi bi-geo-alt"></i> Lamiyaraha Zoobe , Degmada Wadajir, Muqdisho, Soomaaliya</p>
       </div>
       <div>
         <h4>Nala soo xiriir</h4>
@@ -352,7 +354,7 @@ body.lock{overflow:hidden}
       <div>
         <h4>Online</h4>
         <p><i class="bi bi-envelope"></i> <a href="mailto:info@kaafihospital.com">info@kaafihospital.com</a></p>
-        <p><i class="bi bi-globe2"></i> kaafihospital.com</p>
+        <p><i class="bi bi-globe2"></i> kaafi-hospital.vercel.app</p>
       </div>
     </div>
     <div class="credit">© <span id="yr"></span> Kaafi Hospital · Nidaamka ballamaha waxaa dhisay C.S Company</div>
@@ -381,7 +383,7 @@ const CFG = {
 const DISTRICTS = [
   'Boondheere','Cabdicasiis','Daarusalaam','Dayniile','Dharkeenleey','Garasbaaley','Gubadley',
   'Hawl-Wadaag','Heliwaa','Hodan','Kaaraan','Kaxda','Shangaani','Shibis','Waaberi','Wadajir',
-  'Wardhiigleey','Xamar Jajab','Xamar Weyne','Yaaqshiid'
+  'Wardhiigleey','Xamar Jajab','Xamar Weyne','Yaaqshiid','Ceelasha'
 ];
 const OTHER_DISTRICT = 'Meel kale (ka baxsan Muqdisho)';
 
@@ -706,13 +708,13 @@ function renderSheet(){
       <fieldset class="field" data-f="sex">
         <legend>Jinsiga</legend>
         <div class="seg">
-          <button type="button" data-sex="rag" class="${form.sex==='rag'?'on':''}"><i class="bi bi-gender-male"></i> Rag</button>
-          <button type="button" data-sex="dumar" class="${form.sex==='dumar'?'on':''}"><i class="bi bi-gender-female"></i> Dumar</button>
+          <button type="button" data-sex="rag" class="${form.sex==='rag'?'on':''}">Rag</button>
+          <button type="button" data-sex="dumar" class="${form.sex==='dumar'?'on':''}">Dumar</button>
         </div>
         <div class="err">Fadlan dooro Rag ama Dumar.</div>
       </fieldset>
       <fieldset class="field" data-f="came">
-        <legend>Qofka aad numberka u rabto horay ma u yimid isbitaalka?</legend>
+        <legend>QOFKA AAD NUMBERKA U RABTO HORAY MA U YIMID ISBITAALKA?</legend>
         <div class="seg">
           <button type="button" data-came="yes" class="${form.came===true?'on':''}"><i class="bi bi-check-lg"></i> Haa</button>
           <button type="button" data-came="no" class="${form.came===false?'on':''}"><i class="bi bi-x-lg"></i> Maya</button>
@@ -771,7 +773,7 @@ function renderSheet(){
       </dl>
     </div>
     <div class="pay"><i class="bi bi-info-circle"></i>
-      <div>Haddii wicitaanka EVC Plus uusan si toos ah u furmin, riix badhanka hoose si aad u bixiso <b>${money(booking.total)}</b>.</div>
+      <div>Haddii Lacagta adan bixin oo toos u furmin, riix badhanka hoose si aad u bixiso <b>${money(booking.total)}</b>.</div>
     </div>`;
   foot.innerHTML = `<div class="stack">
       <a class="btn btn-green btn-block" href="${telHref(booking.total)}" id="dialAgain"><i class="bi bi-telephone-outbound-fill"></i> Bixi hadda · <span class="ussd" style="background:rgba(255,255,255,.18);color:#fff">${esc(ussd(booking.total))}</span></a>
