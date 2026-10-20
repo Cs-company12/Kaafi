@@ -53,6 +53,7 @@
 .bi-phone::before{content:"\f4e7"}
 .bi-phone-vibrate::before{content:"\f4e6"}
 .bi-plus-lg::before{content:"\f64d"}
+.bi-printer::before{content:"\f4f5"}
 .bi-search::before{content:"\f52a"}
 .bi-shield-check::before{content:"\f52f"}
 .bi-telephone::before{content:"\f5c1"}
@@ -133,7 +134,7 @@ a{color:inherit}
 
 /* doctor cards */
 .grid{display:grid;gap:12px;grid-template-columns:1fr}
-.doc{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);display:grid;grid-template-columns:104px 1fr;overflow:hidden;cursor:pointer;border:1.5px solid transparent;transition:transform .15s,border-color .15s,box-shadow .15s}
+.doc{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);display:grid;grid-template-columns:112px 1fr;overflow:hidden;cursor:pointer;border:1.5px solid transparent;transition:transform .15s,border-color .15s,box-shadow .15s}
 .doc:hover{border-color:var(--navy-m);transform:translateY(-2px)}
 .doc:focus-visible{outline:3px solid var(--navy-m);outline-offset:2px}
 .doc-photo{position:relative;background:var(--navy-l);min-height:132px}
@@ -143,8 +144,8 @@ a{color:inherit}
 .ph i{position:absolute;left:10px;top:10px;font-size:14px;opacity:.6}
 .doc-body{padding:12px 14px;display:flex;flex-direction:column;min-width:0}
 .doc h3{margin:0;font-size:15.5px;line-height:1.3;letter-spacing:-.01em}
-.spec{margin:3px 0 0;font-size:13px;font-weight:700;color:var(--navy)}
-.spec-so{margin:0;font-size:12.5px;color:var(--muted)}
+.spec{margin:3px 0 0;font-size:14px;font-weight:700;color:var(--navy)}
+.spec-so{margin:0;font-size:13.5px;color:var(--muted)}
 .exp{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:12px;font-weight:600;color:var(--ink-2)}
 .exp i{color:var(--red)}
 .doc-foot{margin-top:auto;padding-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -167,7 +168,7 @@ a{color:inherit}
 @media (min-width:640px){
   .grid{grid-template-columns:repeat(2,1fr);gap:16px}
   .doc{grid-template-columns:1fr;grid-template-rows:auto 1fr}
-  .doc-photo{aspect-ratio:4/3.4;min-height:0}
+  .doc-photo{aspect-ratio:4/3.8;min-height:0}
   .doc-body{padding:14px 16px 16px}
   .ph{font-size:40px}
   .ph::after{width:56px;right:-10px;height:200px}
@@ -200,47 +201,47 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 /* sheet */
 .backdrop{position:fixed;inset:0;background:rgba(10,14,40,.55);z-index:50;opacity:0;transition:opacity .2s}
 .backdrop.show{opacity:1}
-.sheet{position:fixed;z-index:51;left:0;right:0;bottom:0;max-height:94vh;max-height:94dvh;background:var(--bg);border-radius:22px 22px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.2)}
+.sheet{position:fixed;z-index:51;inset:0;max-height:100vh;max-height:100dvh;background:var(--bg);border-radius:0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.2)}
 .sheet.show{transform:none}
 @media (min-width:720px){
-  .sheet{left:50%;top:50%;bottom:auto;width:520px;max-height:90vh;border-radius:22px;transform:translate(-50%,-46%) scale(.98);opacity:0;transition:transform .22s,opacity .22s}
-  .sheet.show{transform:translate(-50%,-50%);opacity:1}
+  .sheet{left:0;top:0;bottom:0;width:100%;max-height:100vh;max-height:100dvh;border-radius:0;transform:translateY(100%);opacity:1;transition:transform .22s}
+  .sheet.show{transform:none;opacity:1}
 }
-.sheet-head{display:flex;align-items:center;gap:8px;padding:10px 10px 8px;background:#fff;border-radius:22px 22px 0 0;border-bottom:1px solid var(--line)}
+.sheet-head{display:flex;align-items:center;gap:8px;padding:12px max(16px,env(safe-area-inset-left)) 10px;background:#fff;border-radius:0;border-bottom:1px solid var(--line)}
 .sheet-head .ttl{flex:1;text-align:center}
 .sheet-head .ttl b{display:block;font-size:15px}
 .prog{display:flex;gap:5px;justify-content:center;margin-top:5px}
 .prog span{width:26px;height:4px;border-radius:4px;background:var(--line)}
 .prog span.p-on{background:var(--navy)}
 .prog span.p-ok{background:var(--green)}
-.sheet-body{overflow-y:auto;padding:16px;flex:1;overscroll-behavior:contain}
-.sheet-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)}
+.sheet-body{overflow-y:auto;padding:clamp(18px,3vw,36px);flex:1;overscroll-behavior:contain;width:100%;margin:0 auto}
+.sheet-foot{padding:14px max(20px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));background:#fff;border-top:1px solid var(--line)}
 .sheet-foot:empty{display:none}
 
-.mini{display:flex;gap:12px;align-items:center;background:#fff;border-radius:var(--r-sm);padding:10px;border:1px solid var(--line)}
-.mini .av{width:56px;height:64px;border-radius:10px;overflow:hidden;position:relative;flex:none;background:var(--navy-l)}
+.mini{display:flex;gap:16px;align-items:center;background:#fff;border-radius:var(--r-sm);padding:14px;border:1px solid var(--line);max-width:1080px;margin:0 auto}
+.mini .av{width:72px;height:84px;border-radius:10px;overflow:hidden;position:relative;flex:none;background:var(--navy-l)}
 .mini .av img{width:100%;height:100%;object-fit:cover;object-position:center 22%}
 .mini .av .ph{font-size:18px}
 .mini .av .ph::after,.mini .av .ph i{display:none}
 .mini .t{flex:1;min-width:0}
-.mini .t b{display:block;font-size:14.5px;line-height:1.3}
-.mini .t span{font-size:12.5px;color:var(--navy);font-weight:600}
-.mini .p{font-weight:800;font-size:18px}
+.mini .t b{display:block;font-size:17px;line-height:1.35}
+.mini .t span{font-size:14px;color:var(--navy);font-weight:600}
+.mini .p{font-weight:800;font-size:22px;white-space:nowrap}
 
-.form{display:grid;gap:14px;margin-top:16px}
-.field label,.field legend{display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:6px;padding:0}
+.form{display:grid;gap:20px;margin:24px auto 0;max-width:1080px}
+.field label,.field legend{display:block;font-size:15px;font-weight:700;color:var(--ink-2);margin-bottom:8px;padding:0}
 .field fieldset,fieldset.field{border:0;margin:0;padding:0;min-width:0}
 .inp{position:relative}
 .inp i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
 .inp input,.inp select{width:100%;height:52px;border:1.5px solid var(--line);background:#fff;border-radius:13px;padding:0 14px 0 42px;font-size:16px;outline:0;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
 .inp select{padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23767D99' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 .inp input:focus,.inp select:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(36,49,143,.12)}
-.row2{display:grid;grid-template-columns:110px 1fr;gap:12px}
+.row2{display:grid;grid-template-columns:minmax(130px,.45fr) minmax(0,1.55fr);gap:16px}
 .field.bad input,.field.bad select,.field.bad .seg{border-color:var(--red)}
 .err{display:none;color:var(--red);font-size:12.5px;font-weight:600;margin-top:5px}
 .field.bad .err{display:block}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:13px;padding:5px}
-.seg button{height:42px;border:0;border-radius:9px;background:transparent;font-weight:700;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px}
+.seg button{height:50px;border:0;border-radius:9px;background:transparent;font-weight:700;font-size:16px;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px}
 .seg button.on{background:var(--navy);color:#fff}
 .hint{font-size:12px;color:var(--muted);margin-top:5px}
 .pick-list{display:grid;gap:8px}
@@ -256,6 +257,41 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .pick.on .ck{opacity:1}
 .pick.add .pav{background:var(--red-l);color:var(--red)}
 .field.bad .pick{border-color:var(--red)}
+.inp input,.inp select{height:58px;font-size:17px;border-radius:14px}
+.sheet-foot .btn{min-height:56px;font-size:17px}
+.patient-actions{display:grid;grid-template-columns:minmax(150px,.45fr) minmax(0,1fr);gap:12px;max-width:1080px;margin:0 auto}
+.patient-actions .btn-back{background:#EEF0FB;color:var(--navy)}
+.patient-actions .btn-back:hover{background:#C9CEF0}
+.payment-actions{grid-template-columns:1fr}
+.payment-actions #backPatient{order:2}
+.payment-actions #payBtn{min-height:72px;padding:16px 20px;font-size:19px;font-weight:800;white-space:normal;box-shadow:0 5px 16px rgba(15,154,85,.24);animation:payment-attention 10s ease-out 1}
+.sheet-body.step-enter{animation:step-enter .24s ease-out both}
+@keyframes step-enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes payment-attention{
+  0%,20%,40%,60%,80%,100%{transform:scale(1);box-shadow:0 5px 16px rgba(15,154,85,.24)}
+  10%,30%,50%,70%,90%{transform:scale(1.025);box-shadow:0 8px 24px rgba(15,154,85,.42)}
+}
+@media (prefers-reduced-motion:reduce){.payment-actions #payBtn{animation:none}}
+@media (prefers-reduced-motion:reduce){.sheet-body.step-enter{animation:none}}
+@media (min-width:760px){
+  .form{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .form>.field[data-f="phone"],.form>#prevBox,.form>.field[data-f="name"],.form>fieldset{grid-column:span 2}
+  .form>.row2{display:contents}
+  .form>.row2>.field{grid-column:span 1}
+}
+@media (max-width:520px){
+  .sheet-head{padding-top:max(12px,env(safe-area-inset-top))}
+  .sheet-body{padding:16px}
+  .mini{gap:10px;padding:10px}
+  .mini .av{width:58px;height:68px}
+  .mini .t b{font-size:15px}
+  .mini .t span{font-size:12.5px}
+  .mini .p{font-size:18px}
+  .form{gap:16px}
+  .row2{grid-template-columns:minmax(84px,.55fr) minmax(0,1.45fr);gap:10px}
+  .patient-actions{grid-template-columns:minmax(112px,.7fr) minmax(0,1.3fr);gap:8px}
+  .patient-actions .btn{padding:12px 8px;font-size:15px}
+}
 .spin.dark{border-color:rgba(36,49,143,.25);border-top-color:var(--navy)}
 .hint .spin{display:inline-block;width:12px;height:12px;border-width:2px;vertical-align:-2px;margin-right:4px}
 #prevBox:empty{display:none}
@@ -290,6 +326,23 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 @keyframes rot{to{transform:rotate(360deg)}}
 body.lock{overflow:hidden}
 .swal2-popup{font-family:inherit!important;border-radius:18px!important}
+.receipt-shell{display:none}
+@media print{
+  @page{size:80mm auto;margin:0}
+  html,body{background:#fff!important}
+  body *{visibility:hidden}
+  body .receipt-shell,body .receipt-shell *{visibility:visible}
+  body .receipt-shell{display:block!important;position:fixed;inset:0;background:#fff;color:#000}
+  .receipt-shell .receipt{width:78mm;margin:0 auto;padding:10mm 5mm 8mm;box-sizing:border-box;background:#fff;color:#000;font-family:Arial,Helvetica,sans-serif;line-height:1.35}
+  .receipt-shell .receipt .head{text-align:center;margin-bottom:10px}
+  .receipt-shell .receipt h1{margin:0;font-size:18px;letter-spacing:.08em;font-weight:800;text-transform:uppercase}
+  .receipt-shell .receipt .sub{font-size:11px;margin-top:4px}
+  .receipt-shell .receipt .divider{height:1px;background:#000;margin:8px 0 10px}
+  .receipt-shell .receipt .row{display:flex;justify-content:space-between;gap:10px;font-size:11px;padding:2px 0;border-bottom:1px dashed rgba(0,0,0,.25)}
+  .receipt-shell .receipt .row span:first-child{font-weight:700;white-space:nowrap}
+  .receipt-shell .receipt .row span:last-child{flex:1;text-align:right;word-break:break-word}
+  .receipt-shell .receipt .footer{margin-top:12px;text-align:center;font-size:10px;line-height:1.5}
+}
 </style>
 </head>
 <body>
@@ -301,7 +354,7 @@ body.lock{overflow:hidden}
       <span><b>Kaafi Hospital</b><small>Kaafiyaha Bulshada</small></span>
     </a>
     <div class="top-actions">
-      <button class="dl-btn" id="dlBtn" type="button" hidden><i class="bi bi-download"></i><span>Download</span></button>
+      <button class="dl-btn" id="dlBtn" type="button" hidden><i class="bi bi-download"></i><span>Soo dejiso</span></button>
       <a class="icon-btn" href="tel:+252610830002" aria-label="Wac isbitaalka"><i class="bi bi-telephone-fill"></i></a>
     </div>
   </div>
@@ -365,12 +418,16 @@ body.lock{overflow:hidden}
 <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
   <div class="sheet-head">
     <button class="icon-btn ghost" id="sheetBack" aria-label="Dib u noqo"><i class="bi bi-arrow-left"></i></button>
-    <div class="ttl"><b id="sheetTitle">Xogta bukaanka</b><div class="prog" id="prog"><span></span><span></span><span></span></div></div>
+    <div class="ttl"><b id="sheetTitle">Xogta Bukaanka</b><div class="prog" id="prog"><span></span><span></span><span></span></div></div>
     <button class="icon-btn ghost" id="sheetClose" aria-label="Xir"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="sheet-body" id="sheetBody"></div>
   <div class="sheet-foot" id="sheetFoot"></div>
 </section>
+
+<div class="receipt-shell" aria-hidden="true">
+  <div id="bookingReceipt" class="receipt"></div>
+</div>
 
 <script>
 /* ================= CONFIG ================= */
@@ -446,6 +503,57 @@ const num = n => { const v = Number(n) || 0; return Number.isInteger(v) ? String
 const money = n => '$' + num(n);
 const ussd = (total, pay) => `*789*${pay || CFG.payNumber}*${num(total)}#`;
 const telHref = (total, pay) => 'tel:' + ussd(total, pay).replace(/#/g, '%23');
+function formatReceiptDate(v){
+  try {
+    const d = new Date(v || Date.now());
+    return d.toLocaleString('so-SO', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}).replace(',', '');
+  } catch { return '' }
+}
+function buildBookingReceiptHtml(){
+  const b = booking || {};
+  const patientName = b.patient_name || form.name || '';
+  const patientId = b.patient_id || b.patient_number || b.id || '';
+  const mobile = b.patient_phone || b.mobile || form.phone || '';
+  const appointmentType = b.appointment_type || b.appointment || b.booking_type || (sel && (sel.specialty || sel.department || sel.category)) || '';
+  const doctor = b.doctor_name || (sel && (sel.full_name || sel.name)) || '';
+  const department = b.department || b.doctor_department || (sel && (sel.specialty || sel.category || sel.department)) || '';
+  const amount = b.total ?? ((Number(b.doctor_fee) || 0) + (Number(b.booking_fee) || 0));
+  const paymentMode = b.payment_mode || b.payment_method || 'EVC Plus';
+  const staff = b.user_name || b.staff_name || b.created_by || b.agent || '';
+  const dateValue = formatReceiptDate(b.created_at || b.booking_date || b.date || Date.now());
+  return `
+    <div class="receipt">
+      <div class="head">
+        <h1>KAAFI HOSPITAL</h1>
+        <div class="sub">Rasiidka Ballanta</div>
+      </div>
+      <div class="divider"></div>
+      <div class="row"><span>Lambar:</span><span></span></div>
+      <div class="row"><span>Taariikhda:</span><span>${esc(dateValue)}</span></div>
+      <div class="row"><span>Magaca Bukaanka:</span><span>${esc(patientName)}</span></div>
+      <div class="row"><span>Aqoonsiga Bukaanka:</span><span>${esc(patientId)}</span></div>
+      <div class="row"><span>Lambarka Taleefanka:</span><span>${esc(mobile)}</span></div>
+      <div class="row"><span>Nooca Ballanta:</span><span>${esc(appointmentType)}</span></div>
+      <div class="row"><span>Dhakhtarka:</span><span>${esc(doctor)}</span></div>
+      <div class="row"><span>Qaybta:</span><span>${esc(department)}</span></div>
+      <div class="row"><span>Lacagta:</span><span>${money(amount)}</span></div>
+      <div class="row"><span>Habka Lacag-bixinta:</span><span>${esc(paymentMode)}</span></div>
+      <div class="row"><span>Shaqaale / Isticmaale:</span><span>${esc(staff)}</span></div>
+      <div class="footer">
+        Waad ku mahadsan tahay doorashadaada KAAFI HOSPITAL.<br>
+        Fadlan rasiidkan u hayso ballantaada.
+      </div>
+    </div>
+  `;
+}
+function openBookingReceipt(){
+  if (!booking && !form.name) return;
+  const target = document.getElementById('bookingReceipt');
+  if (!target) return;
+  target.innerHTML = buildBookingReceiptHtml();
+  window.focus();
+  setTimeout(() => window.print(), 120);
+}
 async function loadPayNumber(){
   try { const {data, error} = await sb.rpc('kaafi_pay_number'); if (!error && data) CFG.payNumber = String(data); } catch {}
 }
@@ -497,6 +605,8 @@ let form = EMPTY_FORM();
 let booking = null;
 let busy = false;
 let lookT = null, lookSeq = 0;
+let lookupErrorKey = '';
+let autoAdvanceTimer = null;
 const phoneKey = p => String(p || '').replace(/\D/g, '').slice(-9);
 const netMsg = e => (e && e.message && !/fetch|network/i.test(e.message)) ? e.message : 'Internetka ayaa go\'an. Fadlan hubi oo isku day mar kale.';
 
@@ -586,6 +696,7 @@ function openSheet(d){
 function closeSheet(fromPop){
   const bd = $('#backdrop'), sh = $('#sheet');
   if (sh.hidden) return;
+  if (step === 1) readForm();
   bd.classList.remove('show'); sh.classList.remove('show');
   document.body.classList.remove('lock');
   setTimeout(() => { bd.hidden = true; sh.hidden = true; }, 260);
@@ -595,10 +706,15 @@ function closeSheet(fromPop){
 window.addEventListener('popstate', () => closeSheet(true));
 
 function setProgress(){
-  const titles = {1:'Xogta bukaanka', 2:'Xaqiiji & bixi', 3:'Ballantu waa diyaar'};
+  const titles = {1:'Xogta Bukaanka', 2:'Xaqiiji & bixi', 3:'Ballantu waa diyaar'};
   $('#sheetTitle').textContent = titles[step];
   [...$('#prog').children].forEach((s, i) => { s.className = (i + 1 < step || step === 3) ? 'p-ok' : (i + 1 === step ? 'p-on' : ''); });
-  $('#sheetBack').style.visibility = step === 2 ? 'visible' : 'hidden';
+  $('#sheetBack').style.visibility = step < 3 ? 'visible' : 'hidden';
+}
+
+function goBack(){
+  if (step === 1) { readForm(); closeSheet(); return; }
+  if (step === 2) { step = 1; renderSheet(); }
 }
 
 function miniHTML(){
@@ -647,12 +763,16 @@ function scheduleLookup(){
   const key = phoneKey(form.phone);
   if (key.length < 9) {
     lookSeq++;
+    lookupErrorKey = '';
     if (form.foundKey) { form.found = []; form.foundKey = ''; form.pick = null; paintPrev(); }
     setHint('');
+    maybeAutoAdvance();
     return;
   }
   if (key === form.foundKey) return;
+  if (key === lookupErrorKey) return;
   lookT = setTimeout(() => runLookup(key), 350);
+  updateFormNotice({lookup:1});
 }
 async function runLookup(key){
   const my = ++lookSeq;
@@ -662,14 +782,20 @@ async function runLookup(key){
     if (my !== lookSeq || step !== 1) return;
     if (error) throw error;
     form.foundKey = key;
+    lookupErrorKey = '';
     form.found = (data && data.ok && data.members) || [];
     form.pick = null;
     paintPrev();
     setHint(form.found.length
       ? `<i class="bi bi-check2-circle"></i> Xogtii hore waa la helay — dooro qofka.`
       : (data && !data.ok && data.error) ? esc(data.error) : '');
+    maybeAutoAdvance();
   } catch (e) {
-    if (my === lookSeq) setHint('');
+    if (my === lookSeq) {
+      lookupErrorKey = key;
+      setHint('');
+      updateFormNotice({lookup:1});
+    }
   }
 }
 
@@ -682,14 +808,15 @@ function renderSheet(){
     body.innerHTML = miniHTML() + `
     <form class="form" id="pForm" novalidate>
       <div class="field" data-f="phone">
-        <label for="f_phone">Lambarka taleefanka</label>
+        <label for="f_phone">Lambarka Taleefanka</label>
         <div class="inp"><i class="bi bi-phone"></i><input id="f_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="061 XXX XXXX" value="${esc(form.phone)}" maxlength="20"></div>
         <div class="err">Lambar sax ah geli.</div>
         <div class="hint" id="lookHint">${HINT_DEFAULT}</div>
+        <div class="hint" id="formNotice" role="status" aria-live="polite"></div>
       </div>
       <div id="prevBox">${prevHTML()}</div>
       <div class="field" data-f="name">
-        <label for="f_name">Magaca bukaanka (oo buuxa)</label>
+        <label for="f_name">Magaca Bukaanka (oo buuxa)</label>
         <div class="inp"><i class="bi bi-person"></i><input id="f_name" autocomplete="name" placeholder="Tusaale: Faadumo Cali Xasan" value="${esc(form.name)}" maxlength="100"></div>
         <div class="err">Fadlan qor magaca bukaanka oo buuxa.</div>
       </div>
@@ -714,7 +841,7 @@ function renderSheet(){
         <div class="err">Fadlan dooro Rag ama Dumar.</div>
       </fieldset>
       <fieldset class="field" data-f="came">
-        <legend>QOFKA AAD NUMBERKA U RABTO HORAY MA U YIMID ISBITAALKA?</legend>
+        <legend>Qofka aad lambarka u rabto hore ma u yimid isbitaalka?</legend>
         <div class="seg">
           <button type="button" data-came="yes" class="${form.came===true?'on':''}"><i class="bi bi-check-lg"></i> Haa</button>
           <button type="button" data-came="no" class="${form.came===false?'on':''}"><i class="bi bi-x-lg"></i> Maya</button>
@@ -722,7 +849,10 @@ function renderSheet(){
         <div class="err">Fadlan dooro Haa ama Maya.</div>
       </fieldset>
     </form>`;
-    foot.innerHTML = `<button class="btn btn-primary btn-block" id="toConfirm">Sii wad <i class="bi bi-arrow-right"></i></button>`;
+    foot.innerHTML = `<div class="patient-actions">
+      <button class="btn btn-back" id="backPatient" type="button"><i class="bi bi-arrow-left"></i> Dib u noqo</button>
+      <button class="btn btn-primary" id="toConfirm" type="button">Sii wad <i class="bi bi-arrow-right"></i></button>
+    </div>`;
     if (form.found.length) setHint(`<i class="bi bi-check2-circle"></i> Xogtii hore waa la helay — dooro qofka.`);
     scheduleLookup();
     return;
@@ -749,34 +879,27 @@ function renderSheet(){
         <div class="ln tot"><span>Wadarta guud</span><b>${money(total)}</b></div>
       </div>
       <div class="pay"><i class="bi bi-phone-vibrate"></i>
-        <div>Markaad riixdo <b>“Xaqiiji &amp; Bixi”</b>, ballantaada waa la diiwaangelinayaa, taleefankaaguna wuxuu si toos ah u furayaa EVC Plus:<br><span class="ussd">${esc(ussd(total))}</span></div>
+        <div>Markaad riixdo <b>“Xaqiiji &amp; Lacagta Bixi”</b>, ballantaada waa la diiwaangelinayaa, Lacagta bixi tabo hada si aad ubixiso:<br><span class="ussd">${esc(ussd(total))}</span></div>
       </div>`;
-    foot.innerHTML = `<button class="btn btn-green btn-block" id="payBtn"><i class="bi bi-shield-check"></i> Xaqiiji &amp; Bixi ${money(total)}</button>`;
+    foot.innerHTML = `<div class="patient-actions payment-actions">
+      <button class="btn btn-back" id="backPatient" type="button"><i class="bi bi-arrow-left"></i> Dib u noqo</button>
+      <button class="btn btn-green" id="payBtn" type="button"><i class="bi bi-shield-check"></i> Xaqiiji &amp; Lacagta Bixi · ${money(total)}</button>
+    </div>`;
     return;
   }
 
   // step 3 — done
   body.innerHTML = `<div class="done">
       <div class="check"><i class="bi bi-check-lg"></i></div>
-      <h3>Ballantaada waa la diiwaangeliyay</h3>
-      <p>Koodhka ballantaada:</p>
-      <div class="code">${esc(booking.booking_code)}</div>
-      <p class="muted" style="font-size:13px">Kaydi koodhkan oo tus marka aad timaado isbitaalka.</p>
+      <h3>Ballantaada si guul leh ayaa loo diiwaangeliyay ✅</h3>
+      <p>Waad ku mahadsan tahay doorashadaada <b>Kaafi Hospital</b>.</p>
+      <p>Fadlan iska hubi in lacagta bixisay hadi adan bixin button ka hose tabo.</p>
+      <p>Mahadsanid.</p>
     </div>
-    <div class="box">
-      <dl class="kv">
-        <dt>Bukaanka</dt><dd>${esc(booking.patient_name)}</dd>
-        <dt>Dhakhtarka</dt><dd>${esc(booking.doctor_name)}</dd>
-        <dt>Lacagta dhakhtarka</dt><dd>${money(booking.doctor_fee)}</dd>
-        <dt>Khidmadda ballanta</dt><dd>${money(booking.booking_fee)}</dd>
-        <dt><b style="color:var(--ink)">Wadarta</b></dt><dd style="font-size:18px;color:var(--navy)">${money(booking.total)}</dd>
-      </dl>
-    </div>
-    <div class="pay"><i class="bi bi-info-circle"></i>
-      <div>Haddii Lacagta adan bixin oo toos u furmin, riix badhanka hoose si aad u bixiso <b>${money(booking.total)}</b>.</div>
-    </div>`;
+    `;
   foot.innerHTML = `<div class="stack">
       <a class="btn btn-green btn-block" href="${telHref(booking.total)}" id="dialAgain"><i class="bi bi-telephone-outbound-fill"></i> Bixi hadda · <span class="ussd" style="background:rgba(255,255,255,.18);color:#fff">${esc(ussd(booking.total))}</span></a>
+      <button class="btn btn-light btn-block" id="printReceiptBtn"><i class="bi bi-printer"></i> Daabac rasiidka 🖨️</button>
       <button class="btn btn-light btn-block" id="newBooking"><i class="bi bi-plus-lg"></i> Ballan kale samee</button>
     </div>`;
 }
@@ -789,6 +912,16 @@ function readForm(){
   form.district = $('#f_district').value;
 }
 function validate(){
+  const bad = formErrors();
+  document.querySelectorAll('#pForm .field').forEach(f => f.classList.toggle('bad', !!bad[f.dataset.f]));
+  const first = document.querySelector('#pForm .field.bad');
+  if (first) { first.scrollIntoView({behavior:'smooth', block:'center'}); const i = first.querySelector('input,select'); if (i) i.focus({preventScroll:true}); }
+  if (bad.patient) $('#prevBox').scrollIntoView({behavior:'smooth', block:'center'});
+  updateFormNotice(bad);
+  return !Object.keys(bad).length;
+}
+
+function formErrors(){
   const bad = {};
   if (form.name.length < 3) bad.name = 1;
   const age = Number(form.age);
@@ -798,10 +931,57 @@ function validate(){
   if (!form.district) bad.district = 1;
   if (form.sex !== 'rag' && form.sex !== 'dumar') bad.sex = 1;
   if (form.came !== true && form.came !== false) bad.came = 1;
-  document.querySelectorAll('#pForm .field').forEach(f => f.classList.toggle('bad', !!bad[f.dataset.f]));
-  const first = document.querySelector('#pForm .field.bad');
-  if (first) { first.scrollIntoView({behavior:'smooth', block:'center'}); const i = first.querySelector('input,select'); if (i) i.focus({preventScroll:true}); }
-  return !first;
+  const key = phoneKey(form.phone);
+  if (key.length >= 9 && key !== form.foundKey) bad.lookup = 1;
+  if (key === lookupErrorKey) bad.lookup = 1;
+  if (form.found.length && !form.pick) bad.patient = 1;
+  return bad;
+}
+
+function updateFormNotice(errors){
+  const notice = $('#formNotice');
+  if (!notice) return;
+  const bad = errors || {};
+  const labels = {phone:'lambarka taleefanka', name:'magaca bukaanka', age:'da’da', district:'degmada', sex:'jinsiga', came:'jawaabta su’aasha booqashada', patient:'doorashada bukaanka hore ama qof cusub', lookup:'hubinta xogtii hore'};
+  const missing = Object.keys(bad).map(key => labels[key]).filter(Boolean);
+  if (missing.includes(labels.lookup)) {
+    notice.textContent = phoneKey(form.phone) === lookupErrorKey
+      ? 'Xogtii hore lama hubin karin. Hubi internetka kadibna lambarka mar kale geli.'
+      : 'Lambarka taleefanka waa la hubinayaa. Sug inta xogtii hore la raadinayo.';
+  } else if (missing.length) {
+    notice.textContent = `Fadlan dhammaystir xogtan: ${missing.join(', ')}.`;
+  } else if (form.found.length && !form.pick) {
+    notice.textContent = 'Xogtii hore waa la helay. Dooro bukaanka saxda ah ama qof cusub.';
+  } else {
+    notice.textContent = '';
+  }
+}
+
+function maybeAutoAdvance(){
+  if (step !== 1 || !$('#pForm')) return;
+  readForm();
+  const errors = formErrors();
+  updateFormNotice(errors);
+  clearTimeout(autoAdvanceTimer);
+  autoAdvanceTimer = null;
+  if (Object.keys(errors).length) return;
+  autoAdvanceTimer = setTimeout(() => {
+    autoAdvanceTimer = null;
+    if (step !== 1 || !$('#pForm')) return;
+    readForm();
+    if (Object.keys(formErrors()).length) return;
+    advanceToConfirmation();
+  }, 3000);
+}
+
+function advanceToConfirmation(){
+  clearTimeout(autoAdvanceTimer);
+  autoAdvanceTimer = null;
+  step = 2;
+  const body = $('#sheetBody');
+  body.classList.add('step-enter');
+  body.addEventListener('animationend', () => body.classList.remove('step-enter'), {once:true});
+  renderSheet();
 }
 
 async function confirmAndPay(){
@@ -834,7 +1014,7 @@ async function confirmAndPay(){
   } catch (e) {
     swal({icon:'error', title:'Ballanta lama dhammaystirin', text:netMsg(e)});
     btn.disabled = false;
-    btn.innerHTML = `<i class="bi bi-shield-check"></i> Xaqiiji &amp; Bixi ${money(Number(sel.fee) + CFG.bookingFee)}`;
+    btn.innerHTML = `<i class="bi bi-shield-check"></i> Xaqiiji &amp; Lacagta Bixi · ${money(Number(sel.fee) + CFG.bookingFee)}`;
   } finally {
     busy = false;
   }
@@ -844,6 +1024,7 @@ function setSex(v){
   form.sex = v || '';
   document.querySelectorAll('[data-sex]').forEach(b => b.classList.toggle('on', b.dataset.sex === form.sex));
   if (form.sex) { const f = document.querySelector('[data-f="sex"]'); if (f) f.classList.remove('bad'); }
+  maybeAutoAdvance();
 }
 
 /* ================= EVENTS ================= */
@@ -864,7 +1045,7 @@ $('#grid').addEventListener('keydown', e => {
 });
 $('#backdrop').addEventListener('click', () => closeSheet());
 $('#sheetClose').addEventListener('click', () => closeSheet());
-$('#sheetBack').addEventListener('click', () => { if (step === 2) { step = 1; renderSheet(); } });
+$('#sheetBack').addEventListener('click', goBack);
 $('#sheet').addEventListener('click', e => {
   const t = e.target;
   const sx = t.closest('[data-sex]');
@@ -874,6 +1055,7 @@ $('#sheet').addEventListener('click', e => {
     form.came = cm.dataset.came === 'yes';
     document.querySelectorAll('[data-came]').forEach(b => b.classList.toggle('on', b === cm));
     document.querySelector('[data-f="came"]').classList.remove('bad');
+    maybeAutoAdvance();
     return;
   }
   const pk = t.closest('[data-pick]');
@@ -888,20 +1070,27 @@ $('#sheet').addEventListener('click', e => {
     readForm();
     paintPrev();
     if (!m) $('#f_name').focus();
+    maybeAutoAdvance();
     return;
   }
-  if (t.closest('#toConfirm')) { readForm(); if (validate()) { step = 2; renderSheet(); } return; }
+  if (t.closest('#toConfirm')) { readForm(); if (validate()) advanceToConfirmation(); return; }
+  if (t.closest('#backPatient')) { goBack(); return; }
   if (t.closest('#editP')) { step = 1; renderSheet(); return; }
   if (t.closest('#payBtn')) { confirmAndPay(); return; }
+  if (t.closest('#printReceiptBtn')) { openBookingReceipt(); return; }
   if (t.closest('#newBooking')) { closeSheet(); return; }
 });
 $('#sheet').addEventListener('input', e => {
   const f = e.target.closest('.field'); if (f) f.classList.remove('bad');
-  if (e.target.id === 'f_phone') { form.phone = e.target.value.trim(); scheduleLookup(); }
+  if (e.target.id === 'f_phone') { form.phone = e.target.value.trim(); lookupErrorKey = ''; scheduleLookup(); }
   if (e.target.id === 'f_name' && form.pick && form.pick !== 'new') {
     const m = form.found.find(x => x.id === form.pick);
     if (m && e.target.value.trim().toLowerCase() !== m.full_name.toLowerCase()) { form.pick = null; paintPrev(); }
   }
+  maybeAutoAdvance();
+});
+$('#sheet').addEventListener('change', e => {
+  if (e.target.matches('#pForm input, #pForm select')) maybeAutoAdvance();
 });
 $('#sheet').addEventListener('keydown', e => {
   if (e.key === 'Enter' && step === 1 && e.target.matches('input')) { e.preventDefault(); $('#toConfirm').click(); }
@@ -974,8 +1163,8 @@ const appHead = sub => `<div style="display:flex;align-items:center;gap:12px;jus
   <div style="text-align:left"><b>Kaafi Hospital</b><br><small style="color:#767D99">${sub}</small></div></div>`;
 
 async function offerInstall(evt){
-  const r = await Swal.fire({title:'Soo deji app-ka', html: appHead('Ku dar home screen-ka'),
-    confirmButtonText:'<i class="bi bi-download"></i> Install', confirmButtonColor:'#E1262D',
+  const r = await Swal.fire({title:'Soo deji app-ka', html: appHead('Ku dar shaashadda guriga'),
+    confirmButtonText:'<i class="bi bi-download"></i> Ku rakib', confirmButtonColor:'#E1262D',
     showCancelButton:true, cancelButtonText:'Hadda maya'});
   if (r.isConfirmed) nativeInstall(evt);
 }
@@ -989,7 +1178,7 @@ dlBtn.addEventListener('click', async () => {
   // 2) iPhone: Apple allows only Share → Add to Home Screen
   if (isIOS) {
     return Swal.fire({title:'Soo deji app-ka', confirmButtonColor:'#24318F', confirmButtonText:'Hagaag',
-      html: appHead('iPhone') + `<p style="margin:10px 0 0;font-size:16px">Riix <b>Share</b> <i class="bi bi-box-arrow-up" style="color:#24318F"></i> → <b>Add to Home Screen</b></p>`});
+      html: appHead('iPhone') + `<p style="margin:10px 0 0;font-size:16px">Riix <b>Wadaag</b> <i class="bi bi-box-arrow-up" style="color:#24318F"></i> → <b>Ku dar shaashadda guriga</b></p>`});
   }
 
   // 3) Android in a browser that cannot install by itself (Samsung Internet, Edge, Mi, Facebook…) → open in Chrome
@@ -998,7 +1187,7 @@ dlBtn.addEventListener('click', async () => {
   // 4) in-app browser on other systems
   if (isInApp) {
     const r = await Swal.fire({title:'Ku fur Chrome', confirmButtonColor:'#24318F', confirmButtonText:'<i class="bi bi-link-45deg"></i> Koobi link-ga',
-      html: appHead('Download') + `<p style="margin:10px 0 0">App-ka waxaa laga soo dejin karaa oo keliya browser (Chrome / Safari).</p>`});
+      html: appHead('Soo dejiso') + `<p style="margin:10px 0 0">App-ka waxaa laga soo dejin karaa oo keliya browser-ka (Chrome / Safari).</p>`});
     if (r.isConfirmed) { const ok = await copyLink(); swal({icon: ok ? 'success' : 'info', title: ok ? 'Link-ga waa la koobiyay' : location.href, text: ok ? 'Ku dheji Chrome.' : ''}); }
     return;
   }
@@ -1016,7 +1205,7 @@ dlBtn.addEventListener('click', async () => {
   const missing = await missingAppFiles();
   swal({title:'Kaafi Hospital',
     html: appHead('App') + (!missing.length
-      ? '<p style="margin:10px 0 0">App-ka Kaafi Hospital wuxuu ku jiraa shaashaddaada (home screen).</p>'
+      ? '<p style="margin:10px 0 0">App-ka Kaafi Hospital wuxuu ku jiraa shaashadda guriga.</p>'
       : `<p style="margin:10px 0 0;color:#B81C22;font-size:14px">Faylkan lagama helin website-ka: <b>${missing.join(', ')}</b><br>Ku rar isla meesha uu <b>index.html</b> ku jiro.</p>`)});
 });
 
