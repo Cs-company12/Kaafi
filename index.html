@@ -262,9 +262,9 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .patient-actions{display:grid;grid-template-columns:minmax(150px,.45fr) minmax(0,1fr);gap:12px;max-width:1080px;margin:0 auto}
 .patient-actions .btn-back{background:#EEF0FB;color:var(--navy)}
 .patient-actions .btn-back:hover{background:#C9CEF0}
-.payment-actions{position:relative;grid-template-columns:1fr;width:100%;max-width:1080px;margin:0 auto}
+.payment-actions{position:relative;grid-template-columns:1fr;width:100%;max-width:none;margin:0}
 .payment-actions #backPatient{order:2}
-.payment-actions #payBtn{width:100%;min-height:80px;padding:18px 22px;font-size:20px;font-weight:800;white-space:normal;box-shadow:0 5px 16px rgba(15,154,85,.24);animation:payment-attention 10s ease-out 1}
+.payment-actions #payBtn{width:calc(100% - 16px);margin:0 8px;box-sizing:border-box;min-height:80px;padding:18px 22px;font-size:20px;font-weight:800;white-space:normal;box-shadow:0 5px 16px rgba(15,154,85,.24);animation:payment-attention 10s ease-out 1}
 .payment-guidance-arrow{position:absolute;z-index:2;left:50%;bottom:calc(100% - 5px);font-size:54px;line-height:1;filter:drop-shadow(0 3px 5px rgba(16,22,51,.25));pointer-events:none;transform:translateX(-50%)}
 .payment-guidance-arrow[hidden]{display:none}
 .payment-guidance-arrow.guidance-active{animation:guidance-arrow 1s ease-in-out infinite}
