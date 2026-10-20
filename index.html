@@ -214,8 +214,8 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .prog span{width:26px;height:4px;border-radius:4px;background:var(--line)}
 .prog span.p-on{background:var(--navy)}
 .prog span.p-ok{background:var(--green)}
-.sheet-body{overflow-y:auto;padding:clamp(18px,3vw,36px);flex:1;overscroll-behavior:contain;width:100%;margin:0 auto}
-.sheet-foot{padding:14px max(20px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));background:#fff;border-top:1px solid var(--line)}
+.sheet-body{overflow-y:auto;padding:clamp(18px,3vw,36px);flex:1;overscroll-behavior:contain;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0 auto}
+.sheet-foot{width:100%;max-width:100%;min-width:0;box-sizing:border-box;padding:14px max(20px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));background:#fff;border-top:1px solid var(--line)}
 .sheet-foot.payment-foot{width:100%;box-sizing:border-box;padding:12px max(0px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left))}
 .sheet-foot:empty{display:none}
 
@@ -265,9 +265,7 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .patient-actions .btn-back:hover{background:#C9CEF0}
 .payment-actions{position:relative;display:flex;align-items:stretch;width:100%;max-width:none;min-width:0;margin:0}
 .payment-actions #backPatient{order:2}
-.payment-actions #payBtn{flex:1;width:100%;max-width:none;min-width:0;margin:0 8px;box-sizing:border-box;min-height:72px;padding:14px 16px;font-size:18px;font-weight:800;white-space:nowrap;box-shadow:0 5px 16px rgba(15,154,85,.24);animation:payment-attention 10s ease-out 1}
-.payment-actions #playPaymentGuidance{position:absolute;right:16px;top:-48px;width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--navy);font-size:20px;cursor:pointer;box-shadow:var(--shadow)}
-.payment-actions #playPaymentGuidance[hidden]{display:none}
+.payment-actions #payBtn{flex:1 1 0;width:auto;max-width:100%;min-width:0;margin:0;box-sizing:border-box;min-height:72px;padding:14px 16px;font-size:18px;font-weight:800;white-space:normal;overflow-wrap:anywhere;box-shadow:0 5px 16px rgba(15,154,85,.24);animation:payment-attention 10s ease-out 1}
 .payment-guidance-arrow{position:absolute;z-index:2;left:50%;bottom:calc(100% - 5px);font-size:54px;line-height:1;filter:drop-shadow(0 3px 5px rgba(16,22,51,.25));pointer-events:none;transform:translateX(-50%)}
 .payment-guidance-arrow[hidden]{display:none}
 .payment-guidance-arrow.guidance-active{animation:guidance-arrow 1s ease-in-out infinite}
@@ -323,6 +321,7 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .bill .tot span{font-weight:800;color:var(--ink);font-size:15px}
 .bill .tot b{font-size:28px;letter-spacing:-.02em;color:var(--navy)}
 .pay{display:flex;gap:12px;align-items:flex-start;background:var(--green-l);border:1px solid #BFE8D2;color:#0B5E35;border-radius:var(--r-sm);padding:12px 14px;margin-top:12px;font-size:13.5px}
+.pay[hidden]{display:none!important}
 .pay i{font-size:20px;color:var(--green);margin-top:1px}
 .ussd{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;background:#fff;border-radius:6px;padding:1px 7px;color:var(--ink);letter-spacing:.02em}
 
@@ -333,7 +332,11 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .done h3{margin:0;font-size:20px}
 .done p{margin:6px 0 0;color:var(--ink-2)}
 .code{display:inline-block;margin:14px 0 4px;font-size:30px;font-weight:800;letter-spacing:.04em;color:var(--navy);background:var(--navy-l);padding:8px 20px;border-radius:14px;border:2px dashed var(--navy-m)}
-.stack{display:grid;gap:10px}
+.stack{display:grid;gap:10px;width:100%;max-width:100%;min-width:0}
+.stack>.btn{width:100%;max-width:100%;min-width:0;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere}
+.stack #dialAgain{display:flex;flex-direction:column;gap:8px;text-align:center}
+.stack #dialAgain .dial-label{display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;max-width:100%;min-width:0}
+.stack #dialAgain .ussd{display:block;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;word-break:break-all}
 .spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 body.lock{overflow:hidden}
@@ -893,12 +896,11 @@ function renderSheet(){
         <div class="ln"><span>Khidmadda ballanta</span><b>${money(CFG.bookingFee)}</b></div>
         <div class="ln tot"><span>Wadarta guud</span><b>${money(total)}</b></div>
       </div>
-      <div class="pay"><i class="bi bi-phone-vibrate"></i>
+      <div class="pay" hidden><i class="bi bi-phone-vibrate"></i>
         <div>Markaad riixdo <b>“Xaqiiji &amp; Lacagta Bixi”</b>, ballantaada waa la diiwaangelinayaa, Lacagta bixi tabo hada si aad ubixiso:<br><span class="ussd">${esc(ussd(total))}</span></div>
       </div>`;
     foot.innerHTML = `${guidanceAudioUrl ? `<audio id="paymentGuidanceAudio" preload="auto" src="${esc(guidanceAudioUrl)}"></audio>` : ''}
     <div class="patient-actions payment-actions">
-      <button id="playPaymentGuidance" type="button" aria-label="Dhegayso codka tilmaanta" title="Dhegayso codka tilmaanta" hidden> </button>
       <span id="paymentGuidanceArrow" class="payment-guidance-arrow" aria-hidden="true" hidden>⬇️</span>
       <button class="btn btn-green" id="payBtn" type="button"><i class="bi bi-shield-check"></i> Xaqiiji &amp; Lacagta Bixi · ${money(total)}</button>
     </div>`;
@@ -907,7 +909,7 @@ function renderSheet(){
       guidanceAudio.onended = () => { if (step === 2) $('#paymentGuidanceArrow')?.classList.remove('guidance-active'); };
       guidanceAudio.onerror = () => {
         if (step !== 2) return;
-        if (!speakSomaliGuidance()) showPaymentAudioRetry();
+        speakSomaliGuidance();
       };
     }
     schedulePaymentGuidance();
@@ -917,7 +919,7 @@ function renderSheet(){
   // step 3 — done
   body.innerHTML = `<div class="done">
       <div class="check"><i class="bi bi-check-lg"></i></div>
-      <h3>Ballantaada si guul leh ayaa loo diiwaangeliyay ✅</h3>
+      <h2>Ballantaada si guul leh ayaa loo diiwaangeliyay ✅</h2>
       <p>Waad ku mahadsan tahay doorashadaada <b>Kaafi Hospital</b>.</p>
       <p>Fadlan iska hubi in lacagta bixisay hadi adan bixin button ka hose tabo.</p>
       <p>Mahadsanid.</p>
@@ -973,7 +975,7 @@ function updateFormNotice(errors){
   const missing = Object.keys(bad).map(key => labels[key]).filter(Boolean);
   if (missing.includes(labels.lookup)) {
     notice.textContent = phoneKey(form.phone) === lookupErrorKey
-      ? 'Xogtii hore lama hubin karin. Hubi internetka kadibna lambarka mar kale geli.'
+      ? ' '
       : 'Lambarka taleefanka waa la hubinayaa. Sug inta xogtii hore la raadinayo.';
   } else if (missing.length) {
     notice.textContent = `Fadlan dhammaystir xogtan: ${missing.join(', ')}.`;
@@ -1037,14 +1039,11 @@ async function playPaymentGuidance(arrow = $('#paymentGuidanceArrow')){
       audio.currentTime = 0;
       await audio.play();
       paymentGuidancePlaybackStarted = true;
-      const retry = $('#playPaymentGuidance');
-      if (retry) retry.hidden = true;
       if (arrow) arrow.classList.add('guidance-active');
       return true;
     } catch {}
   }
   if (speakSomaliGuidance()) return true;
-  showPaymentAudioRetry();
   return false;
 }
 
@@ -1060,8 +1059,6 @@ function speakSomaliGuidance(){
   utterance.volume = 1;
   utterance.onstart = () => {
     paymentGuidancePlaybackStarted = true;
-    const retry = $('#playPaymentGuidance');
-    if (retry) retry.hidden = true;
     const arrow = $('#paymentGuidanceArrow');
     if (arrow) arrow.classList.add('guidance-active');
   };
@@ -1072,17 +1069,11 @@ function speakSomaliGuidance(){
   };
   utterance.onerror = () => {
     if (paymentGuidanceUtterance === utterance) paymentGuidanceUtterance = null;
-    showPaymentAudioRetry();
   };
   paymentGuidanceUtterance = utterance;
   try { window.speechSynthesis.speak(utterance); }
   catch { paymentGuidanceUtterance = null; return false; }
   return true;
-}
-
-function showPaymentAudioRetry(){
-  const retry = $('#playPaymentGuidance');
-  if (retry && step === 2 && $('#payBtn') && !paymentGuidancePlaybackStarted) retry.hidden = false;
 }
 
 function stopPaymentGuidance(reset){
@@ -1096,8 +1087,6 @@ function stopPaymentGuidance(reset){
   }
   const arrow = $('#paymentGuidanceArrow');
   if (arrow) { arrow.hidden = true; arrow.classList.remove('guidance-active'); }
-  const retry = $('#playPaymentGuidance');
-  if (retry) retry.hidden = true;
   const audio = $('#paymentGuidanceAudio');
   if (audio) { audio.pause(); audio.currentTime = 0; }
   if (paymentGuidanceUtterance && 'speechSynthesis' in window) {
@@ -1203,7 +1192,6 @@ $('#sheet').addEventListener('click', e => {
   if (t.closest('#backPatient')) { goBack(); return; }
   if (t.closest('#editP')) { stopPaymentGuidance(true); step = 1; renderSheet(); return; }
   if (t.closest('#payBtn')) { stopPaymentGuidance(false); confirmAndPay(); return; }
-  if (t.closest('#playPaymentGuidance')) { playPaymentGuidance(); return; }
   if (t.closest('#printReceiptBtn')) { openBookingReceipt(); return; }
   if (t.closest('#newBooking')) { closeSheet(); return; }
 });
