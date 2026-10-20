@@ -216,6 +216,7 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .prog span.p-ok{background:var(--green)}
 .sheet-body{overflow-y:auto;padding:clamp(18px,3vw,36px);flex:1;overscroll-behavior:contain;width:100%;margin:0 auto}
 .sheet-foot{padding:14px max(20px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));background:#fff;border-top:1px solid var(--line)}
+.sheet-foot.payment-foot{width:100%;box-sizing:border-box;padding:12px max(0px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left))}
 .sheet-foot:empty{display:none}
 
 .mini{display:flex;gap:16px;align-items:center;background:#fff;border-radius:var(--r-sm);padding:14px;border:1px solid var(--line);max-width:1080px;margin:0 auto}
@@ -262,9 +263,11 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .patient-actions{display:grid;grid-template-columns:minmax(150px,.45fr) minmax(0,1fr);gap:12px;max-width:1080px;margin:0 auto}
 .patient-actions .btn-back{background:#EEF0FB;color:var(--navy)}
 .patient-actions .btn-back:hover{background:#C9CEF0}
-.payment-actions{position:relative;grid-template-columns:1fr;width:100%;max-width:none;margin:0}
+.payment-actions{position:relative;display:flex;align-items:stretch;width:100%;max-width:none;min-width:0;margin:0}
 .payment-actions #backPatient{order:2}
-.payment-actions #payBtn{width:calc(100% - 16px);margin:0 8px;box-sizing:border-box;min-height:80px;padding:18px 22px;font-size:20px;font-weight:800;white-space:normal;box-shadow:0 5px 16px rgba(15,154,85,.24);animation:payment-attention 10s ease-out 1}
+.payment-actions #payBtn{flex:1;width:100%;max-width:none;min-width:0;margin:0 8px;box-sizing:border-box;min-height:72px;padding:14px 16px;font-size:18px;font-weight:800;white-space:nowrap;box-shadow:0 5px 16px rgba(15,154,85,.24);animation:payment-attention 10s ease-out 1}
+.payment-actions #playPaymentGuidance{position:absolute;right:16px;top:-48px;width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--navy);font-size:20px;cursor:pointer;box-shadow:var(--shadow)}
+.payment-actions #playPaymentGuidance[hidden]{display:none}
 .payment-guidance-arrow{position:absolute;z-index:2;left:50%;bottom:calc(100% - 5px);font-size:54px;line-height:1;filter:drop-shadow(0 3px 5px rgba(16,22,51,.25));pointer-events:none;transform:translateX(-50%)}
 .payment-guidance-arrow[hidden]{display:none}
 .payment-guidance-arrow.guidance-active{animation:guidance-arrow 1s ease-in-out infinite}
@@ -296,6 +299,10 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
   .row2{grid-template-columns:minmax(84px,.55fr) minmax(0,1.45fr);gap:10px}
   .patient-actions{grid-template-columns:minmax(112px,.7fr) minmax(0,1.3fr);gap:8px}
   .patient-actions .btn{padding:12px 8px;font-size:15px}
+  .payment-actions #payBtn{font-size:16px;padding:12px 10px;min-height:68px}
+}
+@media (max-width:360px){
+  .payment-actions #payBtn{font-size:15px;padding:10px 6px}
 }
 .spin.dark{border-color:rgba(36,49,143,.25);border-top-color:var(--navy)}
 .hint .spin{display:inline-block;width:12px;height:12px;border-width:2px;vertical-align:-2px;margin-right:4px}
@@ -441,6 +448,7 @@ const CFG = {
   key: 'sb_publishable_exzgU4lfqJpzI89f8Jjl7w_5vT2d4NR',
   bookingFee: 1,
   payNumber: '736275',         // fallback; the live number comes from the database (admin → Lacagta)
+  paymentGuidanceAudioUrl: '',
 };
 const DISTRICTS = [
   'Boondheere','Cabdicasiis','Daarusalaam','Dayniile','Dharkeenleey','Garasbaaley','Gubadley',
@@ -605,7 +613,7 @@ let query = '';
 let sel = null;          // selected doctor
 let step = 1;            // 1 form, 2 confirm, 3 done
 /* found: previous patients saved under this phone number; pick: chosen previous patient id, or 'new' */
-const EMPTY_FORM = () => ({name:'', age:'', sex:'', came:null, phone:(store.get('kaafi_phone') || ''), district:'', found:[], foundKey:'', pick:null});
+const EMPTY_FORM = () => ({name:'', age:'', sex:'', came:true, phone:(store.get('kaafi_phone') || ''), district:'', found:[], foundKey:'', pick:null});
 let form = EMPTY_FORM();
 let booking = null;
 let busy = false;
@@ -615,6 +623,7 @@ let autoAdvanceTimer = null;
 let paymentGuidanceTimer = null;
 let paymentGuidanceShown = false;
 let paymentGuidanceUtterance = null;
+let paymentGuidancePlaybackStarted = false;
 let paymentVoiceWaitTimer = null;
 let paymentVoiceRetry = null;
 const phoneKey = p => String(p || '').replace(/\D/g, '').slice(-9);
@@ -814,6 +823,7 @@ async function runLookup(key){
 function renderSheet(){
   setProgress();
   const body = $('#sheetBody'), foot = $('#sheetFoot');
+  foot.classList.toggle('payment-foot', step === 2);
   body.scrollTop = 0;
 
   if (step === 1) {
@@ -852,14 +862,6 @@ function renderSheet(){
         </div>
         <div class="err">Fadlan dooro Rag ama Dumar.</div>
       </fieldset>
-      <fieldset class="field" data-f="came">
-        <legend>Qofka aad lambarka u rabto hore ma u yimid isbitaalka?</legend>
-        <div class="seg">
-          <button type="button" data-came="yes" class="${form.came===true?'on':''}"><i class="bi bi-check-lg"></i> Haa</button>
-          <button type="button" data-came="no" class="${form.came===false?'on':''}"><i class="bi bi-x-lg"></i> Maya</button>
-        </div>
-        <div class="err">Fadlan dooro Haa ama Maya.</div>
-      </fieldset>
     </form>`;
     foot.innerHTML = `<div class="patient-actions">
       <button class="btn btn-back" id="backPatient" type="button"><i class="bi bi-arrow-left"></i> Dib u noqo</button>
@@ -872,6 +874,7 @@ function renderSheet(){
 
   if (step === 2) {
     const total = Number(sel.fee) + CFG.bookingFee;
+    const guidanceAudioUrl = /^https:\/\//i.test(CFG.paymentGuidanceAudioUrl) ? CFG.paymentGuidanceAudioUrl : '';
     body.innerHTML = miniHTML() + `
       <div class="box">
         <h4>Xogta bukaanka <button type="button" id="editP"><i class="bi bi-pencil"></i> Beddel</button></h4>
@@ -893,10 +896,20 @@ function renderSheet(){
       <div class="pay"><i class="bi bi-phone-vibrate"></i>
         <div>Markaad riixdo <b>“Xaqiiji &amp; Lacagta Bixi”</b>, ballantaada waa la diiwaangelinayaa, Lacagta bixi tabo hada si aad ubixiso:<br><span class="ussd">${esc(ussd(total))}</span></div>
       </div>`;
-    foot.innerHTML = `<div class="patient-actions payment-actions">
+    foot.innerHTML = `${guidanceAudioUrl ? `<audio id="paymentGuidanceAudio" preload="auto" src="${esc(guidanceAudioUrl)}"></audio>` : ''}
+    <div class="patient-actions payment-actions">
+      <button id="playPaymentGuidance" type="button" aria-label="Dhegayso codka tilmaanta" title="Dhegayso codka tilmaanta" hidden>🔊</button>
       <span id="paymentGuidanceArrow" class="payment-guidance-arrow" aria-hidden="true" hidden>⬇️</span>
       <button class="btn btn-green" id="payBtn" type="button"><i class="bi bi-shield-check"></i> Xaqiiji &amp; Lacagta Bixi · ${money(total)}</button>
     </div>`;
+    const guidanceAudio = $('#paymentGuidanceAudio');
+    if (guidanceAudio) {
+      guidanceAudio.onended = () => { if (step === 2) $('#paymentGuidanceArrow')?.classList.remove('guidance-active'); };
+      guidanceAudio.onerror = () => {
+        if (step !== 2) return;
+        if (!speakSomaliGuidance()) showPaymentAudioRetry();
+      };
+    }
     schedulePaymentGuidance();
     return;
   }
@@ -911,7 +924,7 @@ function renderSheet(){
     </div>
     `;
   foot.innerHTML = `<div class="stack">
-      <a class="btn btn-green btn-block" href="${telHref(booking.total)}" id="dialAgain"><i class="bi bi-telephone-outbound-fill"></i> Bixi hadda · <span class="ussd" style="background:rgba(255,255,255,.18);color:#fff">${esc(ussd(booking.total))}</span></a>
+      <a class="btn btn-green btn-block" href="${telHref(booking.total)}" id="dialAgain"><i class="bi bi-telephone-outbound-fill"></i> Hadi Adan Bixin Bixi hadda · <span class="ussd" style="background:rgba(255,255,255,.18);color:#fff">${esc(ussd(booking.total))}</span></a>
       <button class="btn btn-light btn-block" id="printReceiptBtn"><i class="bi bi-printer"></i> Daabac rasiidka 🖨️</button>
       <button class="btn btn-light btn-block" id="newBooking"><i class="bi bi-plus-lg"></i> Ballan kale samee</button>
     </div>`;
@@ -923,6 +936,7 @@ function readForm(){
   form.age = $('#f_age').value.trim();
   form.phone = $('#f_phone').value.trim();
   form.district = $('#f_district').value;
+  form.came = true;
 }
 function validate(){
   const bad = formErrors();
@@ -1010,34 +1024,65 @@ function schedulePaymentGuidance(){
 }
 
 function speakPaymentGuidance(arrow){
-  if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return;
-  const sayWithSomaliVoice = () => {
-    if (!arrow || step !== 2 || !$('#payBtn')) return false;
-    const voice = window.speechSynthesis.getVoices().find(item => /^so(?:[-_]|$)/i.test(item.lang || ''));
-    if (!voice) return false;
-    const utterance = new SpeechSynthesisUtterance('Taabo inta…');
-    utterance.lang = voice.lang || 'so-SO';
-    utterance.voice = voice;
-    utterance.onend = () => { if (paymentGuidanceUtterance === utterance && arrow) arrow.classList.remove('guidance-active'); };
-    utterance.onerror = () => { if (paymentGuidanceUtterance === utterance && arrow) arrow.classList.remove('guidance-active'); };
-    paymentGuidanceUtterance = utterance;
-    window.speechSynthesis.speak(utterance);
-    return true;
+  playPaymentGuidance(arrow);
+}
+
+async function playPaymentGuidance(arrow = $('#paymentGuidanceArrow')){
+  if (step !== 2 || !$('#payBtn')) return false;
+  if (paymentGuidancePlaybackStarted || paymentGuidanceUtterance) return true;
+  const audio = $('#paymentGuidanceAudio');
+  if (audio) {
+    if (!audio.paused) return true;
+    try {
+      audio.currentTime = 0;
+      await audio.play();
+      paymentGuidancePlaybackStarted = true;
+      const retry = $('#playPaymentGuidance');
+      if (retry) retry.hidden = true;
+      if (arrow) arrow.classList.add('guidance-active');
+      return true;
+    } catch {}
+  }
+  if (speakSomaliGuidance()) return true;
+  showPaymentAudioRetry();
+  return false;
+}
+
+function speakSomaliGuidance(){
+  if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined' || paymentGuidanceUtterance) return false;
+  const voice = window.speechSynthesis.getVoices().find(item => /^so(?:[-_]|$)/i.test(item.lang || ''));
+  if (!voice) return false;
+  const utterance = new SpeechSynthesisUtterance('Taabo inta bixi.');
+  utterance.lang = voice.lang || 'so-SO';
+  utterance.voice = voice;
+  utterance.rate = 0.9;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  utterance.onstart = () => {
+    paymentGuidancePlaybackStarted = true;
+    const retry = $('#playPaymentGuidance');
+    if (retry) retry.hidden = true;
+    const arrow = $('#paymentGuidanceArrow');
+    if (arrow) arrow.classList.add('guidance-active');
   };
-  if (sayWithSomaliVoice()) return;
-  paymentVoiceRetry = () => {
-    window.speechSynthesis.removeEventListener('voiceschanged', paymentVoiceRetry);
-    clearTimeout(paymentVoiceWaitTimer);
-    paymentVoiceWaitTimer = null;
-    paymentVoiceRetry = null;
-    sayWithSomaliVoice();
+  utterance.onend = () => {
+    if (paymentGuidanceUtterance === utterance) paymentGuidanceUtterance = null;
+    const arrow = $('#paymentGuidanceArrow');
+    if (arrow) arrow.classList.remove('guidance-active');
   };
-  window.speechSynthesis.addEventListener('voiceschanged', paymentVoiceRetry, {once:true});
-  paymentVoiceWaitTimer = setTimeout(() => {
-    if (paymentVoiceRetry) window.speechSynthesis.removeEventListener('voiceschanged', paymentVoiceRetry);
-    paymentVoiceRetry = null;
-    paymentVoiceWaitTimer = null;
-  }, 3000);
+  utterance.onerror = () => {
+    if (paymentGuidanceUtterance === utterance) paymentGuidanceUtterance = null;
+    showPaymentAudioRetry();
+  };
+  paymentGuidanceUtterance = utterance;
+  try { window.speechSynthesis.speak(utterance); }
+  catch { paymentGuidanceUtterance = null; return false; }
+  return true;
+}
+
+function showPaymentAudioRetry(){
+  const retry = $('#playPaymentGuidance');
+  if (retry && step === 2 && $('#payBtn') && !paymentGuidancePlaybackStarted) retry.hidden = false;
 }
 
 function stopPaymentGuidance(reset){
@@ -1051,11 +1096,18 @@ function stopPaymentGuidance(reset){
   }
   const arrow = $('#paymentGuidanceArrow');
   if (arrow) { arrow.hidden = true; arrow.classList.remove('guidance-active'); }
+  const retry = $('#playPaymentGuidance');
+  if (retry) retry.hidden = true;
+  const audio = $('#paymentGuidanceAudio');
+  if (audio) { audio.pause(); audio.currentTime = 0; }
   if (paymentGuidanceUtterance && 'speechSynthesis' in window) {
     window.speechSynthesis.cancel();
     paymentGuidanceUtterance = null;
   }
-  if (reset) paymentGuidanceShown = false;
+  if (reset) {
+    paymentGuidanceShown = false;
+    paymentGuidancePlaybackStarted = false;
+  }
 }
 
 async function confirmAndPay(){
@@ -1151,6 +1203,7 @@ $('#sheet').addEventListener('click', e => {
   if (t.closest('#backPatient')) { goBack(); return; }
   if (t.closest('#editP')) { stopPaymentGuidance(true); step = 1; renderSheet(); return; }
   if (t.closest('#payBtn')) { stopPaymentGuidance(false); confirmAndPay(); return; }
+  if (t.closest('#playPaymentGuidance')) { playPaymentGuidance(); return; }
   if (t.closest('#printReceiptBtn')) { openBookingReceipt(); return; }
   if (t.closest('#newBooking')) { closeSheet(); return; }
 });
