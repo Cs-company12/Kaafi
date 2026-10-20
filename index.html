@@ -216,7 +216,7 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .prog span.p-ok{background:var(--green)}
 .sheet-body{overflow-y:auto;padding:clamp(18px,3vw,36px);flex:1;overscroll-behavior:contain;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0 auto}
 .sheet-foot{width:100%;max-width:100%;min-width:0;box-sizing:border-box;padding:14px max(20px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));background:#fff;border-top:1px solid var(--line)}
-.sheet-foot.payment-foot{width:100%;box-sizing:border-box;padding:12px max(0px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left))}
+.sheet-foot.payment-foot{width:100%;max-width:100%;min-width:0;box-sizing:border-box;padding:12px max(12px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
 .sheet-foot:empty{display:none}
 
 .mini{display:flex;gap:16px;align-items:center;background:#fff;border-radius:var(--r-sm);padding:14px;border:1px solid var(--line);max-width:1080px;margin:0 auto}
@@ -699,7 +699,7 @@ function renderLast(){
   if (!b || Date.now() - new Date(b.created_at).getTime() > 24 * 3600e3) { $('#lastBooking').innerHTML = ''; return; }
   $('#lastBooking').innerHTML = `<div class="last">
     <span class="ic"><i class="bi bi-check2-circle"></i></span>
-    <div class="tx"><b>Ballantaada: ${esc(b.code)}</b>${esc(b.doctor)} · ${money(b.total)}</div>
+    <div class="tx"><b>Ballantaada: La xaqiijiyay</b>${esc(b.doctor)} · ${money(b.total)}</div>
     <a class="btn btn-green" href="${telHref(b.total, b.pay)}"><i class="bi bi-phone"></i> Bixi</a>
     <button class="x" aria-label="Qari" onclick="store.del('kaafi_last_booking');renderLast()"><i class="bi bi-x"></i></button>
   </div>`;
@@ -926,7 +926,7 @@ function renderSheet(){
     </div>
     `;
   foot.innerHTML = `<div class="stack">
-      <a class="btn btn-green btn-block" href="${telHref(booking.total)}" id="dialAgain"><i class="bi bi-telephone-outbound-fill"></i> Hadi Adan Bixin, Bixi hadda · <span class="ussd" style="background:rgba(255,255,255,.18);color:#fff">${esc(ussd(booking.total))}</span></a>
+      <a class="btn btn-green btn-block" href="${telHref(booking.total)}" id="dialAgain"><span class="dial-label"><i class="bi bi-telephone-outbound-fill"></i> Hadi Adan Bixin, Bixi hadda</span><span class="ussd" style="background:rgba(255,255,255,.18);color:#fff">${esc(ussd(booking.total))}</span></a>
       <button class="btn btn-light btn-block" id="printReceiptBtn"><i class="bi bi-printer"></i> Daabac rasiidka 🖨️</button>
       <button class="btn btn-light btn-block" id="newBooking"><i class="bi bi-plus-lg"></i> Ballan kale samee</button>
     </div>`;
