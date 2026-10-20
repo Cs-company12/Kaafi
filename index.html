@@ -898,7 +898,7 @@ function renderSheet(){
       </div>`;
     foot.innerHTML = `${guidanceAudioUrl ? `<audio id="paymentGuidanceAudio" preload="auto" src="${esc(guidanceAudioUrl)}"></audio>` : ''}
     <div class="patient-actions payment-actions">
-      <button id="playPaymentGuidance" type="button" aria-label="Dhegayso codka tilmaanta" title="Dhegayso codka tilmaanta" hidden>🔊</button>
+      <button id="playPaymentGuidance" type="button" aria-label="Dhegayso codka tilmaanta" title="Dhegayso codka tilmaanta" hidden> </button>
       <span id="paymentGuidanceArrow" class="payment-guidance-arrow" aria-hidden="true" hidden>⬇️</span>
       <button class="btn btn-green" id="payBtn" type="button"><i class="bi bi-shield-check"></i> Xaqiiji &amp; Lacagta Bixi · ${money(total)}</button>
     </div>`;
