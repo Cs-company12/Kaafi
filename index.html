@@ -1242,6 +1242,31 @@ window.addEventListener('appinstalled', () => {
   swal({icon:'success', title:'App-ka waa la soo dejiyay', text:'Kaafi Hospital hadda waxay ku jirtaa shaashaddaada.'});
 });
 
+/* ===== Download count (invisible, nothing on screen changes) =====
+   One random number per phone — no name, phone number or other personal data.
+   'install' = the browser installed the app; 'open' = opened from the home screen (once a day). */
+const appDevice = (() => {
+  try {
+    let id = store.get('kaafi_device');
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id || '')) {
+      id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+         : '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+      store.set('kaafi_device', id);
+    }
+    return id;
+  } catch { return null; }
+})();
+const appPlatform = isIOS ? 'ios' : isAndroid ? 'android' : (window.matchMedia('(pointer: fine)').matches ? 'desktop' : 'other');
+function trackApp(event){
+  if (!appDevice) return Promise.resolve(false);
+  return sb.rpc('kaafi_track_app', {p_device: appDevice, p_event: event, p_platform: appPlatform}).then(r => !(r && r.error), () => false);
+}
+window.addEventListener('appinstalled', () => { trackApp('install'); });
+if (isStandalone()) {
+  const openDay = new Date().toISOString().slice(0, 10);
+  if (store.get('kaafi_open_day') !== openDay) trackApp('open').then(ok => { if (ok) store.set('kaafi_open_day', openDay); });
+}
+
 async function nativeInstall(evt){            // opens the browser's own "Install" window
   window.__bip = null;
   try { await evt.prompt(); await evt.userChoice; } catch {}
