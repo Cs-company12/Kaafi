@@ -4,7 +4,7 @@
    - Works offline for the app shell (page, icons, font, libraries — all on this website)
    - NEVER caches Supabase data or the EVC/USSD payment step (always live)
    ===================================================================== */
-const VERSION = 'kaafi-v9';
+const VERSION = 'kaafi-v10';   /* v10: new index.html (iPhone guide video inside the page) — old saved copies are replaced */
 const SHELL_CACHE = `${VERSION}-shell`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
