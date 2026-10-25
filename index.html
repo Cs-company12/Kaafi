@@ -105,63 +105,30 @@ a{color:inherit}
 .ios-install-stages{position:relative;height:min(70dvh,690px);margin-top:12px;overflow:hidden;border-radius:20px;background:#e9ebf2}
 .ios-install-step{position:absolute;inset:0;display:grid;place-items:center;padding:8px;opacity:0;visibility:hidden;transform:scale(.98);transition:opacity .35s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s linear .35s}
 .ios-install-step.active{opacity:1;visibility:visible;transform:scale(1);transition-delay:0s}
-.ios-guide-device{position:relative;width:min(100%,340px);height:min(100%,600px);min-height:370px;overflow:hidden;border:7px solid #242a45;border-radius:32px;background:#f4f5fb;box-shadow:0 10px 30px rgba(22,31,91,.22);color:var(--ink);text-align:left}
-.ios-guide-status{height:28px;display:flex;justify-content:space-between;align-items:center;padding:0 13px;font-size:11px;font-weight:800}
-.ios-guide-browser{display:flex;align-items:center;gap:8px;height:42px;margin:0 10px;padding:0 10px;border:1px solid #e0e3ef;border-radius:13px;background:white;color:var(--muted);font-size:12px}
-.ios-guide-browser-url{flex:1;text-align:center;color:var(--ink-2)}
-.ios-guide-webpage{height:160px;margin:10px;padding:15px;border-radius:15px;background:linear-gradient(135deg,var(--navy),var(--navy-d));color:white}
-.ios-guide-brand{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:800}
-.ios-guide-brand img{width:34px;height:34px;border-radius:50%;background:#fff}
-.ios-guide-webpage h3{margin:17px 0 4px;font-size:17px;line-height:1.15}
-.ios-guide-webpage p{margin:0;color:rgba(255,255,255,.78);font-size:10px}
-.ios-guide-skeleton{height:9px;margin:8px 10px;border-radius:8px;background:#dfe3f2}
-.ios-guide-skeleton.short{width:54%}
-.ios-guide-toolbar{position:absolute;right:8px;bottom:8px;left:8px;display:flex;align-items:center;justify-content:space-around;height:43px;padding:0 7px;border:1px solid #e0e3ef;border-radius:14px;background:#fff;color:#65709a;font-size:16px;box-shadow:0 3px 10px rgba(31,42,100,.08)}
-.ios-guide-menu{position:absolute;right:12px;bottom:60px;left:12px;padding:8px;border:1px solid #e0e3ef;border-radius:19px;background:rgba(255,255,255,.97);box-shadow:0 10px 30px rgba(18,26,68,.2);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-.ios-guide-menu-row{display:flex;align-items:center;gap:13px;min-height:44px;padding:0 11px;border-bottom:1px solid #eceef5;font-size:13px}
-.ios-guide-menu-row:last-child{border-bottom:0}
-.ios-guide-menu-row i{width:19px;color:var(--navy);text-align:center;font-size:16px}
-.ios-guide-sheet{position:absolute;right:0;bottom:0;left:0;height:88%;padding:12px 12px 18px;border:1px solid #e5e7ef;border-radius:27px 27px 0 0;background:rgba(255,255,255,.96);box-shadow:0 -8px 28px rgba(22,31,91,.16);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-.ios-guide-grabber{width:38px;height:4px;margin:0 auto 12px;border-radius:5px;background:#c7cada}
-.ios-guide-share-header{display:flex;align-items:center;gap:10px;padding:0 3px 12px;border-bottom:1px solid #e8eaf2;font-size:12px;font-weight:700}
-.ios-guide-preview-icon{width:40px;height:40px;border:1px solid #e7e9f1;border-radius:10px;background:#fff;object-fit:cover}
-.ios-guide-share-link{color:var(--muted);font-size:10px;font-weight:500}
-.ios-guide-contact-row,.ios-guide-action-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:12px 0 8px}
-.ios-guide-contact{display:grid;justify-items:center;gap:5px;color:var(--ink-2);font-size:9px}
-.ios-guide-contact i{display:grid;place-items:center;width:39px;height:39px;border-radius:50%;background:var(--navy-l);color:var(--navy);font-size:17px}
-.ios-guide-action-tile{display:grid;justify-items:center;gap:5px;min-width:0;padding:8px 2px;border-radius:13px;color:var(--ink-2);font-size:9px;text-align:center}
-.ios-guide-action-tile i{font-size:22px;color:var(--navy)}
-.ios-guide-view-more{display:flex;align-items:center;justify-content:space-between;margin-top:5px;padding:11px 12px;border:1px solid #e6e8f1;border-radius:13px;background:#fff;color:var(--ink);font-size:13px;font-weight:700}
-.ios-guide-view-more i:first-child{margin-right:8px;color:var(--navy)}
-.ios-guide-view-more i:last-child{color:var(--muted)}
-.ios-guide-expanded{height:calc(100% - 64px);overflow:hidden}
-.ios-guide-expanded .ios-guide-action-row{padding-top:7px;border-bottom:1px solid #e6e8f1}
-.ios-guide-expanded-list{margin-top:8px;padding:3px 10px;border:1px solid #e5e7ef;border-radius:17px;background:#fff}
-.ios-guide-option{display:flex;align-items:center;gap:12px;min-height:43px;border-bottom:1px solid #eceef5;font-size:12px}
-.ios-guide-option:last-child{border-bottom:0}
-.ios-guide-option i{width:20px;color:var(--navy);text-align:center;font-size:16px}
-.ios-guide-option.target{position:relative;margin:3px -5px;padding:0 5px;border:2px solid var(--red);border-radius:11px;animation:ios-guide-zoom .8s ease-in-out infinite alternate}
-.ios-guide-add-sheet{width:100%;max-width:300px;padding:13px;border:1px solid #e2e5ef;border-radius:20px;background:#fff;box-shadow:0 10px 28px rgba(22,31,91,.16);color:var(--ink)}
-.ios-guide-add-header{display:flex;align-items:center;justify-content:space-between;padding:3px 3px 13px;border-bottom:1px solid #eceef5;color:var(--navy);font-size:12px}
-.ios-guide-add-header strong{color:var(--ink);font-size:13px}
-.ios-guide-app-preview{display:grid;justify-items:center;gap:8px;padding:18px 0;font-size:13px}
-.ios-guide-app-icon{display:block;width:58px;height:58px;border:1px solid #e1e4ef;border-radius:14px;object-fit:cover}
-.ios-guide-name{width:100%;padding:10px;border:1px solid #dfe3ef;border-radius:10px;background:#f8f9fd;text-align:left;font-size:12px}
-.ios-guide-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;padding-top:11px;border-top:1px solid #eceef5}
-.ios-guide-dialog-actions span,.ios-guide-dialog-actions b{padding:8px 12px;color:var(--navy);font-size:13px}
+.ios-guide-reference{position:relative;height:calc(100% - 46px);max-width:100%;aspect-ratio:499/1080;margin-bottom:46px}
+.ios-guide-reference img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;border-radius:12px;box-shadow:0 5px 18px rgba(20,24,40,.2)}
+.ios-guide-reference .ios-guide-step-label{bottom:-40px}
+.ios-guide-pointer .bi-arrow-down::before{content:"\2193";font-family:'Plus Jakarta Sans',system-ui,sans-serif!important;font-weight:800!important;vertical-align:0}
+.ios-guide-highlight{position:absolute;left:var(--target-x);top:var(--target-y);width:var(--target-w);height:var(--target-h);border:3px solid #ed2939;border-radius:14px;box-shadow:0 0 0 999px rgba(12,16,35,.14),0 0 0 5px rgba(237,41,57,.2);animation:ios-guide-pulse 1s ease-in-out infinite alternate}
+.ios-guide-pointer{position:absolute;left:var(--pointer-x);top:var(--pointer-y);display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#ed2939;color:#fff;font-size:22px;box-shadow:0 3px 12px #171a2a77;animation:ios-guide-point .55s ease-in-out infinite alternate}
+.ios-guide-step-label{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);padding:8px 13px;border-radius:99px;background:#24318F;color:white;font-size:13px;font-weight:800;white-space:nowrap;box-shadow:0 3px 10px #17205555}
+.ios-guide-add-sheet{width:100%;max-width:330px;padding:20px 15px 14px;border-radius:22px;background:#f7f7fa;box-shadow:0 6px 20px rgba(25,29,48,.18);color:#1c1c1e}
+.ios-guide-add-header{display:flex;align-items:center;justify-content:space-between;padding:0 4px 15px;border-bottom:1px solid #d1d1d6;color:#3478d4;font-size:13px}
+.ios-guide-add-header strong{color:#1c1c1e;font-size:15px}
+.ios-guide-app-preview{display:grid;place-items:center;gap:9px;padding:19px 0 22px;font-size:13px}
+.ios-guide-app-icon{display:block;width:62px;height:62px;border-radius:15px;object-fit:cover}
+.ios-guide-name{width:100%;padding:10px;border:1px solid #d1d1d6;border-radius:9px;background:white;text-align:left;font-size:13px}
+.ios-guide-dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:12px;border-top:1px solid #d1d1d6}
+.ios-guide-dialog-actions span,.ios-guide-dialog-actions b{padding:8px 13px;color:#3478d4;font-size:14px}
 .ios-guide-dialog-actions b{font-weight:800}
-.ios-guide-add-target{position:relative;border-radius:10px;box-shadow:0 0 0 3px var(--red);animation:ios-guide-pulse 1s ease-in-out infinite alternate}
-.ios-guide-callout{position:absolute;right:8px;bottom:62px;display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:99px;background:var(--navy);color:#fff;font-size:11px;font-weight:800;box-shadow:0 4px 13px rgba(22,31,91,.25)}
-.ios-guide-callout i{color:#ffd3d5;font-size:15px;animation:ios-guide-point .55s ease-in-out infinite alternate}
-.ios-guide-target{position:relative;border:2px solid var(--red)!important;border-radius:13px!important;animation:ios-guide-zoom .8s ease-in-out infinite alternate}
+.ios-guide-add-target{position:relative;border-radius:10px;box-shadow:0 0 0 3px #ed2939;animation:ios-guide-pulse 1s ease-in-out infinite alternate}
 .ios-guide-progress{height:4px;margin-top:14px;overflow:hidden;border-radius:4px;background:#e7e8ee}
 .ios-guide-progress span{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:left;background:var(--navy);animation:ios-guide-progress 10s linear forwards}
 @keyframes ios-guide-pulse{from{transform:scale(.94);box-shadow:0 0 0 0 rgba(237,41,57,.2)}to{transform:scale(1.04);box-shadow:0 0 0 7px rgba(237,41,57,.16)}}
 @keyframes ios-guide-point{from{transform:translateY(-3px)}to{transform:translateY(5px)}}
-@keyframes ios-guide-zoom{from{transform:scale(.98)}to{transform:scale(1.04)}}
 @keyframes ios-guide-progress{to{transform:scaleX(1)}}
-@media (max-height:620px){.ios-install-stages{height:60dvh}.ios-guide-device{min-height:330px}.ios-guide-webpage{height:130px}}
-@media (prefers-reduced-motion:reduce){.ios-install-step,.ios-install-step.active{transition:none}.ios-guide-callout i,.ios-guide-target,.ios-guide-option.target,.ios-guide-add-target,.ios-guide-progress span{animation:none}}
+@media (max-height:620px){.ios-install-stages{height:60dvh}.ios-install-card{padding:10px}}
+@media (prefers-reduced-motion:reduce){.ios-install-step,.ios-install-step.active{transition:none}.ios-guide-highlight,.ios-guide-pointer,.ios-guide-add-target,.ios-guide-progress span{animation:none}}
 .brand small{white-space:nowrap}
 @media (max-width:420px){.dl-btn{padding:0 12px;gap:5px;font-size:13px}.brand b{font-size:15px}.brand small{letter-spacing:.04em}.top-actions{gap:6px}}
 @media (max-width:380px){.brand small{display:none}}
@@ -375,7 +342,7 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .box{background:#fff;border-radius:var(--r-sm);border:1px solid var(--line);padding:14px;margin-top:12px}
 .box h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
 .box h4 button{border:0;background:none;color:var(--navy);font-weight:700;font-size:13px;cursor:pointer;text-transform:none;letter-spacing:0}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;margin:0}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;font-size:14px;margin:0}
 .kv dt{color:var(--muted)}
 .kv dd{margin:0;font-weight:600;text-align:right;word-break:break-word}
 .kv dd.patient-name{font-size:1.2rem;font-weight:800;letter-spacing:.02em;text-transform:uppercase;color:var(--navy);line-height:1.35}
@@ -1394,83 +1361,36 @@ function showIosInstallGuide(){
     <p class="ios-install-note">Raac tallaabooyinkan Safari-ga iPhone-ka.</p>
     <div class="ios-install-stages">
       <div class="ios-install-step active" data-ios-guide-step aria-hidden="false">
-        <div class="ios-guide-device">
-          <div class="ios-guide-status"><span>9:41</span><span>●●● ◉ ▰</span></div>
-          <div class="ios-guide-browser"><i class="bi bi-chevron-left"></i><span class="ios-guide-browser-url"><i class="bi bi-lock-fill"></i> kaafihospital.com</span><i class="bi bi-arrow-clockwise"></i></div>
-          <div class="ios-guide-webpage">
-            <div class="ios-guide-brand"><img src="icons/apple-touch-icon.png" alt=""><span>Kaafi Hospital<br>KAABIYAHA BULSHADA</span></div>
-            <h3>Ballanso dhakhtarkaaga adigoo meel kasta jooga</h3>
-            <p>Dooro dhakhtarka, buuxi xogta bukaanka, kadibna ku bixi EVC Plus.</p>
-          </div>
-          <div class="ios-guide-skeleton"></div><div class="ios-guide-skeleton short"></div>
-          <div class="ios-guide-menu">
-            <div class="ios-guide-menu-row ios-guide-target"><i class="bi bi-box-arrow-up"></i><strong>Share</strong></div>
-            <div class="ios-guide-menu-row"><i class="bi bi-bookmark"></i><span>Add to Bookmarks</span></div>
-            <div class="ios-guide-menu-row"><i class="bi bi-bookmark-plus"></i><span>Add Bookmark to...</span></div>
-            <div class="ios-guide-menu-row"><i class="bi bi-plus-square"></i><span>New Tab</span></div>
-          </div>
-          <div class="ios-guide-toolbar"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i><i class="bi bi-bookmarks"></i><i class="bi bi-copy"></i></div>
-          <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> 1 · Taabo Share</span>
+        <div class="ios-guide-reference">
+          <img src="icons/WhatsApp%20Image%202026-10-25%20at%201.25.57%20PM.jpeg" alt="Sawirka Safari menu-ga iyo ikhtiyaarka Share">
+          <span class="ios-guide-highlight" style="--target-x:35%;--target-y:60%;--target-w:60%;--target-h:8%"></span>
+          <span class="ios-guide-pointer" style="--pointer-x:77%;--pointer-y:52%" aria-hidden="true"><i class="bi bi-arrow-down"></i></span>
+          <span class="ios-guide-step-label">1 · Taabo Share</span>
         </div>
       </div>
       <div class="ios-install-step" data-ios-guide-step aria-hidden="true">
-        <div class="ios-guide-device">
-          <div class="ios-guide-status"><span>9:41</span><span>●●● ◉ ▰</span></div>
-          <div class="ios-guide-browser"><i class="bi bi-chevron-left"></i><span class="ios-guide-browser-url"><i class="bi bi-lock-fill"></i> kaafihospital.com</span><i class="bi bi-arrow-clockwise"></i></div>
-          <div class="ios-guide-webpage">
-            <div class="ios-guide-brand"><img src="icons/apple-touch-icon.png" alt=""><span>Kaafi Hospital<br>KAABIYAHA BULSHADA</span></div>
-            <h3>Ballanso dhakhtarkaaga</h3><p>Kaafi Hospital · Ballan Dhakhtar</p>
-          </div>
-          <div class="ios-guide-sheet">
-            <div class="ios-guide-grabber"></div>
-            <div class="ios-guide-share-header"><img class="ios-guide-preview-icon" src="icons/apple-touch-icon.png" alt=""><span>Kaafi Hospital · Ballan Dhakhtar<br><small class="ios-guide-share-link">kaafi.bokings.workers.dev</small></span></div>
-            <div class="ios-guide-contact-row">
-              <span class="ios-guide-contact"><i class="bi bi-person-circle"></i>Contact</span>
-              <span class="ios-guide-contact"><i class="bi bi-chat-dots-fill"></i>Messages</span>
-              <span class="ios-guide-contact"><i class="bi bi-envelope-fill"></i>Mail</span>
-              <span class="ios-guide-contact"><i class="bi bi-journal"></i>Notes</span>
-            </div>
-            <div class="ios-guide-action-row">
-              <span class="ios-guide-action-tile"><i class="bi bi-copy"></i>Copy</span>
-              <span class="ios-guide-action-tile"><i class="bi bi-bookmark"></i>Add to<br>Bookmarks</span>
-              <span class="ios-guide-action-tile"><i class="bi bi-eyeglasses"></i>Add to Reading<br>List</span>
-              <span class="ios-guide-action-tile ios-guide-target"><i class="bi bi-chevron-down"></i>View More</span>
-            </div>
-            <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> 2 · Taabo View More</span>
-          </div>
+        <div class="ios-guide-reference">
+          <img src="icons/WhatsApp%20Image%202026-10-25%20at%201.25.57%20PM%20(1).jpeg" alt="Sawirka Share Sheet-ka Safari iyo View More">
+          <span class="ios-guide-highlight" style="--target-x:72%;--target-y:85%;--target-w:22%;--target-h:12%"></span>
+          <span class="ios-guide-pointer" style="--pointer-x:77%;--pointer-y:77%" aria-hidden="true"><i class="bi bi-arrow-down"></i></span>
+          <span class="ios-guide-step-label">2 · Taabo View More</span>
         </div>
       </div>
       <div class="ios-install-step" data-ios-guide-step aria-hidden="true">
-        <div class="ios-guide-device">
-          <div class="ios-guide-status"><span>9:41</span><span>●●● ◉ ▰</span></div>
-          <div class="ios-guide-browser"><i class="bi bi-chevron-left"></i><span class="ios-guide-browser-url"><i class="bi bi-lock-fill"></i> kaafihospital.com</span><i class="bi bi-arrow-clockwise"></i></div>
-          <div class="ios-guide-sheet ios-guide-expanded">
-            <div class="ios-guide-grabber"></div>
-            <div class="ios-guide-share-header"><img class="ios-guide-preview-icon" src="icons/apple-touch-icon.png" alt=""><span>Kaafi Hospital · Ballan Dhakhtar<br><small class="ios-guide-share-link">kaafi.bokings.workers.dev</small></span></div>
-            <div class="ios-guide-action-row">
-              <span class="ios-guide-action-tile"><i class="bi bi-copy"></i>Copy</span>
-              <span class="ios-guide-action-tile"><i class="bi bi-bookmark"></i>Add to<br>Bookmarks</span>
-              <span class="ios-guide-action-tile"><i class="bi bi-eyeglasses"></i>Add to Reading<br>List</span>
-              <span class="ios-guide-action-tile"><i class="bi bi-chevron-up"></i>View Less</span>
-            </div>
-            <div class="ios-guide-expanded-list">
-              <div class="ios-guide-option"><i class="bi bi-bookmark-plus"></i><span>Add Bookmark to...</span></div>
-              <div class="ios-guide-option"><i class="bi bi-star"></i><span>Add to Favourites</span></div>
-              <div class="ios-guide-option"><i class="bi bi-house-add"></i><span>Add to Quick Note</span></div>
-              <div class="ios-guide-option"><i class="bi bi-file-earmark-text"></i><span>Find on Page</span></div>
-              <div class="ios-guide-option target"><i class="bi bi-plus-square"></i><strong>Add to Home Screen</strong></div>
-            </div>
-            <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> 3 · Taabo Add to Home Screen</span>
-          </div>
+        <div class="ios-guide-reference">
+          <img src="icons/WhatsApp%20Image%202026-10-25%20at%201.25.57%20PM%20(2).jpeg" alt="Sawirka menu-ga Safari oo muujinaya Add to Home Screen">
+          <span class="ios-guide-highlight" style="--target-x:4%;--target-y:67%;--target-w:92%;--target-h:6%"></span>
+          <span class="ios-guide-pointer" style="--pointer-x:82%;--pointer-y:58%" aria-hidden="true"><i class="bi bi-arrow-down"></i></span>
+          <span class="ios-guide-step-label">3 · Hoos u dhaadhac → Add to Home Screen</span>
         </div>
       </div>
       <div class="ios-install-step" data-ios-guide-step aria-hidden="true">
         <div class="ios-guide-add-sheet">
           <div class="ios-guide-add-header"><span>‹ Back</span><strong>Add to Home Screen</strong><span></span></div>
-          <div class="ios-guide-app-preview"><img class="ios-guide-app-icon" src="icons/apple-touch-icon.png" alt="Kaafi Hospital"><b>Kaafi Hospital</b></div>
+          <div class="ios-guide-app-preview"><img class="ios-guide-app-icon" src="icons/apple-touch-icon.png" alt=""><b>Kaafi Hospital</b></div>
           <div class="ios-guide-name">Kaafi Hospital</div>
           <div class="ios-guide-dialog-actions"><span>Cancel</span><b class="ios-guide-add-target">Add</b></div>
-          <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> 4 · Taabo Add</span>
+          <span class="ios-guide-step-label">4 · Taabo Add</span>
         </div>
       </div>
     </div>
