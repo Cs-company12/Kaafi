@@ -97,6 +97,23 @@ a{color:inherit}
 .dl-btn:hover{background:var(--red-d)}
 .dl-btn[hidden]{display:none}
 .dl-btn i{font-size:16px}
+.ios-install-guide{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:rgba(10,14,40,.58)}
+.ios-install-guide[hidden]{display:none}
+.ios-install-card{width:min(100%,360px);padding:22px;border-radius:22px;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.28);text-align:center}
+.ios-install-title{margin:0 0 5px;color:var(--ink);font-size:19px}
+.ios-install-note{margin:0;color:var(--muted);font-size:12px}
+.ios-install-stages{position:relative;display:grid;place-items:center;min-height:190px;margin-top:14px}
+.ios-install-step{position:absolute;display:none;flex-direction:column;align-items:center;gap:12px;width:100%;font-size:16px;font-weight:800;color:var(--ink)}
+.ios-install-step.active{display:flex;animation:ios-guide-zoom .45s ease both}
+.ios-install-arrow{color:var(--red);font-size:28px;line-height:1;animation:ios-guide-point .5s ease-in-out infinite alternate}
+.ios-install-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:18px;width:190px;padding:10px 14px;border:1px solid #d9dce8;border-radius:14px;background:#f5f6fa;color:#68708c;font-size:19px}
+.ios-install-toolbar .ios-install-share{width:42px;height:42px;display:grid;place-items:center;border:3px solid var(--red);border-radius:50%;color:var(--navy);font-size:24px;animation:ios-guide-zoom .6s ease-in-out infinite alternate}
+.ios-install-menu{width:200px;padding:12px;border:1px solid #d9dce8;border-radius:14px;background:#f5f6fa}
+.ios-install-menu div{display:flex;align-items:center;gap:10px;padding:10px;border:2px solid var(--navy);border-radius:10px;background:#fff;color:var(--ink);font-size:14px;font-weight:700}
+.ios-install-add{padding:10px 28px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-size:17px;font-weight:800;animation:ios-guide-zoom .7s ease-in-out infinite alternate}
+@keyframes ios-guide-zoom{from{transform:scale(.86);opacity:.45}to{transform:scale(1);opacity:1}}
+@keyframes ios-guide-point{from{transform:translateY(-2px)}to{transform:translateY(5px)}}
+@media (prefers-reduced-motion:reduce){.ios-install-step.active,.ios-install-arrow,.ios-install-add,.ios-install-toolbar .ios-install-share{animation:none}}
 .brand small{white-space:nowrap}
 @media (max-width:420px){.dl-btn{padding:0 12px;gap:5px;font-size:13px}.brand b{font-size:15px}.brand small{letter-spacing:.04em}.top-actions{gap:6px}}
 @media (max-width:380px){.brand small{display:none}}
@@ -1246,7 +1263,7 @@ const isChromium = !isIOS && /Chrome|Chromium|SamsungBrowser|EdgA|Edg\/|OPR\//i.
 const dlBtn = $('#dlBtn');
 const appIcon = () => document.querySelector('link[rel=apple-touch-icon]').href;
 
-if (isIOS) dlBtn.querySelector('span').textContent = 'Add to Home Screen';
+if (isIOS) dlBtn.querySelector('span').textContent = 'Download';
 dlBtn.hidden = isStandalone() || !(isIOS || isAndroid || isChromium || window.__bip);
 window.addEventListener('kaafi-installable', () => { if (!isStandalone()) dlBtn.hidden = false; });
 window.addEventListener('appinstalled', () => {
@@ -1314,6 +1331,50 @@ const appHead = sub => `<div style="display:flex;align-items:center;gap:12px;jus
   <img src="${appIcon()}" alt="" width="56" height="56" style="border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
   <div style="text-align:left"><b>Kaafi Hospital</b><br><small style="color:#767D99">${sub}</small></div></div>`;
 
+let iosInstallGuideTimer = null;
+function showIosInstallGuide(){
+  clearTimeout(iosInstallGuideTimer);
+  const previousGuide = document.getElementById('iosInstallGuide');
+  if (previousGuide) previousGuide.remove();
+  const guide = document.createElement('div');
+  guide.id = 'iosInstallGuide';
+  guide.className = 'ios-install-guide';
+  guide.setAttribute('role', 'status');
+  guide.setAttribute('aria-live', 'polite');
+  guide.innerHTML = `<div class="ios-install-card">
+    <h2 class="ios-install-title">Ku dar shaashadda guriga</h2>
+    <p class="ios-install-note">Tilmaam muuqaal ah · Meesha Share ku taal way kala duwanaan kartaa Safari-ga.</p>
+    <div class="ios-install-stages">
+      <div class="ios-install-step active" data-ios-guide-step>
+        <span>Share icon</span>
+        <span class="ios-install-arrow" aria-hidden="true">↓</span>
+        <div class="ios-install-toolbar" aria-hidden="true"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i><i class="bi bi-bookmark"></i><i class="bi bi-box-arrow-up ios-install-share"></i></div>
+      </div>
+      <div class="ios-install-step" data-ios-guide-step>
+        <div class="ios-install-menu" aria-hidden="true"><div><i class="bi bi-house-add"></i><span>Add to Home Screen</span></div></div>
+        <span class="ios-install-arrow" aria-hidden="true">↓</span>
+      </div>
+      <div class="ios-install-step" data-ios-guide-step>
+        <button class="ios-install-add" type="button" tabindex="-1" aria-hidden="true">Add</button>
+      </div>
+    </div>
+  </div>`;
+  document.body.appendChild(guide);
+  const steps = guide.querySelectorAll('[data-ios-guide-step]');
+  const showStep = index => {
+    steps.forEach((step, stepIndex) => step.classList.toggle('active', stepIndex === index));
+    if (index === steps.length - 1) {
+      iosInstallGuideTimer = setTimeout(() => {
+        guide.remove();
+        iosInstallGuideTimer = null;
+      }, 1000);
+    } else {
+      iosInstallGuideTimer = setTimeout(() => showStep(index + 1), 1000);
+    }
+  };
+  showStep(0);
+}
+
 async function offerInstall(evt){
   const r = await Swal.fire({title:'Soo deji app-ka', html: appHead('Ku dar shaashadda guriga'),
     confirmButtonText:'<i class="bi bi-download"></i> Ku rakib', confirmButtonColor:'#E1262D',
@@ -1324,14 +1385,8 @@ async function offerInstall(evt){
 dlBtn.addEventListener('click', async () => {
   const t0 = Date.now();
 
-  // iOS Safari can open the native share sheet, but not its Add to Home Screen action.
   if (isIOS) {
-    if (typeof navigator.share === 'function') {
-      try { await navigator.share({url: location.href}); }
-      catch (error) {
-        if (!error || error.name !== 'AbortError') console.error('Unable to share the page from iOS Safari.', error);
-      }
-    }
+    showIosInstallGuide();
     return;
   }
 
