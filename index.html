@@ -1324,11 +1324,19 @@ async function offerInstall(evt){
 dlBtn.addEventListener('click', async () => {
   const t0 = Date.now();
 
+  // iOS Safari can open the native share sheet, but not its Add to Home Screen action.
+  if (isIOS) {
+    if (typeof navigator.share === 'function') {
+      try { await navigator.share({url: location.href}); }
+      catch (error) {
+        if (!error || error.name !== 'AbortError') console.error('Unable to share the page from iOS Safari.', error);
+      }
+    }
+    return;
+  }
+
   // 1) browser can install directly (Chrome, Edge desktop, older Samsung Internet)
   if (window.__bip) return nativeInstall(window.__bip);
-
-  // 2) iPhone: iOS Safari does not expose an API to open its Add to Home Screen action.
-  if (isIOS) return;
 
   // 3) Android in a browser that cannot install by itself (Samsung Internet, Edge, Mi, Facebook…) → open in Chrome
   if (isAndroid && !isRealChrome && !params.get('nochrome')) return openInChrome();
