@@ -1246,6 +1246,7 @@ const isChromium = !isIOS && /Chrome|Chromium|SamsungBrowser|EdgA|Edg\/|OPR\//i.
 const dlBtn = $('#dlBtn');
 const appIcon = () => document.querySelector('link[rel=apple-touch-icon]').href;
 
+if (isIOS) dlBtn.querySelector('span').textContent = 'Add to Home Screen';
 dlBtn.hidden = isStandalone() || !(isIOS || isAndroid || isChromium || window.__bip);
 window.addEventListener('kaafi-installable', () => { if (!isStandalone()) dlBtn.hidden = false; });
 window.addEventListener('appinstalled', () => {
@@ -1326,11 +1327,8 @@ dlBtn.addEventListener('click', async () => {
   // 1) browser can install directly (Chrome, Edge desktop, older Samsung Internet)
   if (window.__bip) return nativeInstall(window.__bip);
 
-  // 2) iPhone: Apple allows only Share → Add to Home Screen
-  if (isIOS) {
-    return Swal.fire({title:'Soo deji app-ka', confirmButtonColor:'#24318F', confirmButtonText:'Hagaag',
-      html: appHead('iPhone') + `<p style="margin:10px 0 0;font-size:16px">Riix <b>Wadaag</b> <i class="bi bi-box-arrow-up" style="color:#24318F"></i> → <b>Ku dar shaashadda guriga</b></p>`});
-  }
+  // 2) iPhone: iOS Safari does not expose an API to open its Add to Home Screen action.
+  if (isIOS) return;
 
   // 3) Android in a browser that cannot install by itself (Samsung Internet, Edge, Mi, Facebook…) → open in Chrome
   if (isAndroid && !isRealChrome && !params.get('nochrome')) return openInChrome();
