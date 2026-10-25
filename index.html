@@ -97,23 +97,55 @@ a{color:inherit}
 .dl-btn:hover{background:var(--red-d)}
 .dl-btn[hidden]{display:none}
 .dl-btn i{font-size:16px}
-.ios-install-guide{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:rgba(10,14,40,.58)}
+.ios-install-guide{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px;background:rgba(10,14,40,.68)}
 .ios-install-guide[hidden]{display:none}
-.ios-install-card{width:min(100%,360px);padding:22px;border-radius:22px;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.28);text-align:center}
-.ios-install-title{margin:0 0 5px;color:var(--ink);font-size:19px}
-.ios-install-note{margin:0;color:var(--muted);font-size:12px}
-.ios-install-stages{position:relative;display:grid;place-items:center;min-height:190px;margin-top:14px}
-.ios-install-step{position:absolute;display:none;flex-direction:column;align-items:center;gap:12px;width:100%;font-size:16px;font-weight:800;color:var(--ink)}
-.ios-install-step.active{display:flex;animation:ios-guide-zoom .45s ease both}
-.ios-install-arrow{color:var(--red);font-size:28px;line-height:1;animation:ios-guide-point .5s ease-in-out infinite alternate}
-.ios-install-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:18px;width:190px;padding:10px 14px;border:1px solid #d9dce8;border-radius:14px;background:#f5f6fa;color:#68708c;font-size:19px}
-.ios-install-toolbar .ios-install-share{width:42px;height:42px;display:grid;place-items:center;border:3px solid var(--red);border-radius:50%;color:var(--navy);font-size:24px;animation:ios-guide-zoom .6s ease-in-out infinite alternate}
-.ios-install-menu{width:200px;padding:12px;border:1px solid #d9dce8;border-radius:14px;background:#f5f6fa}
-.ios-install-menu div{display:flex;align-items:center;gap:10px;padding:10px;border:2px solid var(--navy);border-radius:10px;background:#fff;color:var(--ink);font-size:14px;font-weight:700}
-.ios-install-add{padding:10px 28px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-size:17px;font-weight:800;animation:ios-guide-zoom .7s ease-in-out infinite alternate}
-@keyframes ios-guide-zoom{from{transform:scale(.86);opacity:.45}to{transform:scale(1);opacity:1}}
-@keyframes ios-guide-point{from{transform:translateY(-2px)}to{transform:translateY(5px)}}
-@media (prefers-reduced-motion:reduce){.ios-install-step.active,.ios-install-arrow,.ios-install-add,.ios-install-toolbar .ios-install-share{animation:none}}
+.ios-install-card{width:min(100%,430px);padding:18px;border-radius:24px;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.3);text-align:center}
+.ios-install-title{margin:0 28px 5px;color:var(--ink);font-size:19px}
+.ios-install-note{margin:0 auto;color:var(--muted);font-size:12px;line-height:1.45}
+.ios-install-stages{position:relative;height:370px;margin-top:14px;overflow:hidden;border-radius:20px;background:#e9ebf2}
+.ios-install-step{position:absolute;inset:0;display:grid;place-items:center;padding:10px;opacity:0;visibility:hidden;transform:scale(.96);transition:opacity .35s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s linear .35s}
+.ios-install-step.active{opacity:1;visibility:visible;transform:scale(1);transition-delay:0s}
+.ios-guide-phone{position:relative;width:min(100%,310px);height:344px;padding:12px 12px 10px;border:7px solid #181a22;border-radius:30px;background:#f4f5f9;box-shadow:0 8px 24px rgba(20,24,40,.22);color:#1c1c1e;text-align:left}
+.ios-guide-status{display:flex;justify-content:space-between;padding:0 7px 7px;font-size:11px;font-weight:800}
+.ios-guide-address{padding:8px 11px;border:1px solid #e0e1e8;border-radius:12px;background:#fff;text-align:center;font-size:11px;color:#3b3b42}
+.ios-guide-page{height:173px;margin-top:9px;padding:12px;border-radius:12px;background:#fff;text-align:center}
+.ios-guide-logo{display:grid;place-items:center;width:40px;height:40px;margin:0 auto 7px;border-radius:12px;background:#24318F;color:#fff;font-weight:900}
+.ios-guide-page strong{display:block;font-size:14px}
+.ios-guide-page small{display:block;margin-top:5px;color:#777d90;font-size:10px}
+.ios-guide-toolbar{display:flex;align-items:center;justify-content:space-around;height:54px;margin-top:4px;color:#4667b2;font-size:17px}
+.ios-guide-share-target,.ios-guide-more-target,.ios-guide-home-target,.ios-guide-add-target{position:relative;isolation:isolate}
+.ios-guide-share-target::before,.ios-guide-more-target::before,.ios-guide-home-target::before,.ios-guide-add-target::before{position:absolute;z-index:-1;inset:-7px;content:"";border:3px solid #ed2939;border-radius:14px;animation:ios-guide-pulse 1s ease-in-out infinite alternate}
+.ios-guide-share-target::before{inset:-8px;border-radius:50%}
+.ios-guide-callout{position:absolute;left:50%;bottom:18px;display:flex;align-items:center;gap:7px;transform:translateX(-50%);padding:7px 11px;border-radius:99px;background:#24318F;color:#fff;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 3px 10px #17205555}
+.ios-guide-callout i{font-size:17px}
+.ios-guide-sheet{width:100%;max-width:330px;padding:14px;border-radius:22px;background:#f7f7fa;box-shadow:0 6px 20px rgba(25,29,48,.18);color:#1c1c1e;text-align:left}
+.ios-guide-sheet-head{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #d6d6dc;font-size:12px;font-weight:700}
+.ios-guide-preview{display:grid;place-items:center;width:48px;height:48px;border-radius:9px;background:#24318F;color:white;font-size:16px}
+.ios-guide-share-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:14px 0 4px;text-align:center}
+.ios-guide-share-app{display:grid;place-items:center;gap:5px;color:#42434a;font-size:9px}
+.ios-guide-share-app i{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#fff;color:#3178d4;font-size:20px}
+.ios-guide-view-more{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding:13px;border-radius:12px;background:#fff;color:#1c1c1e;font-size:14px;font-weight:700}
+.ios-guide-view-more i:last-child{color:#8a8b94}
+.ios-guide-action-list{display:grid;gap:5px;margin-top:12px}
+.ios-guide-action{display:flex;align-items:center;gap:12px;padding:12px;border-radius:11px;background:#fff;font-size:13px;font-weight:650}
+.ios-guide-action i{width:20px;color:#3478d4;text-align:center;font-size:16px}
+.ios-guide-action.highlight{position:relative;isolation:isolate}
+.ios-guide-action.highlight::before{position:absolute;z-index:-1;inset:-3px;content:"";border:3px solid #ed2939;border-radius:14px;animation:ios-guide-pulse 1s ease-in-out infinite alternate}
+.ios-guide-add-sheet{width:100%;max-width:330px;padding:20px 15px 14px;border-radius:22px;background:#f7f7fa;box-shadow:0 6px 20px rgba(25,29,48,.18);color:#1c1c1e}
+.ios-guide-app-preview{display:grid;place-items:center;gap:9px;padding:7px 0 22px;font-size:13px}
+.ios-guide-app-icon{display:grid;place-items:center;width:62px;height:62px;border-radius:15px;background:#24318F;color:#fff;font-size:25px;font-weight:900}
+.ios-guide-name{width:100%;padding:10px;border:1px solid #d1d1d6;border-radius:9px;background:white;text-align:left;font-size:13px}
+.ios-guide-dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:12px;border-top:1px solid #d1d1d6}
+.ios-guide-dialog-actions span,.ios-guide-dialog-actions b{padding:8px 13px;color:#3478d4;font-size:14px}
+.ios-guide-dialog-actions b{font-weight:800}
+.ios-guide-dialog-actions .ios-guide-add-target{isolation:auto}
+.ios-guide-dialog-actions .ios-guide-add-target::before{z-index:0;inset:0;border-radius:10px;pointer-events:none}
+.ios-guide-progress{height:4px;margin-top:14px;overflow:hidden;border-radius:4px;background:#e7e8ee}
+.ios-guide-progress span{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:left;background:var(--navy);animation:ios-guide-progress 10s linear forwards}
+@keyframes ios-guide-pulse{from{transform:scale(.94);box-shadow:0 0 0 0 rgba(237,41,57,.2)}to{transform:scale(1.04);box-shadow:0 0 0 7px rgba(237,41,57,.16)}}
+@keyframes ios-guide-progress{to{transform:scaleX(1)}}
+@media (max-height:620px){.ios-install-card{padding:12px}.ios-install-stages{height:min(330px,58vh)}.ios-guide-phone{transform:scale(.88)}}
+@media (prefers-reduced-motion:reduce){.ios-install-step,.ios-install-step.active{transition:none}.ios-guide-share-target::before,.ios-guide-more-target::before,.ios-guide-home-target::before,.ios-guide-add-target::before,.ios-guide-action.highlight::before,.ios-guide-progress span{animation:none}}
 .brand small{white-space:nowrap}
 @media (max-width:420px){.dl-btn{padding:0 12px;gap:5px;font-size:13px}.brand b{font-size:15px}.brand small{letter-spacing:.04em}.top-actions{gap:6px}}
 @media (max-width:380px){.brand small{display:none}}
@@ -1343,36 +1375,81 @@ function showIosInstallGuide(){
   guide.setAttribute('aria-live', 'polite');
   guide.innerHTML = `<div class="ios-install-card">
     <h2 class="ios-install-title">Ku dar shaashadda guriga</h2>
-    <p class="ios-install-note">Tilmaam muuqaal ah · Meesha Share ku taal way kala duwanaan kartaa Safari-ga.</p>
+    <p class="ios-install-note">Muuqaal tusaale ah · Safari-gaaga wuu ka duwanaan karaa.</p>
     <div class="ios-install-stages">
-      <div class="ios-install-step active" data-ios-guide-step>
-        <span>Share icon</span>
-        <span class="ios-install-arrow" aria-hidden="true">↓</span>
-        <div class="ios-install-toolbar" aria-hidden="true"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i><i class="bi bi-bookmark"></i><i class="bi bi-box-arrow-up ios-install-share"></i></div>
+      <div class="ios-install-step active" data-ios-guide-step aria-hidden="false">
+        <div class="ios-guide-phone">
+          <div class="ios-guide-status"><span>9:41</span><span>●●● ▰</span></div>
+          <div class="ios-guide-address"><i class="bi bi-lock-fill"></i> kaafihospital.com</div>
+          <div class="ios-guide-page"><span class="ios-guide-logo">K</span><strong>Kaafi Hospital</strong><small>Ballanso dhakhtarka si fudud</small></div>
+          <div class="ios-guide-toolbar" aria-hidden="true"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i><i class="bi bi-bookmark"></i><i class="bi bi-box-arrow-up ios-guide-share-target"></i></div>
+          <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> Share</span>
+        </div>
       </div>
-      <div class="ios-install-step" data-ios-guide-step>
-        <div class="ios-install-menu" aria-hidden="true"><div><i class="bi bi-house-add"></i><span>Add to Home Screen</span></div></div>
-        <span class="ios-install-arrow" aria-hidden="true">↓</span>
+      <div class="ios-install-step" data-ios-guide-step aria-hidden="true">
+        <div class="ios-guide-phone">
+          <div class="ios-guide-status"><span>9:41</span><span>●●● ▰</span></div>
+          <div class="ios-guide-sheet">
+            <div class="ios-guide-sheet-head"><span class="ios-guide-preview">K</span><span>kaafihospital.com</span></div>
+            <div class="ios-guide-share-row">
+              <span class="ios-guide-share-app"><i class="bi bi-chat-fill"></i>Messages</span>
+              <span class="ios-guide-share-app"><i class="bi bi-envelope-fill"></i>Mail</span>
+              <span class="ios-guide-share-app"><i class="bi bi-copy"></i>Copy</span>
+              <span class="ios-guide-share-app"><i class="bi bi-bookmark"></i>Bookmark</span>
+            </div>
+            <div class="ios-guide-view-more ios-guide-more-target"><span><i class="bi bi-three-dots"></i> View More</span><i class="bi bi-chevron-right"></i></div>
+          </div>
+          <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> View More</span>
+        </div>
       </div>
-      <div class="ios-install-step" data-ios-guide-step>
-        <button class="ios-install-add" type="button" tabindex="-1" aria-hidden="true">Add</button>
+      <div class="ios-install-step" data-ios-guide-step aria-hidden="true">
+        <div class="ios-guide-phone">
+          <div class="ios-guide-status"><span>9:41</span><span>●●● ▰</span></div>
+          <div class="ios-guide-sheet">
+            <div class="ios-guide-sheet-head"><span>Actions</span></div>
+            <div class="ios-guide-action-list">
+              <div class="ios-guide-action"><i class="bi bi-bookmark"></i><span>Add Bookmark</span></div>
+              <div class="ios-guide-action"><i class="bi bi-star"></i><span>Add to Favorites</span></div>
+              <div class="ios-guide-action highlight ios-guide-home-target"><i class="bi bi-house-add"></i><span>Add to Home Screen</span></div>
+              <div class="ios-guide-action"><i class="bi bi-book"></i><span>Add to Reading List</span></div>
+            </div>
+          </div>
+          <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> Add to Home Screen</span>
+        </div>
+      </div>
+      <div class="ios-install-step" data-ios-guide-step aria-hidden="true">
+        <div class="ios-guide-add-sheet">
+          <div class="ios-guide-app-preview"><span class="ios-guide-app-icon">K</span><b>Kaafi Hospital</b></div>
+          <div class="ios-guide-name">Kaafi Hospital</div>
+          <div class="ios-guide-dialog-actions"><span>Cancel</span><b class="ios-guide-add-target">Add</b></div>
+          <span class="ios-guide-callout"><i class="bi bi-arrow-up"></i> Add</span>
+        </div>
       </div>
     </div>
+    <div class="ios-guide-progress" aria-hidden="true"><span></span></div>
   </div>`;
   document.body.appendChild(guide);
   const steps = guide.querySelectorAll('[data-ios-guide-step]');
   const showStep = index => {
-    steps.forEach((step, stepIndex) => step.classList.toggle('active', stepIndex === index));
-    if (index === steps.length - 1) {
-      iosInstallGuideTimer = setTimeout(() => {
-        guide.remove();
-        iosInstallGuideTimer = null;
-      }, 1000);
-    } else {
-      iosInstallGuideTimer = setTimeout(() => showStep(index + 1), 1000);
-    }
+    steps.forEach((step, stepIndex) => {
+      const active = stepIndex === index;
+      step.classList.toggle('active', active);
+      step.setAttribute('aria-hidden', String(!active));
+    });
   };
   showStep(0);
+  const advance = index => {
+    iosInstallGuideTimer = setTimeout(() => {
+      if (index === steps.length) {
+        guide.remove();
+        iosInstallGuideTimer = null;
+        return;
+      }
+      showStep(index);
+      advance(index + 1);
+    }, index === steps.length ? 1000 : 3000);
+  };
+  advance(1);
 }
 
 async function offerInstall(evt){
