@@ -244,8 +244,6 @@ footer .credit{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,25
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:13px;padding:5px}
 .seg button{height:50px;border:0;border-radius:9px;background:transparent;font-weight:700;font-size:16px;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px}
 .seg button.on{background:var(--navy);color:#fff}
-.visit-question legend{font-size:18px;font-weight:800;line-height:1.4;color:var(--ink)}
-.visit-question .seg button{height:56px;font-size:18px;font-weight:800}
 .hint{font-size:12px;color:var(--muted);margin-top:5px}
 .pick-list{display:grid;gap:8px}
 .pick{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:13px;padding:10px 12px;cursor:pointer;transition:border-color .15s,background .15s}
@@ -618,7 +616,7 @@ let query = '';
 let sel = null;          // selected doctor
 let step = 1;            // 1 form, 2 confirm, 3 done
 /* found: previous patients saved under this phone number; pick: chosen previous patient id, or 'new' */
-const EMPTY_FORM = () => ({name:'', age:'', sex:'', came:true, phone:(store.get('kaafi_phone') || ''), district:'', found:[], foundKey:'', pick:null});
+const EMPTY_FORM = () => ({name:'', age:'', sex:'', came:null, phone:(store.get('kaafi_phone') || ''), district:'', found:[], foundKey:'', pick:null});
 let form = EMPTY_FORM();
 let booking = null;
 let busy = false;
@@ -868,10 +866,10 @@ function renderSheet(){
         <div class="err">Fadlan dooro Rag ama Dumar.</div>
       </fieldset>
       <fieldset class="field visit-question" data-f="came">
-        <legend>Bukaankani hore ma u yimid isbitaalka?</legend>
+        <legend>BUKAANKANI NUMBER KA LORABO HORE MA U YIMID ISBITAALKA?</legend>
         <div class="seg">
-          <button type="button" data-came="yes" class="${form.came?'on':''}" aria-pressed="${form.came}">HAA</button>
-          <button type="button" data-came="no" class="${!form.came?'on':''}" aria-pressed="${!form.came}">MAYA</button>
+          <button type="button" data-came="yes" class="${form.came===true?'on':''}" aria-pressed="${form.came===true}">HAA</button>
+          <button type="button" data-came="no" class="${form.came===false?'on':''}" aria-pressed="${form.came===false}">MAYA</button>
         </div>
         <div class="err">Fadlan dooro HAA ama MAYA.</div>
       </fieldset>
@@ -897,7 +895,7 @@ function renderSheet(){
           <dt>Jinsiga</dt><dd>${form.sex === 'rag' ? 'Rag' : 'Dumar'}</dd>
           <dt>Taleefanka</dt><dd>${esc(form.phone)}</dd>
           <dt>Degmada</dt><dd>${esc(form.district)}</dd>
-          <dt>Bukaankani hore ma u yimid isbitaalka?</dt><dd>${form.came ? 'HAA' : 'MAYA'}</dd>
+          <dt>BUKAANKANI NUMBER KA LORABO HORE MA U YIMID ISBITAALKA?</dt><dd>${form.came ? 'HAA' : 'MAYA'}</dd>
         </dl>
       </div>
       <div class="box bill">
